@@ -1,0 +1,9 @@
+{
+  "name": "KCC IR Meet",
+  "short_name": "IR Meet",
+  "start_url": "./index.html#speak",
+  "display": "standalone",
+  "background_color": "#002D56",
+  "theme_color": "#002D56",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

@@ -1,0 +1,449 @@
+/* KCC IR Meet — app logic (vanilla JS, no build step). Data comes from data/*.js globals. */
+(function () {
+  "use strict";
+  const CFG = window.KCC_CONFIG || {};
+  const SCRIPTS = window.KCC_SCRIPTS || [];
+  const ANSWERS = window.KCC_ANSWERS || [];
+  const PHRASES = window.KCC_PHRASES || { categories: [], easyWords: [], pronounce: [], mistakes: [], numberExamples: [] };
+  const FACTS = window.KCC_FACTS || [];
+
+  const $ = (sel, el) => (el || document).querySelector(sel);
+  const h = (tag, attrs, ...kids) => {
+    const el = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      const v = attrs[k];
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k === "html") el.innerHTML = v;
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const kid of kids.flat()) {
+      if (kid === null || kid === undefined || kid === false) continue;
+      el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    }
+    return el;
+  };
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("kccmeet:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("kccmeet:" + k, JSON.stringify(v)); } catch (e) { /* private mode */ } }
+  };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------- global state ----------
+  const VIEWS = [
+    { id: "speak", label: "SPEAK", ic: "🎙️" },
+    { id: "answer", label: "ANSWER", ic: "💬" },
+    { id: "phrases", label: "PHRASES", ic: "🗣️" },
+    { id: "facts", label: "FACTS", ic: "📊" }
+  ];
+  const state = {
+    view: "speak",
+    scale: store.get("scale", 1),
+    theme: store.get("theme", null),
+    // Korean gist visibility per view (SPEAK hidden by default — brief §2)
+    kr: store.get("kr", { speak: false, answer: true, phrases: true, facts: true }),
+    interp: store.get("interp", !!CFG.interpreterDefault),
+    scriptId: store.get("scriptId", SCRIPTS[0] && SCRIPTS[0].id),
+    pos: store.get("pos", {}),      // scriptId -> flat paragraph index
+    answerId: null,
+    phraseTab: store.get("phraseTab", "phrases"),
+    phraseCat: store.get("phraseCat", PHRASES.categories[0] && PHRASES.categories[0].id),
+    outline: false,
+    timer: { running: false, start: 0, acc: 0, iv: null }
+  };
+
+  function applyScale() {
+    document.documentElement.style.setProperty("--scale", state.scale);
+    store.set("scale", state.scale);
+  }
+  function applyTheme() {
+    const sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const t = state.theme || (sysDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+    const meta = $('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", t === "dark" ? "#0B1220" : "#002D56");
+  }
+  function applyKr() {
+    document.body.classList.toggle("hide-kr", !state.kr[state.view]);
+    store.set("kr", state.kr);
+    const b = $("#krBtn"); if (b) b.classList.toggle("on", !!state.kr[state.view]);
+  }
+
+  // ---------- routing ----------
+  function parseHash() {
+    const parts = (location.hash || "#speak").slice(1).split("/").map(decodeURIComponent);
+    return { view: VIEWS.some(v => v.id === parts[0]) ? parts[0] : "speak", a: parts[1], b: parts[2] };
+  }
+  function go(view, a, b) {
+    const parts = [view]; if (a !== undefined && a !== null) parts.push(a); if (b !== undefined && b !== null) parts.push(b);
+    const hash = "#" + parts.map(encodeURIComponent).join("/");
+    if (location.hash === hash) render(); else location.hash = hash;
+  }
+  window.addEventListener("hashchange", render);
+
+  // ---------- header / tabs ----------
+  function renderHeader() {
+    const nav = $("#topnav"); nav.innerHTML = "";
+    const tabs = $("#tabbar"); tabs.innerHTML = "";
+    for (const v of VIEWS) {
+      nav.append(h("button", { class: v.id === state.view ? "on" : "", onclick: () => go(v.id) }, v.ic + " " + v.label));
+      tabs.append(h("button", { class: v.id === state.view ? "on" : "", onclick: () => go(v.id) }, h("span", { class: "ic" }, v.ic), v.label));
+    }
+    $("#qbadge").textContent = CFG.quarter || "";
+    const st = $("#status");
+    if (CFG.status) { st.classList.remove("hidden"); st.innerHTML = "⚠️ " + esc(CFG.status); } else st.classList.add("hidden");
+  }
+  function bindControls() {
+    $("#krBtn").addEventListener("click", () => { state.kr[state.view] = !state.kr[state.view]; applyKr(); });
+    $("#aMinus").addEventListener("click", () => { state.scale = Math.max(0.8, +(state.scale - 0.1).toFixed(2)); applyScale(); });
+    $("#aPlus").addEventListener("click", () => { state.scale = Math.min(1.8, +(state.scale + 0.1).toFixed(2)); applyScale(); });
+    $("#themeBtn").addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme");
+      state.theme = cur === "dark" ? "light" : "dark"; store.set("theme", state.theme); applyTheme();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      if (state.view === "speak") {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); step(1); }
+        else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); step(-1); }
+        else if (e.key === "Escape") { state.outline = !state.outline; render(); }
+        else if (e.key.toLowerCase() === "k") { state.kr.speak = !state.kr.speak; applyKr(); }
+        else if (e.key.toLowerCase() === "t") toggleTimer();
+      } else if (state.view === "answer" && state.answerId) {
+        if (e.key === "ArrowRight") stepAnswer(1);
+        else if (e.key === "ArrowLeft") stepAnswer(-1);
+        else if (e.key === "Escape") go("answer");
+      }
+    });
+  }
+
+  // ---------- render root ----------
+  function render() {
+    const r = parseHash();
+    state.view = r.view;
+    renderHeader(); applyKr();
+    const main = $("#main"); main.innerHTML = "";
+    if (r.view === "speak") renderSpeak(main, r);
+    else if (r.view === "answer") renderAnswer(main, r);
+    else if (r.view === "phrases") renderPhrases(main, r);
+    else renderFacts(main, r);
+    main.append(h("div", { class: "foot" }, `${CFG.appName || "KCC IR Meet"} ${CFG.version || ""} · as of ${CFG.asOf || ""} · external-statement content only · ←→ keys / swipe to move`));
+    window.scrollTo({ top: 0 });
+  }
+
+  // =====================================================================
+  // SPEAK — teleprompter
+  // =====================================================================
+  function flatParas(script) {
+    const out = [];
+    script.sections.forEach((s, si) => s.paras.forEach((p, pi) => out.push({ s, si, p, pi })));
+    return out;
+  }
+  function curScript() { return SCRIPTS.find(s => s.id === state.scriptId) || SCRIPTS[0]; }
+  function step(d) {
+    const sc = curScript(); if (!sc) return;
+    const flat = flatParas(sc);
+    const i = Math.min(flat.length - 1, Math.max(0, (state.pos[sc.id] || 0) + d));
+    state.pos[sc.id] = i; store.set("pos", state.pos);
+    go("speak", sc.id, String(i));
+  }
+  function fmtTime(ms) { const s = Math.floor(ms / 1000); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
+  function timerElapsed() { const t = state.timer; return t.acc + (t.running ? Date.now() - t.start : 0); }
+  function toggleTimer() {
+    const t = state.timer;
+    if (t.running) { t.acc += Date.now() - t.start; t.running = false; clearInterval(t.iv); t.iv = null; }
+    else { t.start = Date.now(); t.running = true; t.iv = setInterval(paintTimer, 500); }
+    paintTimer();
+  }
+  function resetTimer() { const t = state.timer; t.acc = 0; t.start = Date.now(); if (!t.running) { clearInterval(t.iv); t.iv = null; } paintTimer(); }
+  function paintTimer() { const el = $("#timer"); if (el) { el.textContent = fmtTime(timerElapsed()); el.classList.toggle("run", state.timer.running); } }
+
+  function renderSpeak(main, r) {
+    if (!SCRIPTS.length) { main.append(h("div", { class: "card", style: "padding:20px" }, "No scripts in data/scripts.js")); return; }
+    if (r.a && SCRIPTS.some(s => s.id === r.a)) { state.scriptId = r.a; store.set("scriptId", r.a); }
+    const sc = curScript();
+    const flat = flatParas(sc);
+    let i = r.b !== undefined ? parseInt(r.b, 10) : (state.pos[sc.id] || 0);
+    if (isNaN(i) || i < 0) i = 0; if (i > flat.length - 1) i = flat.length - 1;
+    state.pos[sc.id] = i; store.set("pos", state.pos);
+    const cur = flat[i];
+
+    // picker
+    const picker = h("div", { class: "picker" });
+    for (const s of SCRIPTS) {
+      picker.append(h("button", { class: s.id === sc.id ? "on" : "", onclick: () => go("speak", s.id, String(state.pos[s.id] || 0)) },
+        h("span", { class: "t" }, s.title, s.badge ? h("span", { class: "b" }, s.badge) : null),
+        h("span", { class: "s" }, `${s.duration} · ${s.titleKr}`)));
+    }
+    main.append(picker);
+
+    const card = h("div", { class: "card prompter" });
+    card.append(h("div", { class: "progress" }, h("i", { style: `width:${((i + 1) / flat.length) * 100}%` })));
+    card.append(h("div", { class: "pr-top" },
+      h("span", { class: "sec" }, `${cur.si + 1}. ${cur.s.title}`),
+      h("span", { class: "tm" }, "⏱ " + cur.s.time),
+      h("span", { class: "pos" }, `${i + 1} / ${flat.length}`)));
+    if (cur.s.chips && cur.s.chips.length) {
+      card.append(h("div", { class: "pr-chips chips" }, cur.s.chips.map(c => h("span", { class: "chip" }, c))));
+    }
+    const body = h("div", { class: "pr-body" },
+      h("p", { class: "pr-en", html: cur.p.en }),
+      cur.p.kr ? h("p", { class: "pr-kr kr" }, cur.p.kr) : null,
+      cur.p.pause ? h("div", { class: "pr-pause" }, "··· pause") : null);
+    // tap zones: left third = back, right two-thirds = next; swipe
+    let tx = 0, ty = 0;
+    body.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    body.addEventListener("touchend", e => {
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+    });
+    body.addEventListener("click", e => {
+      if (window.getSelection && String(window.getSelection())) return;
+      const rect = body.getBoundingClientRect(); step((e.clientX - rect.left) < rect.width / 3 ? -1 : 1);
+    });
+    card.append(body);
+
+    const nav = h("div", { class: "pr-nav" },
+      h("button", { class: "big ghost", disabled: i === 0, onclick: () => step(-1) }, "← Prev"),
+      h("div", { class: "pr-tools" },
+        h("button", { class: "tool" + (state.outline ? " on" : ""), onclick: () => { state.outline = !state.outline; render(); } }, "☰ Outline"),
+        h("button", { class: "tool", onclick: () => { state.kr.speak = !state.kr.speak; applyKr(); } }, "한글 (K)"),
+        h("button", { class: "tool", onclick: () => { state.pos[sc.id] = 0; store.set("pos", state.pos); resetTimer(); go("speak", sc.id, "0"); } }, "⟲ Start"),
+        h("button", { class: "tool", onclick: toggleTimer, title: "T key" }, "▶/❚❚"),
+        h("button", { class: "tool", onclick: resetTimer }, "00:00"),
+        h("span", { class: "timer", id: "timer" }, fmtTime(timerElapsed()))),
+      h("button", { class: "big", disabled: i === flat.length - 1, onclick: () => step(1) }, "Next →"));
+    card.append(nav);
+    if (state.outline) {
+      const ol = h("div", { class: "outline" });
+      let acc = 0;
+      sc.sections.forEach((s, si) => {
+        const start = acc; acc += s.paras.length;
+        ol.append(h("button", { class: si === cur.si ? "on" : "", onclick: () => { state.outline = false; go("speak", sc.id, String(start)); } },
+          h("span", null, `${si + 1}. ${s.title}`), h("span", { class: "tm" }, `${s.time} · ${s.paras.length}¶`)));
+      });
+      if (sc.note) ol.append(h("div", { class: "kr", style: "font-size:.8rem;padding:8px 12px" }, "📝 " + sc.note));
+      card.append(ol);
+    }
+    main.append(card);
+    paintTimer();
+  }
+
+  // =====================================================================
+  // ANSWER — question buttons → one card
+  // =====================================================================
+  function stepAnswer(d) {
+    const i = ANSWERS.findIndex(a => a.id === state.answerId);
+    const n = (i + d + ANSWERS.length) % ANSWERS.length;
+    go("answer", ANSWERS[n].id);
+  }
+  function renderAnswer(main, r) {
+    state.answerId = r.a && ANSWERS.some(a => a.id === r.a) ? r.a : null;
+    const wrap = h("div", { class: "ans-wrap" + (state.answerId ? " has-detail" : "") });
+    const grid = h("div", { class: "agrid" });
+    for (const a of ANSWERS) {
+      grid.append(h("button", { class: "abtn" + (a.id === state.answerId ? " on" : ""), onclick: () => go("answer", a.id) },
+        h("span", { class: "no" }, String(a.n).padStart(2, "0")),
+        h("span", { class: "ic" }, a.icon || "•"),
+        h("span", { class: "l" }, a.label),
+        h("span", { class: "lk" }, a.labelKr)));
+    }
+    wrap.append(grid);
+    if (state.answerId) wrap.append(renderAnswerDetail(ANSWERS.find(a => a.id === state.answerId)));
+    else if (window.innerWidth >= 900) {
+      wrap.append(h("div", { class: "card", style: "padding:28px;color:var(--muted);font-size:1rem" },
+        h("div", { style: "font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:8px" }, "Pick a question type on the left."),
+        "Each card: one fixed line → one core sentence → 2–4 support sentences → 3 numbers → Korean core for the interpreter → terms. Nothing more.",
+        h("div", { class: "kr", style: "margin-top:8px;font-size:.9rem" }, "버튼 하나 = 답 하나. ←→ 키로 카드 이동, Esc로 격자 복귀.")));
+    }
+    main.append(wrap);
+  }
+  function renderAnswerDetail(a) {
+    const d = h("div", { class: "card adetail" + (state.interp ? " interp" : "") });
+    d.append(h("div", { class: "ad-head" },
+      h("button", { class: "tool", onclick: () => go("answer"), title: "Esc" }, "← All"),
+      h("span", { class: "ic" }, a.icon || ""),
+      h("div", null, h("div", { class: "t" }, `${String(a.n).padStart(2, "0")} · ${a.label}`), h("div", { class: "tk" }, a.labelKr)),
+      h("div", { class: "sp" },
+        h("button", { class: "tool" + (state.interp ? " on" : ""), onclick: () => { state.interp = !state.interp; store.set("interp", state.interp); render(); } },
+          state.interp ? "🎧 With interpreter" : "🗣 Direct English"))));
+    if (a.fixed && a.fixed.length) {
+      d.append(h("div", { class: "ad-fixed" }, h("div", { class: "lbl" }, "FIXED LINE — SAY IT THE SAME WAY EVERY TIME"), a.fixed.map(f => h("p", null, f))));
+    }
+    const body = h("div", { class: "ad-body" });
+    body.append(h("p", { class: "ad-core" }, h("span", { class: "lbl" }, "Core answer"), a.core));
+    if (a.support && a.support.length) {
+      body.append(h("ul", { class: "ad-sup" }, a.support.map((s, i) => h("li", null, h("i", null, String(i + 1)), h("span", null, s)))));
+    }
+    if (a.numbers && a.numbers.length) {
+      body.append(h("div", { class: "ad-nums" }, a.numbers.slice(0, 3).map(n => h("div", { class: "num" }, h("b", null, n.v), h("span", null, n.l)))));
+    }
+    if (a.kr && a.kr.length) {
+      body.append(h("div", { class: "ad-kr kr" }, h("span", { class: "ad-lbl" }, "국문 핵심 — 통역이 그대로 옮길 수 있게"), a.kr.map(k => h("p", null, k))));
+    }
+    if (a.terms && a.terms.length) {
+      body.append(h("div", { class: "ad-terms" }, h("span", { class: "ad-lbl" }, "Terms — 통역 병기 용어"),
+        h("table", null, a.terms.map(t => h("tr", null, h("td", null, t.kr), h("td", null, t.en, t.note ? h("span", { class: "nt" }, "⚠ " + t.note) : null))))));
+    }
+    if (a.hold && a.hold !== "—") body.append(h("div", { class: "ad-hold kr" }, h("span", null, "🚧"), h("span", null, "여기까지만: " + a.hold)));
+    d.append(body);
+    d.append(h("div", { class: "ad-nav" },
+      h("button", { onclick: () => stepAnswer(-1) }, "← Prev card"),
+      h("button", { onclick: () => stepAnswer(1) }, "Next card →")));
+    return d;
+  }
+
+  // =====================================================================
+  // PHRASES — survival English + tools
+  // =====================================================================
+  const PTABS = [
+    { id: "phrases", label: "Phrases" }, { id: "easy", label: "Easy words" }, { id: "say", label: "Pronounce" },
+    { id: "numbers", label: "Numbers" }, { id: "mistakes", label: "Mistakes" }
+  ];
+  function renderPhrases(main, r) {
+    if (r.a && PTABS.some(t => t.id === r.a)) { state.phraseTab = r.a; store.set("phraseTab", r.a); }
+    const tabs = h("div", { class: "subtabs" }, PTABS.map(t => h("button", { class: t.id === state.phraseTab ? "on" : "", onclick: () => go("phrases", t.id) }, t.label)));
+    main.append(tabs);
+    const t = state.phraseTab;
+    if (t === "phrases") {
+      if (r.b && PHRASES.categories.some(c => c.id === r.b)) { state.phraseCat = r.b; store.set("phraseCat", r.b); }
+      const cat = PHRASES.categories.find(c => c.id === state.phraseCat) || PHRASES.categories[0];
+      main.append(h("div", { class: "chips catrow" }, PHRASES.categories.map(c =>
+        h("button", { class: "chip" + (c.id === cat.id ? " sel" : ""), onclick: () => go("phrases", "phrases", c.id) }, c.title, h("span", { class: "sub kr" }, c.titleKr)))));
+      main.append(h("div", { class: "plist" }, cat.items.map(it => h("div", { class: "card pitem" }, h("div", { class: "en" }, it.en), it.kr ? h("div", { class: "kr" }, it.kr) : null))));
+    } else if (t === "easy") {
+      main.append(h("p", { class: "kr", style: "font-size:.85rem;margin-bottom:10px" }, "낭독·답변 중 전달이 흔들린 단어 → 쉬운 말로. 왼쪽을 말하려다 막히면 오른쪽."));
+      main.append(h("div", { class: "card tablecard scrollx" }, h("table", { class: "ptable" },
+        h("tr", null, h("th", null, "Instead of"), h("th", null, "Say"), h("th", { class: "kr" }, "뜻")),
+        PHRASES.easyWords.map(w => h("tr", null, h("td", { class: "h" }, w.hard), h("td", { class: "e" }, w.easy), h("td", { class: "kr" }, w.kr))))));
+    } else if (t === "say") {
+      main.append(h("p", { class: "kr", style: "font-size:.85rem;margin-bottom:10px" }, "대문자 = 강세. 미팅 전 한 번씩 소리 내 읽기."));
+      main.append(h("div", { class: "card tablecard scrollx" }, h("table", { class: "ptable" },
+        h("tr", null, h("th", null, "Word"), h("th", null, "Say"), h("th", { class: "kr" }, "뜻")),
+        PHRASES.pronounce.map(w => h("tr", null, h("td", { class: "e" }, w.word), h("td", { class: "say" }, w.say), h("td", { class: "kr" }, w.kr))))));
+    } else if (t === "mistakes") {
+      main.append(h("div", { class: "card tablecard scrollx" }, h("table", { class: "ptable" },
+        h("tr", null, h("th", null, "✕ Avoid"), h("th", null, "✓ Say"), h("th", { class: "kr" }, "왜")),
+        PHRASES.mistakes.map(w => h("tr", null, h("td", { class: "h" }, w.wrong), h("td", { class: "e" }, w.right), h("td", { class: "kr" }, w.kr))))));
+    } else if (t === "numbers") {
+      main.append(renderConverter());
+      main.append(h("div", { class: "sect-title", style: "margin-top:16px" }, "Common numbers"));
+      main.append(h("div", { class: "card tablecard scrollx" }, h("table", { class: "ptable" },
+        h("tr", null, h("th", null, "한국어"), h("th", null, "English")),
+        PHRASES.numberExamples.map(w => h("tr", null, h("td", { class: "h", style: "color:var(--text)" }, w.kr), h("td", { class: "e" }, w.en))))));
+    }
+  }
+
+  // ---------- number converter (KR 억/조 ↔ EN billion/trillion) ----------
+  function convert(raw) {
+    const s = raw.trim(); if (!s) return null;
+    const flat = s.replace(/,/g, "").replace(/\s+/g, "");
+    const kUnit = /(조|억|만)/.test(flat);
+    const eUnit = /(trillion|billion|million|thousand|tn|bn|mn|mm|m|k)\b/i.test(s);
+    // currency / unit
+    let unitKr = "원", unitEn = "won";
+    if (/달러|\$|dollar|usd/i.test(s)) { unitKr = "달러"; unitEn = "dollars"; }
+    else if (/유로|€|euro|eur/i.test(s)) { unitKr = "유로"; unitEn = "euros"; }
+    else if (/톤|tons?\b/i.test(s)) { unitKr = "톤"; unitEn = "tons"; }
+    else if (/주(?!당)|shares?\b/i.test(s)) { unitKr = "주"; unitEn = "shares"; }
+    const perShare = /주당|per share/i.test(s);
+
+    let value = null, dir = null;
+    if (kUnit) {
+      dir = "kr→en";
+      const re = /(\d+(?:\.\d+)?)(조|억|만)?/g; let m, sum = 0, any = false;
+      const num = flat.replace(/[^\d.조억만]/g, "");
+      while ((m = re.exec(num))) { any = true; const n = parseFloat(m[1]); const u = m[2] === "조" ? 1e12 : m[2] === "억" ? 1e8 : m[2] === "만" ? 1e4 : 1; sum += n * u; }
+      if (!any) return null; value = sum;
+    } else if (eUnit) {
+      dir = "en→kr";
+      const re = /(\d+(?:\.\d+)?)\s*(trillion|billion|million|thousand|tn|bn|mn|mm|m|k)\b/gi; let m, sum = 0, any = false;
+      while ((m = re.exec(s))) { any = true; const n = parseFloat(m[1]); const u = m[2].toLowerCase(); const mult = /^(trillion|tn)$/.test(u) ? 1e12 : /^(billion|bn)$/.test(u) ? 1e9 : /^(million|mn|mm|m)$/.test(u) ? 1e6 : 1e3; sum += n * mult; }
+      if (!any) return null; value = sum;
+    } else {
+      const n = parseFloat(flat.replace(/[^\d.]/g, "")); if (isNaN(n)) return null;
+      value = n; dir = "plain";
+    }
+    const en = toEnglish(value, unitEn, perShare), kr = toKorean(value, unitKr, perShare);
+    return { dir, en, kr, value };
+  }
+  function trim(n, d) { return (+n.toFixed(d)).toLocaleString("en-US", { maximumFractionDigits: d }); }
+  function toEnglish(v, unit, perShare) {
+    const money = /won|dollars|euros/.test(unit);
+    let main, alt = "";
+    if (v >= 1e12) { main = `${trim(v / 1e12, 2)} trillion`; alt = `${trim(v / 1e9, 1)} billion`; }
+    else if (v >= 1e9) { main = `${trim(v / 1e9, 2)} billion`; alt = `${trim(v / 1e6, 0)} million`; }
+    else if (v >= 1e6) { main = `${trim(v / 1e6, 2)} million`; }
+    else if (v >= 1e4 && !money) { main = `${trim(v / 1e3, 1)} thousand`; }
+    else main = trim(v, 2);
+    const u = perShare ? `${money ? unit : "won"} per share` : unit;
+    return { main: `${main} ${u}`, alt: alt ? `${alt} ${u}` : "" };
+  }
+  function toKorean(v, unit, perShare) {
+    const parts = [];
+    let rest = v;
+    const jo = Math.floor(rest / 1e12); if (jo) { parts.push(`${jo.toLocaleString("ko-KR")}조`); rest -= jo * 1e12; }
+    if (v >= 1e8) {
+      const eok = rest / 1e8;
+      if (eok > 0) parts.push(`${(+eok.toFixed(1)).toLocaleString("ko-KR", { maximumFractionDigits: 1 })}억`);
+    } else if (v >= 1e4 && !/원|달러|유로/.test(unit)) {
+      parts.push(`${(+(rest / 1e4).toFixed(1)).toLocaleString("ko-KR", { maximumFractionDigits: 1 })}만`);
+    } else parts.push(trim(rest, 2));
+    const body = parts.join(" ");
+    if (perShare) return `주당 ${body}${/원|달러|유로/.test(unit) ? unit : "원"}`;
+    return `${body}${unit}`;
+  }
+  function renderConverter() {
+    const out = h("div", { class: "out" }, h("b", null, "—"), h("span", null, "예: 1조 8,060억 / 1,289억원 / 6.5억달러 / 128.9 billion / 650 million dollars / 17 million shares"));
+    const input = h("input", { type: "text", placeholder: "숫자 입력: 1,289억원  또는  128.9 billion", autocomplete: "off", inputmode: "text" });
+    const paint = () => {
+      const r = convert(input.value);
+      if (!r) { out.innerHTML = ""; out.append(h("b", null, "—"), h("span", null, "억·조·만 또는 billion·trillion·million 단위를 포함해 입력")); return; }
+      out.innerHTML = "";
+      if (r.dir === "kr→en") out.append(h("b", null, r.en.main), h("span", null, r.en.alt ? `also: ${r.en.alt}` : ""));
+      else if (r.dir === "en→kr") out.append(h("b", null, r.kr), h("span", null, `= ${r.en.main}`));
+      else out.append(h("b", null, r.en.main), h("span", null, r.kr));
+    };
+    input.addEventListener("input", paint);
+    const ex = ["1조 8,060억원", "1,289억원", "373억원", "6.5억달러", "16.4억달러", "1,700만주", "128.9 billion", "2 trillion won", "650 million dollars", "300 thousand shares"];
+    return h("div", { class: "card conv" },
+      h("label", null, "Number converter — 억·조 ↔ billion·trillion"),
+      h("div", { class: "row" }, input),
+      out,
+      h("div", { class: "ex chips" }, ex.map(e => h("button", { class: "chip", onclick: () => { input.value = e; paint(); } }, e))),
+      h("div", { class: "hint kr" }, "1억 = 100 million · 1,000억 = 100 billion · 1조 = 1 trillion. 말할 때는 소수 한 자리까지만 (128.9 billion)."));
+  }
+
+  // =====================================================================
+  // FACTS — quick reference
+  // =====================================================================
+  function renderFacts(main, r) {
+    main.append(h("div", { class: "chips catrow" }, FACTS.map(g => h("button", { class: "chip", onclick: () => { const el = document.getElementById("f-" + g.id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); } }, (g.icon || "") + " " + g.title.split(" — ")[0]))));
+    for (const g of FACTS) {
+      const card = h("div", { class: "card fgroup", id: "f-" + g.id, style: "scroll-margin-top:calc(var(--hdr) + 12px)" });
+      card.append(h("h3", null, g.icon ? h("span", null, g.icon) : null, g.title));
+      if (g.note) card.append(h("div", { class: "note kr" }, g.note));
+      for (const row of g.rows) card.append(h("div", { class: "frow" }, h("div", { class: "l" }, row[0]), h("div", { class: "v" }, row[1]), row[2] ? h("div", { class: "s" }, row[2]) : null));
+      main.append(card);
+    }
+  }
+
+  // =====================================================================
+  // lock screen
+  // =====================================================================
+  function initLock() {
+    const lock = $("#lock");
+    if (!CFG.passcode || store.get("unlocked", false)) { lock.remove(); return; }
+    const err = $(".err", lock), inp = $("input", lock);
+    $("form", lock).addEventListener("submit", e => {
+      e.preventDefault();
+      if (inp.value.trim() === String(CFG.passcode)) { store.set("unlocked", true); lock.remove(); }
+      else { err.textContent = "Incorrect passcode."; inp.value = ""; inp.focus(); }
+    });
+    setTimeout(() => inp.focus(), 50);
+  }
+
+  // ---------- boot ----------
+  applyScale(); applyTheme(); bindControls(); initLock(); render();
+  if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (!state.theme) applyTheme(); });
+})();
