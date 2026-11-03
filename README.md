@@ -50,7 +50,7 @@ data/facts.js       ★ FACTS 숫자표 (확정 분기로 교체)
 2. Framework Preset: **Other**, Build Command: 비움, Output Directory: 비움(루트). `vercel.json`이 `cleanUrls`와 `noindex` 헤더를 설정합니다.
 3. Deploy. 이후에는 `main`(또는 연결한 브랜치)에 푸시할 때마다 자동 배포.
 
-패스코드는 `data/config.js`의 `passcode`입니다(기본 `kccir`). 빈 문자열이면 잠금 화면이 사라집니다.
+잠금은 기본 꺼져 있습니다. 필요하면 `data/config.js`의 `passcode`에 값을 넣으면 패스코드 화면이 생깁니다.
 클라이언트 측 잠금이라 **억제 장치일 뿐 보안이 아닙니다** — 그래서 내부 자료는 이 저장소에 넣지 않습니다.
 
 ## 폰·태블릿에 설치
