@@ -449,3 +449,134 @@ window.KCC_SCRIPTS.push(
     ]
   }
 );
+
+// ============================================================
+// 사업부별 1분 코멘트 — 투자자가 “walk me through X”라고 할 때 읽는 짧은 스크립트
+// 기준: 3Q 스크립트(10/26) 스탠스 + 2Q 확정 수치. kind: "Segment"
+// ============================================================
+window.KCC_SCRIPTS.push(
+  {
+    id: "seg-bm-3q26",
+    quarter: "3Q 2026", kind: "Segment",
+    title: "Building Materials — 1-minute comment",
+    titleKr: "건자재 1분 코멘트 + 예상 질문 2개",
+    duration: "1–2 min",
+    badge: "3Q 공시 전",
+    note: "Q2 복기 → Q3 방향 → view → Q&A 2개.",
+    sections: [
+      {
+        title: "Building Materials", time: "0:00 – 1:00",
+        chips: ["Q2: 262.3bn / 37.9bn · strongest in 5", "Gypsum 60–70% share, never a loss", "Q3 demand softer", "Commercial first, housing ~early 2028"],
+        paras: [
+          { en: "Let me recap Q2 first. Building Materials had its <b>strongest quarter in five</b>: revenue 262.3 billion won, up 13.7 percent, operating profit 37.9 billion, up about 40 percent. Volume into semiconductor sites and data centres carried it, while housing stayed weak.",
+            kr: "2Q 복기: 5개 분기 내 최고. 매출 2,623억(+13.7%), OP 379억(+40%). 하이테크·DC 견인, 주택 부진." },
+          { en: "For Q3, the construction downturn continues. Interior demand weakened, and the first semiconductor volumes came off their Q2 level. In PVC windows, lower demand and the raw-material burden both weigh on profit. <b>Gypsum board remains the stable core.</b>",
+            kr: "3Q: 다운사이클 지속. 인테리어↓, 반도체 초도물량↓. 창호 이중 부담. 석고보드 안정." },
+          { en: "Our view is unchanged: <b>commercial first, housing later</b>. Gypsum board lags housing starts by about two years, so we do not expect a genuine housing recovery until around early 2028, and we hold even that loosely.",
+            kr: "view 불변: 상업용 먼저, 주택 ’28 초. 석고보드 2년 후행. 단정 금지." }
+        ]
+      },
+      {
+        title: "Likely questions", time: "Q&A",
+        chips: ["Recovery? → Commercial first", "Data centres? → positive, not yet game-changer"],
+        paras: [
+          { en: "<b>When does it recover?</b> Commercial first, housing later. Commercial is already working; housing around early 2028, and we stay conservative.",
+            kr: "회복 시점 → 상업용 먼저, 주택 ’28 초, 보수적." },
+          { en: "<b>Data centres?</b> Positive, but not yet a game-changer for volumes. A mid-size building uses about 200 tons. Hyperscale would change that — upside, not base case.",
+            kr: "DC → 긍정적이나 아직 게임체인저 아님(~200톤/동). 하이퍼스케일은 업사이드." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "seg-paint-3q26",
+    quarter: "3Q 2026", kind: "Segment",
+    title: "Paint & Coatings — 1-minute comment",
+    titleKr: "도료 1분 코멘트 + 예상 질문 2개",
+    duration: "1–2 min",
+    badge: "3Q 공시 전",
+    note: "Q2 복기 → Q3 원가 시차 → 제품별 → Q&A 2개.",
+    sections: [
+      {
+        title: "Paint & Coatings", time: "0:00 – 1:00",
+        chips: ["Q2: 545.9bn / 48.5bn · April +10%", "Q3 = cost peak, below 1H", "Auto & marine demand OK · architectural weak", "FY margin 9–10%"],
+        paras: [
+          { en: "Quick recap of Q2. Paint grew revenue 15.9 percent to 545.9 billion won, on our April price increase of about 10 percent and strong overseas volumes. The margin came down to around 9 percent because of the lag in passing raw-material costs through.",
+            kr: "2Q: 매출 5,459억(+15.9%), 4월 ~10% 인상·해외. 마진 ~9%(시차)." },
+          { en: "In Q3, demand in automotive and marine continues despite the slow season. But because of the raw-material delay, profit will be below the first half. <b>Q3 is the cost peak.</b> Architectural is the weak spot: pass-through is harder and demand is poor.",
+            kr: "3Q: 자동차·선박 수요 지속. 원재료 시차로 상반기 대비↓. 3Q 원가 정점. 건축 약점." },
+          { en: "By product, <b>marine is the bright spot</b>: mid-teens margins and an order book solid through 2028. Auto runs at around 10 percent on market-linked pricing. Overseas volumes keep growing. For the year we aim to hold the margin in the 9 to 10 percent range.",
+            kr: "선박 미드틴·수주 ’28 견조. 자동차 ~10% 시황연동. 해외 성장. 연간 9~10%." }
+        ]
+      },
+      {
+        title: "Likely questions", time: "Q&A",
+        chips: ["Raw materials? → pass-through with a lag", "Price cuts if oil falls? → position lets us hold"],
+        paras: [
+          { en: "<b>How do you manage raw materials?</b> Price pass-through, with a lag. Auto and marine use market-linked or spec pricing; architectural is constrained. Q3 is the peak, and in Q4 the lag works for us.",
+            kr: "원가 → 시차 두고 전가. 자동차·선박 시황연동, 건축 제약. 4Q엔 시차가 유리하게." },
+          { en: "<b>Price cuts if oil falls?</b> Our market position lets us hold price. Dominant domestic and marine shares, and repair coatings grow double digits on the installed base.",
+            kr: "유가 하락 시 인하? → 시장 지위로 판가 유지. 보수선 두 자릿수 성장." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "seg-silicone-3q26",
+    quarter: "3Q 2026", kind: "Segment",
+    title: "Silicone — 1-minute comment",
+    titleKr: "실리콘 1분 코멘트 + 예상 질문 3개",
+    duration: "1–2 min",
+    badge: "3Q 공시 전",
+    note: "가장 많이 묻는 부문. Q2 복기 → Q3 두 가지 압박 → 양극화 → Q&A 3개. 깊이 들어가면 Momentive 5분 요약으로.",
+    sections: [
+      {
+        title: "Silicone", time: "0:00 – 1:00",
+        chips: ["Q2: OP 2.6 → 37.3bn · EBITDA 9.5 → 13.5%", "Q3 down vs Q2: season + FX", "Q4 recovery · FY EBITDA 12–13%", "Specialty up, low-end slow", "FY OP up YoY, 100bn ‘challenging’"],
+        paras: [
+          { en: "Silicone was the swing factor in Q2. Operating profit went from 2.6 billion won to <b>37.3 billion</b>, and the EBITDA margin from 9.5 to 13.5 percent, on the April price increase, volume up from 63 to 66 thousand tons, and the low-end restructuring showing through.",
+            kr: "2Q: OP 26→373억, EBITDA 9.5→13.5%. 4월 인상·물량 6.3→6.6만톤·저가 라인 구조조정." },
+          { en: "In Q3, raw-material volatility is limited. The pressure comes from two places. First, the summer slow season, which mainly hurts our low-end lines. Second, the stronger won, which reduces the translated value. So <b>Q3 is down from Q2, and we expect Q4 to recover.</b> Full-year EBITDA margin should be in the 12 to 13 percent range.",
+            kr: "3Q: ①비수기 → 저가 제품군 ②원화 강세 → 환산. 3Q↓, 4Q 회복. 연간 EBITDA 12~13%." },
+          { en: "Structurally, the gap inside the portfolio is widening. Low-end products are not improving as fast as we would like. Electronic materials and personal care keep growing with solid margins. For the year, silicone operating profit should be up on last year, but 100 billion won looks challenging.",
+            kr: "양극화: 저가 더딤, 전자·퍼스널케어 성장. 연간 OP 전년 대비 증가, 1,000억은 쉽지 않음(여기까지)." }
+        ]
+      },
+      {
+        title: "Likely questions", time: "Q&A",
+        chips: ["Sustainable? → price trigger, supply side sustains", "Normalise when? → specialty there, low-end drag", "Momentive? → 5-min update script"],
+        paras: [
+          { en: "<b>Is the recovery sustainable?</b> Price was the trigger; the supply side makes it sustainable — Chinese cuts, peers raising prices, and our own specialty mix. Early in the recovery, so I would not overstate it.",
+            kr: "지속성 → 가격 촉발, 공급이 지속(중국 감산·경쟁사 인상·믹스). 회복 초기." },
+          { en: "<b>When does the margin normalise?</b> The specialty side is already there; the low-end side is the drag. Q4 recovers; full-year 12 to 13 percent. We benchmark against Wacker and have not closed the gap yet.",
+            kr: "정상화 → 스페셜티는 이미, 저가가 발목. 4Q 회복, 연간 12~13%. Wacker 갭 인정." },
+          { en: "<b>Momentive?</b> Let me give you five points directionally — stand-alone numbers are not separately disclosed. <i>(→ Momentive 5-minute Update)</i>",
+            kr: "모멘티브 → 5분 요약 스크립트로 전환." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "seg-materials-3q26",
+    quarter: "3Q 2026", kind: "Segment",
+    title: "Advanced Materials (Others) — 1-minute comment",
+    titleKr: "소재·기타 1분 코멘트",
+    duration: "1 min",
+    badge: "유지",
+    note: "질문이 있을 때만. EMC·세라믹 기판.",
+    sections: [
+      {
+        title: "Advanced Materials", time: "0:00 – 1:00",
+        chips: ["Q2: 112.5bn / 1.3bn · substrate capex", "EMC: power modules · not HBM", "AMB (EV) / DCB (industrial)", "Jeonju AMB Nov · Vietnam DCB", "Share ~7% · 20+ Chinese entrants"],
+        paras: [
+          { en: "Our advanced-materials business sits in the Others segment: revenue 112.5 billion won in Q2 with a thin 1.3 billion operating profit, because we are investing in ceramic-substrate capacity. <b>Small today, but this is where the semiconductor and EV exposure sits.</b>",
+            kr: "기타 = 첨단소재. 2Q 매출 1,125억·OP 13억(기판 투자). 반도체·EV 익스포저." },
+          { en: "In EMC our strength is power-module compounds. We do not directly supply HBM molding compounds; we supply WOP-type EMC for DRAM, and our liquid products are being evaluated for other packaging applications.",
+            kr: "EMC: 파워모듈 강점. HBM 직접 공급 아님, DRAM용 WOP." },
+          { en: "Ceramic substrates go into power modules inside inverters, for EV drivetrains and AI data-centre power. AMB is the EV-grade high end, DCB the industrial workhorse. Jeonju AMB expansion completes in November. With twenty-plus Chinese entrants and the EV slowdown, profitability needs time; our share is around 7 percent. The positives are the Hyundai Mobis channel, customers de-risking from China, and AI power demand.",
+            kr: "기판 = 인버터 속 파워모듈. AMB(EV)/DCB(산업). 전주 11월. 중국 20+·캐즘 → 시간 필요, 점유 ~7%. 모비스·탈중국·AI 전력." }
+        ]
+      }
+    ]
+  }
+);

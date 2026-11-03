@@ -10,10 +10,22 @@
 // 검색: label · labelKr · tags · core · support · kr · terms 전부 검색 대상.
 // ============================================================
 window.KCC_ANSWER_CATS = [
-  { id: "group",    label: "Group",            labelKr: "공통" },
+  { id: "group",    label: "Group",            labelKr: "공통",
+    subs: [
+      { id: "cost",    label: "Cost & Pricing",   labelKr: "원가·판가" },
+      { id: "fx-ni",   label: "FX & Net Profit",  labelKr: "환율·순이익" },
+      { id: "outlook", label: "Outlook & Other",  labelKr: "전망·기타" }
+    ] },
   { id: "bm",       label: "Building Mat.",    labelKr: "건자재" },
   { id: "paint",    label: "Paint",            labelKr: "도료" },
-  { id: "silicone", label: "Silicone",         labelKr: "실리콘" },
+  { id: "silicone", label: "Silicone",         labelKr: "실리콘",
+    subs: [
+      { id: "margin",   label: "Results & Margin",    labelKr: "실적·마진" },
+      { id: "market",   label: "Market & Competition", labelKr: "시황·수요·경쟁" },
+      { id: "mom-fin",  label: "Momentive Finance",   labelKr: "모멘티브 재무" },
+      { id: "strategy", label: "Strategy & Big Bets", labelKr: "전략·Big Bets" },
+      { id: "ops",      label: "Operations & Integration", labelKr: "운영·품질·통합" }
+    ] },
   { id: "returns",  label: "Dividend & Returns", labelKr: "배당·주주환원" },
   { id: "asset",    label: "Asset Monetisation", labelKr: "자산활용" },
   { id: "capex",    label: "CAPEX & Balance Sheet", labelKr: "CAPEX·재무" },
@@ -128,7 +140,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "silicone-margin",
-    cat: "silicone", period: "3Q26", updated: "2026-10-26",
+    cat: "silicone", sub: "margin", period: "3Q26", updated: "2026-10-26",
     n: 4, icon: "🧪",
     label: "Silicone margin — normalisation",
     labelKr: "실리콘 마진 — 정상화 시점",
@@ -164,7 +176,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "price-increase",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "cost", period: "3Q26", updated: "2026-10-26",
     n: 5, icon: "🏷️",
     label: "Price increases — Q4?",
     labelKr: "4분기 추가 가격 인상 여부",
@@ -198,7 +210,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "raw-materials",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "cost", period: "3Q26", updated: "2026-10-26",
     n: 6, icon: "🛢️",
     label: "Raw materials — lag, how long",
     labelKr: "원재료 — 시차, 얼마나 가나",
@@ -300,7 +312,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "momentive",
-    cat: "silicone", period: "3Q26", updated: "2026-10-26",
+    cat: "silicone", sub: "mom-fin", period: "3Q26", updated: "2026-10-26",
     n: 9, icon: "🌐",
     label: "Momentive — injection? IPO? spin-off?",
     labelKr: "모멘티브 — 추가 출자·IPO·인적분할",
@@ -406,7 +418,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "fx",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "fx-ni", period: "3Q26", updated: "2026-10-26",
     n: 12, icon: "💱",
     label: "FX — KRW strength",
     labelKr: "환율 — 원화 강세 영향",
@@ -439,7 +451,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "net-profit-swing",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "fx-ni", period: "3Q26", updated: "2026-10-26",
     n: 13, icon: "📉",
     label: "Net profit — valuation swing",
     labelKr: "순이익 — 평가손익 변동",
@@ -610,7 +622,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "risk-upside",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "outlook", period: "3Q26", updated: "2026-10-26",
     n: 18, icon: "⚖️",
     label: "Segment risk vs upside",
     labelKr: "부문별 리스크 vs 업사이드 (한 문장씩)",
@@ -643,7 +655,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "cost-actions",
-    cat: "group", period: "3Q26", updated: "2026-10-26",
+    cat: "group", sub: "cost", period: "3Q26", updated: "2026-10-26",
     n: 19, icon: "🛠️",
     label: "Cost actions in our control",
     labelKr: "회사가 통제 가능한 원가 조치",
@@ -686,7 +698,7 @@ window.KCC_ANSWERS.push(
   // ---------------- 실리콘 · Momentive ----------------
   {
     id: "sil-sustainable",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "margin", period: "2Q26", updated: "2026-08-17",
     n: 20, icon: "🧪",
     label: "Silicone recovery — sustainable, or just the April price?",
     labelKr: "실리콘 회복 — 지속 가능? 가격 효과뿐?",
@@ -718,7 +730,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-how-to-read",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "margin", period: "2Q26", updated: "2026-08-17",
     n: 21, icon: "📖",
     label: "Silicone — how to read the business (seasonality, spreads)",
     labelKr: "실리콘 — 분석가가 자주 틀리는 것 (계절성·스프레드)",
@@ -749,7 +761,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-market-backdrop",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "market", period: "2Q26", updated: "2026-08-17",
     n: 22, icon: "🌏",
     label: "Silicone market — China cuts, DMC, Dow Europe",
     labelKr: "실리콘 시황 — 중국 감산·DMC·Dow 유럽",
@@ -781,7 +793,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-demand-by-business",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "market", period: "2Q26", updated: "2026-08-17",
     n: 23, icon: "🧭",
     label: "Silicone — where demand is strong / weak",
     labelKr: "실리콘 — 사업별 강약 (어디가 좋고 어디가 약한가)",
@@ -814,7 +826,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-long-term",
-    cat: "silicone", period: "2Q26", updated: "2026-08-21",
+    cat: "silicone", sub: "strategy", period: "2Q26", updated: "2026-08-21",
     n: 24, icon: "🚀",
     label: "Silicone — long-term targets & strategy",
     labelKr: "실리콘 — 장기 목표·전략 (베이직 → 스페셜티)",
@@ -846,7 +858,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-big-bets",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "strategy", period: "2Q26", updated: "2026-08-17",
     n: 25, icon: "🎯",
     label: "Big bets — thermal, bio-pharma, tire silane, AI data centres",
     labelKr: "Big Bets — 열관리·바이오파마·타이어 실란·AI 데이터센터",
@@ -878,7 +890,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-profitable",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "mom-fin", period: "2Q26", updated: "2026-08-17",
     n: 26, icon: "💵",
     label: "Momentive — is it profitable now?",
     labelKr: "모멘티브 — 지금 흑자인가? 언제 순이익 기여?",
@@ -910,7 +922,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-behind-plan",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "mom-fin", period: "2Q26", updated: "2026-08-17",
     n: 27, icon: "📉",
     label: "Momentive — why behind plan? full-year picture?",
     labelKr: "모멘티브 — 계획 미달 이유·연간 전망",
@@ -942,7 +954,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-cash-drain",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "mom-fin", period: "2Q26", updated: "2026-08-17",
     n: 28, icon: "🏦",
     label: "Momentive — cash drain? when self-funding?",
     labelKr: "모멘티브 — 자금 블랙홀? 자립 시점?",
@@ -974,7 +986,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-china-share",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "market", period: "2Q26", updated: "2026-08-17",
     n: 29, icon: "🇨🇳",
     label: "Losing share to Chinese producers?",
     labelKr: "중국 업체에 점유율 상실? 어떻게 경쟁?",
@@ -1006,7 +1018,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-biggest-risk",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "ops", period: "2Q26", updated: "2026-08-17",
     n: 30, icon: "⚠️",
     label: "Momentive — biggest risk today? (quality, delivery)",
     labelKr: "모멘티브 — 최대 리스크 (품질·납기)",
@@ -1039,7 +1051,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-capex-footprint",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "ops", period: "2Q26", updated: "2026-08-17",
     n: 31, icon: "🏭",
     label: "Momentive — capex, five-year plan, plant closures?",
     labelKr: "모멘티브 — 설비투자·5개년 계획·사업장 정리?",
@@ -1071,7 +1083,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-macro-tariffs",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "market", period: "2Q26", updated: "2026-08-17",
     n: 32, icon: "🌪️",
     label: "Momentive — Middle East, tariffs, inflation impact",
     labelKr: "모멘티브 — 중동·관세·인플레 영향",
@@ -1103,7 +1115,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "mom-korea-fit",
-    cat: "silicone", period: "2Q26", updated: "2026-08-17",
+    cat: "silicone", sub: "ops", period: "2Q26", updated: "2026-08-17",
     n: 33, icon: "🤝",
     label: "Korean silicone + Momentive — synergy, integration",
     labelKr: "국내 실리콘과 모멘티브 — 시너지·통합 현황",
@@ -1137,7 +1149,7 @@ window.KCC_ANSWERS.push(
   // ---------------- 공통 · 재무 · 회계 ----------------
   {
     id: "glass-fiber-restated",
-    cat: "group", period: "2Q26", updated: "2026-08-17",
+    cat: "group", sub: "outlook", period: "2Q26", updated: "2026-08-17",
     n: 34, icon: "📑",
     label: "Why did prior-quarter numbers change? (glass fiber)",
     labelKr: "전분기 수치가 왜 바뀌었나 — 유리장섬유 재분류",
@@ -1169,7 +1181,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "guidance-h2",
-    cat: "group", period: "2Q26", updated: "2026-08-17",
+    cat: "group", sub: "outlook", period: "2Q26", updated: "2026-08-17",
     n: 35, icon: "🧭",
     label: "Guidance? (we don’t give numbers)",
     labelKr: "가이던스 요청 — 수치 가이던스 없음",
@@ -1199,7 +1211,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "valuation-accounting",
-    cat: "group", period: "2Q26", updated: "2026-08-17",
+    cat: "group", sub: "fx-ni", period: "2Q26", updated: "2026-08-17",
     n: 36, icon: "🧾",
     label: "Valuation gains distort P&L — change the accounting?",
     labelKr: "평가손익이 손익 왜곡 — 회계처리 변경?",

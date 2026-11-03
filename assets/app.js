@@ -48,8 +48,11 @@
     pos: store.get("pos", {}),      // scriptId -> flat paragraph index
     answerId: null,
     aCat: store.get("aCat", "all"),
+    aSub: store.get("aSub", "all"),
     aPeriod: store.get("aPeriod", "all"),
     aQuery: "",
+    stars: store.get("stars", []),
+    speakMode: store.get("speakMode", "flow"),
     sQuarter: store.get("sQuarter", null),
     phraseTab: store.get("phraseTab", "phrases"),
     phraseCat: store.get("phraseCat", PHRASES.categories[0] && PHRASES.categories[0].id),
@@ -151,6 +154,14 @@
     const flat = flatParas(sc);
     const i = Math.min(flat.length - 1, Math.max(0, (state.pos[sc.id] || 0) + d));
     state.pos[sc.id] = i; store.set("pos", state.pos);
+    if (state.speakMode === "flow") {
+      // update highlight in place, no full re-render (keeps scroll position)
+      document.querySelectorAll(".flow-p.cur").forEach(el => el.classList.remove("cur"));
+      const el = document.getElementById("fp-" + i);
+      if (el) { el.classList.add("cur"); el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+      history.replaceState(null, "", "#" + ["speak", sc.id, String(i)].map(encodeURIComponent).join("/"));
+      return;
+    }
     go("speak", sc.id, String(i));
   }
   function fmtTime(ms) { const s = Math.floor(ms / 1000); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
@@ -189,10 +200,42 @@
     const picker = h("div", { class: "picker" });
     for (const s of SCRIPTS.filter(x => (x.quarter || "Evergreen") === state.sQuarter)) {
       picker.append(h("button", { class: s.id === sc.id ? "on" : "", onclick: () => go("speak", s.id, String(state.pos[s.id] || 0)) },
-        h("span", { class: "t" }, s.kind ? h("span", { class: "b" }, s.kind) : null, s.title),
+        h("span", { class: "t" }, s.kind ? h("span", { class: "b k-" + s.kind.toLowerCase() }, s.kind) : null, s.title),
         h("span", { class: "s" }, `${s.duration} · ${s.titleKr}${s.badge ? " · " + s.badge : ""}`)));
     }
     main.append(picker);
+
+    const modeBar = h("div", { class: "modebar" },
+      h("button", { class: "tool" + (state.speakMode === "flow" ? " on" : ""), onclick: () => { state.speakMode = "flow"; store.set("speakMode", "flow"); render(); } }, "📜 Full script"),
+      h("button", { class: "tool" + (state.speakMode === "prompter" ? " on" : ""), onclick: () => { state.speakMode = "prompter"; store.set("speakMode", "prompter"); render(); } }, "🎬 Prompter"),
+      h("span", { class: "kr modehint" }, state.speakMode === "flow" ? "전체를 스크롤하며 읽기. 문단을 클릭하면 현재 위치로 표시, ←→로 이동." : "한 화면에 한 문단. ←→ / 스와이프 / 탭으로 넘김."),
+      h("button", { class: "tool", onclick: () => { state.kr.speak = !state.kr.speak; applyKr(); } }, "한글 (K)"),
+      h("button", { class: "tool", onclick: toggleTimer, title: "T key" }, "▶/❚❚"),
+      h("button", { class: "tool", onclick: resetTimer }, "00:00"),
+      h("span", { class: "timer", id: "timer" }, fmtTime(timerElapsed())));
+    main.append(modeBar);
+
+    if (state.speakMode === "flow") {
+      const card = h("div", { class: "card flow" });
+      if (sc.note) card.append(h("div", { class: "flow-note kr" }, "📝 " + sc.note));
+      let idx = 0;
+      sc.sections.forEach((s, si) => {
+        card.append(h("div", { class: "flow-sec" }, h("span", { class: "n" }, `${si + 1}. ${s.title}`), h("span", { class: "tm" }, "⏱ " + s.time)));
+        if (s.chips && s.chips.length) card.append(h("div", { class: "flow-chips chips" }, s.chips.map(c => h("span", { class: "chip" }, c))));
+        s.paras.forEach(p => {
+          const k = idx++;
+          const el = h("div", { class: "flow-p" + (k === i ? " cur" : ""), id: "fp-" + k, onclick: () => { state.pos[sc.id] = k; store.set("pos", state.pos); go("speak", sc.id, String(k)); } },
+            h("p", { class: "fp-en", html: p.en }),
+            p.kr ? h("p", { class: "fp-kr kr" }, p.kr) : null,
+            p.pause ? h("div", { class: "pr-pause" }, "··· pause") : null);
+          card.append(el);
+        });
+      });
+      main.append(card);
+      setTimeout(() => { const cur = document.getElementById("fp-" + i); if (cur && i > 0) cur.scrollIntoView({ block: "center", behavior: "smooth" }); }, 30);
+      paintTimer();
+      return;
+    }
 
     const card = h("div", { class: "card prompter" });
     card.append(h("div", { class: "progress" }, h("i", { style: `width:${((i + 1) / flat.length) * 100}%` })));
@@ -207,7 +250,6 @@
       h("p", { class: "pr-en", html: cur.p.en }),
       cur.p.kr ? h("p", { class: "pr-kr kr" }, cur.p.kr) : null,
       cur.p.pause ? h("div", { class: "pr-pause" }, "··· pause") : null);
-    // tap zones: left third = back, right two-thirds = next; swipe
     let tx = 0, ty = 0;
     body.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
     body.addEventListener("touchend", e => {
@@ -219,16 +261,11 @@
       const rect = body.getBoundingClientRect(); step((e.clientX - rect.left) < rect.width / 3 ? -1 : 1);
     });
     card.append(body);
-
     const nav = h("div", { class: "pr-nav" },
       h("button", { class: "big ghost", disabled: i === 0, onclick: () => step(-1) }, "← Prev"),
       h("div", { class: "pr-tools" },
         h("button", { class: "tool" + (state.outline ? " on" : ""), onclick: () => { state.outline = !state.outline; render(); } }, "☰ Outline"),
-        h("button", { class: "tool", onclick: () => { state.kr.speak = !state.kr.speak; applyKr(); } }, "한글 (K)"),
-        h("button", { class: "tool", onclick: () => { state.pos[sc.id] = 0; store.set("pos", state.pos); resetTimer(); go("speak", sc.id, "0"); } }, "⟲ Start"),
-        h("button", { class: "tool", onclick: toggleTimer, title: "T key" }, "▶/❚❚"),
-        h("button", { class: "tool", onclick: resetTimer }, "00:00"),
-        h("span", { class: "timer", id: "timer" }, fmtTime(timerElapsed()))),
+        h("button", { class: "tool", onclick: () => { state.pos[sc.id] = 0; store.set("pos", state.pos); resetTimer(); go("speak", sc.id, "0"); } }, "⟲ Start")),
       h("button", { class: "big", disabled: i === flat.length - 1, onclick: () => step(1) }, "Next →"));
     card.append(nav);
     if (state.outline) {
@@ -251,17 +288,75 @@
   // =====================================================================
   const CATS = window.KCC_ANSWER_CATS || [];
   const catOf = id => CATS.find(c => c.id === id) || { id, label: id, labelKr: "" };
-  function answerText(a) {
-    return [a.label, a.labelKr, (a.tags || []).join(" "), a.core, (a.fixed || []).join(" "), (a.support || []).join(" "),
-      (a.kr || []).join(" "), (a.terms || []).map(t => t.kr + " " + t.en).join(" "), (a.numbers || []).map(n => n.v + " " + n.l).join(" "),
-      catOf(a.cat).label, catOf(a.cat).labelKr, a.period || ""].join(" \n ").toLowerCase();
+  // 한글 ↔ 영문 별칭: 어느 쪽으로 쳐도 같은 카드가 나오게
+  const ALIASES = {
+    "물산": "samsung c&t", "삼성물산": "samsung c&t", "삼물": "samsung c&t", "모멘티브": "momentive", "mpm": "momentive",
+    "자사주": "treasury", "소각": "cancellation / cancel", "유동화": "monetisation / sell down / sell-down", "매각": "sale / disposal",
+    "교환사채": "exchangeable / eb", "eb": "exchangeable", "환율": "fx / won", "원화": "won", "순차입": "net debt", "순차입금": "net debt",
+    "차입": "debt", "부채비율": "debt-to-equity", "신용등급": "rating", "등급": "rating", "밸류업": "value-up", "배당": "dividend",
+    "특별배당": "special dividend", "주주환원": "shareholder return / returns", "실리콘": "silicone", "도료": "paint / coatings",
+    "건자재": "building materials", "석고": "gypsum", "석고보드": "gypsum", "단열재": "insulation", "창호": "windows", "선박": "marine",
+    "자동차": "auto / automotive", "원재료": "raw material", "판가": "price", "가격": "price", "인상": "price increase", "마진": "margin",
+    "가이던스": "guidance", "전망": "outlook / guidance", "중국": "china / chinese", "관세": "tariff", "유가": "oil", "투자": "capex",
+    "설비투자": "capex", "행동주의": "activist", "트러스톤": "truston", "주총": "agm", "승계": "succession", "기판": "substrate",
+    "데이터센터": "data centre", "열관리": "thermal", "타이어": "tire", "품질": "quality", "납기": "delivery", "자립": "self-funding",
+    "순이익": "net profit", "평가손익": "valuation", "평가이익": "valuation gain", "시가평가": "mark-to-market", "ipo": "ipo",
+    "인적분할": "spin-off", "출자": "injection", "리스크": "risk", "환원": "returns", "목표": "target", "pbr": "pbr", "roe": "roe"
+  };
+  function answerFields(a) {
+    const c = catOf(a.cat);
+    const sc = c.subs && c.subs.find(x => x.id === a.sub);
+    return [
+      { w: 4, t: [a.label, a.labelKr].join(" ") },
+      { w: 3, t: [(a.tags || []).join(" "), c.label, c.labelKr, sc ? sc.labelKr + " " + sc.label : "", a.period || ""].join(" ") },
+      { w: 2, t: [a.core, (a.fixed || []).join(" "), (a.terms || []).map(t => t.kr + " " + t.en).join(" ")].join(" ") },
+      { w: 1, t: [(a.support || []).join(" "), (a.kr || []).join(" "), (a.numbers || []).map(n => n.v + " " + n.l).join(" ")].join(" ") }
+    ].map(f => { const t = f.t.toLowerCase(); return { w: f.w, t, ns: t.replace(/\s+/g, "") }; });
+  }
+  // 검색어 → 후보 구(phrase) 목록. 별칭은 정확히 일치할 때만, 구 단위로 추가 (쪼개지 않음)
+  function expandQuery(q) {
+    const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return words.map(w => { const alts = [w]; if (ALIASES[w]) alts.push(...ALIASES[w].split(" / ")); return alts; });
+  }
+  function scoreAnswer(a, groups) {
+    if (!groups.length) return 1;
+    const fields = answerFields(a);
+    let total = 0;
+    for (const alts of groups) {
+      let best = 0;
+      for (const f of fields) for (const ph of alts) {
+        const p = ph.replace(/\s+/g, "");
+        if (f.t.includes(ph) || (p.length >= 2 && f.ns.includes(p))) { best = Math.max(best, f.w + (f.w === 4 && f.t.startsWith(ph) ? 1 : 0)); }
+      }
+      if (!best) return 0;          // AND: every word must hit somewhere
+      total += best;
+    }
+    return total;
   }
   function filteredAnswers() {
-    const q = state.aQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const groups = expandQuery(state.aQuery);
+    const searching = groups.length > 0;
     const order = id => { const i = CATS.findIndex(c => c.id === id); return i < 0 ? 99 : i; };
-    return ANSWERS.filter(a => (state.aCat === "all" || a.cat === state.aCat) && (state.aPeriod === "all" || a.period === state.aPeriod))
-      .filter(a => !q.length || (t => q.every(w => t.includes(w)))(answerText(a)))
-      .sort((a, b) => order(a.cat) - order(b.cat) || (b.period || "").localeCompare(a.period || "") || a.n - b.n);
+    const base = ANSWERS.filter(a => searching ? true :
+        (state.aCat === "stars" ? state.stars.includes(a.id) :
+          (state.aCat === "all" || a.cat === state.aCat) && (state.aSub === "all" || state.aCat === "all" || a.sub === state.aSub)) &&
+        (state.aPeriod === "all" || a.period === state.aPeriod));
+    if (!searching) return base.sort((a, b) => order(a.cat) - order(b.cat) || (b.period || "").localeCompare(a.period || "") || a.n - b.n);
+    return base.map(a => ({ a, s: scoreAnswer(a, groups) })).filter(x => x.s > 0)
+      .sort((x, y) => y.s - x.s || order(x.a.cat) - order(y.a.cat) || x.a.n - y.a.n).map(x => x.a);
+  }
+  function toggleStar(id) {
+    const i = state.stars.indexOf(id);
+    if (i < 0) state.stars.push(id); else state.stars.splice(i, 1);
+    store.set("stars", state.stars);
+  }
+  function highlight(text, groups) {
+    if (!groups.length) return document.createTextNode(text);
+    const words = groups.flat().filter(w => w.length >= 2).sort((a, b) => b.length - a.length);
+    const re = new RegExp("(" + words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "ig");
+    const frag = document.createDocumentFragment();
+    String(text).split(re).forEach((part, i) => { if (!part) return; frag.append(i % 2 ? h("mark", null, part) : part); });
+    return frag;
   }
   function stepAnswer(d) {
     const list = filteredAnswers().length ? filteredAnswers() : ANSWERS;
@@ -285,14 +380,24 @@
     side.append(h("div", { class: "asearch" }, h("span", { class: "mag" }, "🔍"), input,
       h("button", { class: "clr", title: "clear", onclick: () => { input.value = ""; state.aQuery = ""; paintList(); input.focus(); } }, "✕")));
 
-    // category chips
+    // category chips (+ ★ Today, + sub-chips when the category has them)
     const periods = []; for (const p of ANSWERS.map(a => a.period).filter(Boolean)) if (!periods.includes(p)) periods.push(p);
     periods.sort().reverse();
     const chipRow = h("div", { class: "chips catrow" });
-    const mkCat = (id, label, sub) => h("button", { class: "chip" + (state.aCat === id ? " sel" : ""), onclick: () => { state.aCat = id; store.set("aCat", id); render(); } }, label, sub ? h("span", { class: "sub" }, sub) : null);
+    const setCat = id => { state.aCat = id; state.aSub = "all"; store.set("aCat", id); store.set("aSub", "all"); render(); };
+    const mkCat = (id, label, sub) => h("button", { class: "chip" + (state.aCat === id ? " sel" : ""), onclick: () => setCat(id) }, label, sub ? h("span", { class: "sub" }, sub) : null);
     chipRow.append(mkCat("all", "All", "전체"));
+    chipRow.append(h("button", { class: "chip star" + (state.aCat === "stars" ? " sel" : ""), onclick: () => setCat("stars") }, "★ Today", h("span", { class: "sub" }, String(state.stars.length))));
     for (const c of CATS) chipRow.append(mkCat(c.id, c.labelKr, c.label));
     side.append(chipRow);
+    const curCat = CATS.find(c => c.id === state.aCat);
+    if (curCat && curCat.subs && curCat.subs.length) {
+      const srow = h("div", { class: "chips catrow subs" });
+      const mkSub = (id, label, sub) => h("button", { class: "chip" + (state.aSub === id ? " sel" : ""), onclick: () => { state.aSub = id; store.set("aSub", id); render(); } }, label, sub ? h("span", { class: "sub" }, sub) : null);
+      srow.append(mkSub("all", "All " + curCat.labelKr));
+      for (const sc of curCat.subs) srow.append(mkSub(sc.id, sc.labelKr, sc.label));
+      side.append(srow);
+    }
     if (periods.length > 1) {
       const prow = h("div", { class: "chips catrow periods" });
       const mkP = (id, label) => h("button", { class: "chip" + (state.aPeriod === id ? " sel" : ""), onclick: () => { state.aPeriod = id; store.set("aPeriod", id); render(); } }, label);
@@ -301,27 +406,40 @@
       side.append(prow);
     }
 
+    const note = h("div", { class: "anote kr hidden" });
+    side.append(note);
     const listEl = h("div", { class: "alist card" });
     const cntEl = h("span", { id: "aCount" });
     side.append(listEl);
     function paintList() {
       listEl.innerHTML = "";
+      const groups = expandQuery(state.aQuery);
+      const searching = groups.length > 0;
+      note.classList.toggle("hidden", !searching);
+      note.textContent = "🔎 검색 중에는 카테고리·시기 필터를 무시하고 전체 " + ANSWERS.length + "개에서 찾습니다.";
+      side.classList.toggle("searching", searching);
       const list = filteredAnswers();
-      if (!list.length) { cntEl.textContent = `0 / ${ANSWERS.length}`; listEl.append(h("div", { class: "aempty" }, "No match. ", h("span", { class: "kr" }, "다른 단어로 검색하거나 카테고리를 All로."))); return; }
+      if (!list.length) { cntEl.textContent = `0 / ${ANSWERS.length}`; listEl.append(h("div", { class: "aempty" }, "No match. ", h("span", { class: "kr" }, state.aCat === "stars" ? "행의 ★을 눌러 오늘 쓸 카드를 담아두세요." : "다른 단어로 검색해 보세요 (한글·영문 모두 가능)."))); return; }
       let lastCat = null;
+      const grouped = !searching && state.aCat === "all";
       for (const a of list) {
-        if (state.aCat === "all" && a.cat !== lastCat) {
+        if (grouped && a.cat !== lastCat) {
           lastCat = a.cat; const c = catOf(a.cat);
           listEl.append(h("div", { class: "ahead" }, c.labelKr, h("span", null, c.label)));
         }
+        const starred = state.stars.includes(a.id);
+        const subLabel = (curCat && curCat.subs && state.aSub === "all" && a.sub) ? (curCat.subs.find(x => x.id === a.sub) || {}).labelKr : null;
         listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : ""), onclick: () => go("answer", a.id) },
-          h("span", { class: "no" }, String(a.n).padStart(2, "0")),
-          h("span", { class: "txt" }, h("span", { class: "l" }, a.label), h("span", { class: "lk kr" }, a.labelKr)),
-          h("span", { class: "meta" }, a.period ? h("span", { class: "per" }, a.period) : null, h("span", { class: "arr" }, "›"))));
+          h("span", { class: "txt" }, h("span", { class: "l" }, highlight(a.label, groups)), h("span", { class: "lk kr" }, highlight(a.labelKr, groups))),
+          h("span", { class: "meta" },
+            (!grouped && (searching || state.aCat === "stars")) ? h("span", { class: "per cat" }, catOf(a.cat).labelKr) : null,
+            subLabel ? h("span", { class: "per cat" }, subLabel) : null,
+            a.period ? h("span", { class: "per" }, a.period) : null,
+            h("span", { class: "starbtn" + (starred ? " on" : ""), title: "Today 목록에 담기", onclick: e => { e.stopPropagation(); toggleStar(a.id); paintList(); const sc = $(".chip.star .sub"); if (sc) sc.textContent = String(state.stars.length); } }, starred ? "★" : "☆"))));
       }
       cntEl.textContent = `${list.length} / ${ANSWERS.length}`;
     }
-    side.append(h("div", { class: "acount kr" }, cntEl, " · 카테고리 → 최신 분기 → 번호 순"));
+    side.append(h("div", { class: "acount kr" }, cntEl, " · 카테고리 → 최신 분기 → 번호 순 · ☆ = 오늘 쓸 카드 담기"));
     paintList();
     wrap.append(side);
 
@@ -339,9 +457,10 @@
     d.append(h("div", { class: "ad-head" },
       h("button", { class: "tool", onclick: () => go("answer"), title: "Esc" }, "← All"),
       h("span", { class: "ic" }, a.icon || ""),
-      h("div", null, h("div", { class: "t" }, `${String(a.n).padStart(2, "0")} · ${a.label}`),
-        h("div", { class: "tk" }, h("span", { class: "per" }, catOf(a.cat).labelKr), a.period ? h("span", { class: "per" }, a.period) : null, a.updated ? h("span", { class: "upd" }, "updated " + a.updated) : null, " ", h("span", { class: "kr" }, a.labelKr))),
+      h("div", null, h("div", { class: "t" }, a.label, h("span", { class: "cardno" }, "#" + a.n)),
+        h("div", { class: "tk" }, h("span", { class: "per" }, catOf(a.cat).labelKr), (() => { const c = catOf(a.cat); const sc = c.subs && c.subs.find(x => x.id === a.sub); return sc ? h("span", { class: "per" }, sc.labelKr) : null; })(), a.period ? h("span", { class: "per" }, a.period) : null, a.updated ? h("span", { class: "upd" }, "updated " + a.updated) : null, " ", h("span", { class: "kr" }, a.labelKr))),
       h("div", { class: "sp" },
+        h("button", { class: "tool" + (state.stars.includes(a.id) ? " on" : ""), onclick: () => { toggleStar(a.id); render(); } }, state.stars.includes(a.id) ? "★ Today" : "☆ Today"),
         h("button", { class: "tool" + (state.interp ? " on" : ""), onclick: () => { state.interp = !state.interp; store.set("interp", state.interp); render(); } },
           state.interp ? "🎧 With interpreter" : "🗣 Direct English"))));
     if (a.fixed && a.fixed.length) {
