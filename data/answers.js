@@ -1,14 +1,28 @@
 // ============================================================
-// ANSWER 뱅크 — 질문 유형별 카드
+// ANSWER 뱅크 — 질문 유형별 카드 (누적형)
 // 원칙: 대외 발언 가능한 문장만. 내부 수치·MBR·개별 기관 대화 내용 없음.
-// 구조: fixed(미팅마다 흔들리지 않게 못 박는 문장) → core(한 문장, 가장 크게)
+// 구조: cat(카테고리) · period(시기 태그, 예 "3Q26") · updated(최종 수정일)
+//       → fixed(미팅마다 흔들리지 않게 못 박는 문장) → core(한 문장, 가장 크게)
 //       → support(근거 2~4문장) → numbers(숫자 3개) → kr(통역용 국문 2문장 이내)
 //       → terms(통역 오류가 났던 용어) → hold(여기까지만 — 발언 경계선)
-// 분기 교체 시: numbers / support의 분기 수치만 바꾸면 됨
+// 새 분기: 기존 카드를 지우지 말고 period/updated만 바꿔 갱신하거나, 새 질문은 카드를 추가.
+//          같은 주제라도 스탠스가 달라졌으면 새 카드(period 새 분기)로 두면 이력이 남음.
+// 검색: label · labelKr · tags · core · support · kr · terms 전부 검색 대상.
 // ============================================================
+window.KCC_ANSWER_CATS = [
+  { id: "group",    label: "Group",            labelKr: "공통" },
+  { id: "bm",       label: "Building Mat.",    labelKr: "건자재" },
+  { id: "paint",    label: "Paint",            labelKr: "도료" },
+  { id: "silicone", label: "Silicone",         labelKr: "실리콘" },
+  { id: "returns",  label: "Dividend & Returns", labelKr: "배당·주주환원" },
+  { id: "asset",    label: "Asset Monetisation", labelKr: "자산활용" },
+  { id: "capex",    label: "CAPEX & Balance Sheet", labelKr: "CAPEX·재무" },
+  { id: "gov",      label: "Governance & IR",  labelKr: "거버넌스·IR" }
+];
 window.KCC_ANSWERS = [
   {
     id: "cnt-when-how",
+    cat: "asset", period: "3Q26", updated: "2026-10-26",
     n: 1, icon: "🏢",
     label: "Samsung C&T — when / how",
     labelKr: "삼성물산 유동화 — 시점·방식",
@@ -43,6 +57,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "special-dividend",
+    cat: "returns", period: "3Q26", updated: "2026-10-26",
     n: 2, icon: "💰",
     label: "Special dividend — ≥50%? lag? quarterly?",
     labelKr: "특별배당 — 비율·시차·분기배당",
@@ -78,6 +93,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "special-proposal-or-firm",
+    cat: "returns", period: "3Q26", updated: "2026-10-26",
     n: 3, icon: "📜",
     label: "Special dividend — proposal or commitment?",
     labelKr: "특별배당 — ‘제안’인가 ‘확정’인가",
@@ -111,6 +127,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "silicone-margin",
+    cat: "silicone", period: "3Q26", updated: "2026-10-26",
     n: 4, icon: "🧪",
     label: "Silicone margin — normalisation",
     labelKr: "실리콘 마진 — 정상화 시점",
@@ -146,6 +163,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "price-increase",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 5, icon: "🏷️",
     label: "Price increases — Q4?",
     labelKr: "4분기 추가 가격 인상 여부",
@@ -179,6 +197,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "raw-materials",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 6, icon: "🛢️",
     label: "Raw materials — lag, how long",
     labelKr: "원재료 — 시차, 얼마나 가나",
@@ -213,6 +232,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "net-debt-fcf-capex",
+    cat: "capex", period: "3Q26", updated: "2026-10-26",
     n: 7, icon: "🏦",
     label: "Net debt / FCF / CAPEX",
     labelKr: "순차입금 · 현금흐름 · 투자",
@@ -246,6 +266,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "net-debt-ebitda",
+    cat: "capex", period: "3Q26", updated: "2026-10-26",
     n: 8, icon: "📐",
     label: "Net debt / EBITDA vs peers",
     labelKr: "순차입금/EBITDA 배수 — 피어 대비",
@@ -278,6 +299,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "momentive",
+    cat: "silicone", period: "3Q26", updated: "2026-10-26",
     n: 9, icon: "🌐",
     label: "Momentive — injection? IPO? spin-off?",
     labelKr: "모멘티브 — 추가 출자·IPO·인적분할",
@@ -313,6 +335,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "building-materials",
+    cat: "bm", period: "3Q26", updated: "2026-10-26",
     n: 10, icon: "🏗️",
     label: "Building materials — recovery timing",
     labelKr: "건자재 — 회복 시점",
@@ -347,6 +370,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "paint-margins",
+    cat: "paint", period: "3Q26", updated: "2026-10-26",
     n: 11, icon: "🎨",
     label: "Paint — marine / auto margins",
     labelKr: "도료 — 선박·자동차 마진",
@@ -381,6 +405,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "fx",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 12, icon: "💱",
     label: "FX — KRW strength",
     labelKr: "환율 — 원화 강세 영향",
@@ -413,6 +438,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "net-profit-swing",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 13, icon: "📉",
     label: "Net profit — valuation swing",
     labelKr: "순이익 — 평가손익 변동",
@@ -445,6 +471,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "treasury-shares",
+    cat: "returns", period: "3Q26", updated: "2026-10-26",
     n: 14, icon: "📄",
     label: "Treasury shares — schedule, employee 4%",
     labelKr: "자사주 — 소각 일정·임직원 4%",
@@ -478,6 +505,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "value-up-targets",
+    cat: "returns", period: "3Q26", updated: "2026-08-21",
     n: 15, icon: "🎯",
     label: "Value-up targets — PBR / ROE",
     labelKr: "밸류업 목표 — PBR·ROE 2028/2030",
@@ -512,6 +540,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "governance-activists",
+    cat: "gov", period: "3Q26", updated: "2026-10-26",
     n: 16, icon: "🤝",
     label: "Governance — activists",
     labelKr: "거버넌스 — 행동주의·주주 소통",
@@ -547,6 +576,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "ir-engagement",
+    cat: "gov", period: "3Q26", updated: "2026-10-26",
     n: 17, icon: "✈️",
     label: "IR engagement — NDR, coverage, site tour",
     labelKr: "IR 활동 — NDR·커버리지·공장 방문",
@@ -579,6 +609,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "risk-upside",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 18, icon: "⚖️",
     label: "Segment risk vs upside",
     labelKr: "부문별 리스크 vs 업사이드 (한 문장씩)",
@@ -611,6 +642,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "cost-actions",
+    cat: "group", period: "3Q26", updated: "2026-10-26",
     n: 19, icon: "🛠️",
     label: "Cost actions in our control",
     labelKr: "회사가 통제 가능한 원가 조치",

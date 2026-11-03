@@ -42,11 +42,15 @@
     scale: store.get("scale", 1),
     theme: store.get("theme", null),
     // Korean gist visibility per view (SPEAK hidden by default — brief §2)
-    kr: store.get("kr", { speak: false, answer: true, phrases: true, facts: true }),
+    kr: store.get("kr", { speak: false, answer: true, phrases: false, facts: true }),
     interp: store.get("interp", !!CFG.interpreterDefault),
     scriptId: store.get("scriptId", SCRIPTS[0] && SCRIPTS[0].id),
     pos: store.get("pos", {}),      // scriptId -> flat paragraph index
     answerId: null,
+    aCat: store.get("aCat", "all"),
+    aPeriod: store.get("aPeriod", "all"),
+    aQuery: "",
+    sQuarter: store.get("sQuarter", null),
     phraseTab: store.get("phraseTab", "phrases"),
     phraseCat: store.get("phraseCat", PHRASES.categories[0] && PHRASES.categories[0].id),
     outline: false,
@@ -109,7 +113,9 @@
         else if (e.key === "Escape") { state.outline = !state.outline; render(); }
         else if (e.key.toLowerCase() === "k") { state.kr.speak = !state.kr.speak; applyKr(); }
         else if (e.key.toLowerCase() === "t") toggleTimer();
-      } else if (state.view === "answer" && state.answerId) {
+      } else if (state.view === "answer") {
+        if (e.key === "/") { e.preventDefault(); const q = $("#aSearch"); if (q) { q.focus(); q.select(); } return; }
+        if (!state.answerId) return;
         if (e.key === "ArrowRight") stepAnswer(1);
         else if (e.key === "ArrowLeft") stepAnswer(-1);
         else if (e.key === "Escape") go("answer");
@@ -168,12 +174,23 @@
     state.pos[sc.id] = i; store.set("pos", state.pos);
     const cur = flat[i];
 
-    // picker
+    // picker — quarter tabs, then scripts of that quarter
+    const quarters = [];
+    for (const q of SCRIPTS.map(x => x.quarter || "Evergreen")) if (!quarters.includes(q)) quarters.push(q);
+    const qkey = q => { const m = /^(\d)Q (\d{4})$/.exec(q); return m ? m[2] + m[1] : "0"; };
+    quarters.sort((a, b) => qkey(b).localeCompare(qkey(a)));
+    if (!state.sQuarter || !quarters.includes(state.sQuarter) || (r.a && sc.quarter !== state.sQuarter)) state.sQuarter = sc.quarter || "Evergreen";
+    store.set("sQuarter", state.sQuarter);
+    const qrow = h("div", { class: "chips catrow" }, quarters.map(q => h("button", {
+      class: "chip" + (q === state.sQuarter ? " sel" : ""),
+      onclick: () => { state.sQuarter = q; store.set("sQuarter", q); const first = SCRIPTS.find(x => (x.quarter || "Evergreen") === q); go("speak", first.id, String(state.pos[first.id] || 0)); }
+    }, q === "Evergreen" ? "상시 · Evergreen" : q)));
+    main.append(qrow);
     const picker = h("div", { class: "picker" });
-    for (const s of SCRIPTS) {
+    for (const s of SCRIPTS.filter(x => (x.quarter || "Evergreen") === state.sQuarter)) {
       picker.append(h("button", { class: s.id === sc.id ? "on" : "", onclick: () => go("speak", s.id, String(state.pos[s.id] || 0)) },
-        h("span", { class: "t" }, s.title, s.badge ? h("span", { class: "b" }, s.badge) : null),
-        h("span", { class: "s" }, `${s.duration} · ${s.titleKr}`)));
+        h("span", { class: "t" }, s.kind ? h("span", { class: "b" }, s.kind) : null, s.title),
+        h("span", { class: "s" }, `${s.duration} · ${s.titleKr}${s.badge ? " · " + s.badge : ""}`)));
     }
     main.append(picker);
 
@@ -232,29 +249,88 @@
   // =====================================================================
   // ANSWER — question buttons → one card
   // =====================================================================
+  const CATS = window.KCC_ANSWER_CATS || [];
+  const catOf = id => CATS.find(c => c.id === id) || { id, label: id, labelKr: "" };
+  function answerText(a) {
+    return [a.label, a.labelKr, (a.tags || []).join(" "), a.core, (a.fixed || []).join(" "), (a.support || []).join(" "),
+      (a.kr || []).join(" "), (a.terms || []).map(t => t.kr + " " + t.en).join(" "), (a.numbers || []).map(n => n.v + " " + n.l).join(" "),
+      catOf(a.cat).label, catOf(a.cat).labelKr, a.period || ""].join(" \n ").toLowerCase();
+  }
+  function filteredAnswers() {
+    const q = state.aQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const order = id => { const i = CATS.findIndex(c => c.id === id); return i < 0 ? 99 : i; };
+    return ANSWERS.filter(a => (state.aCat === "all" || a.cat === state.aCat) && (state.aPeriod === "all" || a.period === state.aPeriod))
+      .filter(a => !q.length || (t => q.every(w => t.includes(w)))(answerText(a)))
+      .sort((a, b) => order(a.cat) - order(b.cat) || (b.period || "").localeCompare(a.period || "") || a.n - b.n);
+  }
   function stepAnswer(d) {
-    const i = ANSWERS.findIndex(a => a.id === state.answerId);
-    const n = (i + d + ANSWERS.length) % ANSWERS.length;
-    go("answer", ANSWERS[n].id);
+    const list = filteredAnswers().length ? filteredAnswers() : ANSWERS;
+    let i = list.findIndex(a => a.id === state.answerId); if (i < 0) i = 0;
+    const n = (i + d + list.length) % list.length;
+    go("answer", list[n].id);
   }
   function renderAnswer(main, r) {
     state.answerId = r.a && ANSWERS.some(a => a.id === r.a) ? r.a : null;
     const wrap = h("div", { class: "ans-wrap" + (state.answerId ? " has-detail" : "") });
-    const grid = h("div", { class: "agrid" });
-    for (const a of ANSWERS) {
-      grid.append(h("button", { class: "abtn" + (a.id === state.answerId ? " on" : ""), onclick: () => go("answer", a.id) },
-        h("span", { class: "no" }, String(a.n).padStart(2, "0")),
-        h("span", { class: "ic" }, a.icon || "•"),
-        h("span", { class: "l" }, a.label),
-        h("span", { class: "lk" }, a.labelKr)));
+    const side = h("div", { class: "alist-wrap" });
+
+    // search
+    const input = h("input", { id: "aSearch", type: "search", placeholder: "검색: 질문·키워드·숫자 (예: 특별배당, Wacker, 2028, EB)   /", value: state.aQuery, autocomplete: "off" });
+    let deb = null;
+    input.addEventListener("input", () => { state.aQuery = input.value; clearTimeout(deb); deb = setTimeout(paintList, 80); });
+    input.addEventListener("keydown", e => {
+      if (e.key === "Escape") { input.value = ""; state.aQuery = ""; paintList(); input.blur(); }
+      if (e.key === "Enter") { const f = filteredAnswers(); if (f.length) go("answer", f[0].id); }
+    });
+    side.append(h("div", { class: "asearch" }, h("span", { class: "mag" }, "🔍"), input,
+      h("button", { class: "clr", title: "clear", onclick: () => { input.value = ""; state.aQuery = ""; paintList(); input.focus(); } }, "✕")));
+
+    // category chips
+    const periods = []; for (const p of ANSWERS.map(a => a.period).filter(Boolean)) if (!periods.includes(p)) periods.push(p);
+    periods.sort().reverse();
+    const chipRow = h("div", { class: "chips catrow" });
+    const mkCat = (id, label, sub) => h("button", { class: "chip" + (state.aCat === id ? " sel" : ""), onclick: () => { state.aCat = id; store.set("aCat", id); render(); } }, label, sub ? h("span", { class: "sub" }, sub) : null);
+    chipRow.append(mkCat("all", "All", "전체"));
+    for (const c of CATS) chipRow.append(mkCat(c.id, c.labelKr, c.label));
+    side.append(chipRow);
+    if (periods.length > 1) {
+      const prow = h("div", { class: "chips catrow periods" });
+      const mkP = (id, label) => h("button", { class: "chip" + (state.aPeriod === id ? " sel" : ""), onclick: () => { state.aPeriod = id; store.set("aPeriod", id); render(); } }, label);
+      prow.append(mkP("all", "All periods"));
+      for (const p of periods) prow.append(mkP(p, p));
+      side.append(prow);
     }
-    wrap.append(grid);
+
+    const listEl = h("div", { class: "alist card" });
+    const cntEl = h("span", { id: "aCount" });
+    side.append(listEl);
+    function paintList() {
+      listEl.innerHTML = "";
+      const list = filteredAnswers();
+      if (!list.length) { cntEl.textContent = `0 / ${ANSWERS.length}`; listEl.append(h("div", { class: "aempty" }, "No match. ", h("span", { class: "kr" }, "다른 단어로 검색하거나 카테고리를 All로."))); return; }
+      let lastCat = null;
+      for (const a of list) {
+        if (state.aCat === "all" && a.cat !== lastCat) {
+          lastCat = a.cat; const c = catOf(a.cat);
+          listEl.append(h("div", { class: "ahead" }, c.labelKr, h("span", null, c.label)));
+        }
+        listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : ""), onclick: () => go("answer", a.id) },
+          h("span", { class: "no" }, String(a.n).padStart(2, "0")),
+          h("span", { class: "txt" }, h("span", { class: "l" }, a.label), h("span", { class: "lk kr" }, a.labelKr)),
+          h("span", { class: "meta" }, a.period ? h("span", { class: "per" }, a.period) : null, h("span", { class: "arr" }, "›"))));
+      }
+      cntEl.textContent = `${list.length} / ${ANSWERS.length}`;
+    }
+    side.append(h("div", { class: "acount kr" }, cntEl, " · 카테고리 → 최신 분기 → 번호 순"));
+    paintList();
+    wrap.append(side);
+
     if (state.answerId) wrap.append(renderAnswerDetail(ANSWERS.find(a => a.id === state.answerId)));
     else if (window.innerWidth >= 900) {
       wrap.append(h("div", { class: "card", style: "padding:28px;color:var(--muted);font-size:1rem" },
-        h("div", { style: "font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:8px" }, "Pick a question type on the left."),
-        "Each card: one fixed line → one core sentence → 2–4 support sentences → 3 numbers → Korean core for the interpreter → terms. Nothing more.",
-        h("div", { class: "kr", style: "margin-top:8px;font-size:.9rem" }, "버튼 하나 = 답 하나. ←→ 키로 카드 이동, Esc로 격자 복귀.")));
+        h("div", { style: "font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:8px" }, "Pick a question on the left, or type to search."),
+        "Each card: fixed line → core sentence → support → 3 numbers → Korean core for the interpreter → terms.",
+        h("div", { class: "kr", style: "margin-top:8px;font-size:.9rem" }, "/ 키로 검색창, Enter로 첫 결과 열기, ←→ 카드 이동, Esc 목록 복귀.")));
     }
     main.append(wrap);
   }
@@ -263,7 +339,8 @@
     d.append(h("div", { class: "ad-head" },
       h("button", { class: "tool", onclick: () => go("answer"), title: "Esc" }, "← All"),
       h("span", { class: "ic" }, a.icon || ""),
-      h("div", null, h("div", { class: "t" }, `${String(a.n).padStart(2, "0")} · ${a.label}`), h("div", { class: "tk" }, a.labelKr)),
+      h("div", null, h("div", { class: "t" }, `${String(a.n).padStart(2, "0")} · ${a.label}`),
+        h("div", { class: "tk" }, h("span", { class: "per" }, catOf(a.cat).labelKr), a.period ? h("span", { class: "per" }, a.period) : null, a.updated ? h("span", { class: "upd" }, "updated " + a.updated) : null, " ", h("span", { class: "kr" }, a.labelKr))),
       h("div", { class: "sp" },
         h("button", { class: "tool" + (state.interp ? " on" : ""), onclick: () => { state.interp = !state.interp; store.set("interp", state.interp); render(); } },
           state.interp ? "🎧 With interpreter" : "🗣 Direct English"))));

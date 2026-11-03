@@ -4,11 +4,13 @@
 //   나열은 First / Second / Third, 쉬운 단어(dip→fall, lag→delay 등)
 // 구조: script → sections[] → paras[] { en, kr, pause? }
 //   chips = 문단 위에 보여줄 숫자·키워드 (3~6개)
-// 분기 교체 시: 맨 위 스크립트를 새 분기 것으로 바꾸고, 지난 분기는 아래로 내리거나 삭제
+// 누적형: quarter("3Q 2026" 등 / 상시는 "Evergreen") + kind(Preview / Review / Topic / Intro).
+//   새 분기는 새 스크립트를 위에 추가. 지난 분기 것은 지우지 않아도 분기 탭으로 분리되어 보임.
 // ============================================================
 window.KCC_SCRIPTS = [
   {
     id: "q3-2026-recent",
+    quarter: "3Q 2026", kind: "Preview",
     title: "3Q 2026 — Recent Developments",
     titleKr: "3Q 외국인 주주 미팅 · 최근 동향",
     duration: "7–9 min",
@@ -107,6 +109,7 @@ window.KCC_SCRIPTS = [
   },
   {
     id: "value-up-5min",
+    quarter: "Evergreen", kind: "Topic",
     title: "Value-up & Shareholder Return",
     titleKr: "밸류업·주주환원 5분",
     duration: "5 min",
@@ -183,6 +186,7 @@ window.KCC_SCRIPTS = [
   },
   {
     id: "q2-2026-results",
+    quarter: "2Q 2026", kind: "Review",
     title: "2Q 2026 — Results Briefing",
     titleKr: "2Q 확정실적 10분 스크립트",
     duration: "10 min",
@@ -285,6 +289,7 @@ window.KCC_SCRIPTS = [
   },
   {
     id: "company-overview",
+    quarter: "Evergreen", kind: "Intro",
     title: "Company Overview",
     titleKr: "회사 개요 · 신규 투자자용 1분",
     duration: "1 min",
