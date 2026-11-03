@@ -134,7 +134,8 @@ button.chip:hover{border-color:var(--blue)}
 .asearch .clr:hover{background:var(--chip)}
 .catrow.periods .chip{font-size:.78rem;padding:4px 10px}
 @media(max-width:899px){.alist-wrap .catrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}.alist-wrap .catrow::-webkit-scrollbar{display:none}}
-.alist{overflow:hidden;padding:4px 0}
+.alist{overflow:hidden;padding:4px 0;flex-shrink:0}
+.alist-wrap>*{flex-shrink:0}
 .ahead{position:sticky;top:0;z-index:1;background:var(--card2);color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 14px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:baseline}
 .ahead span{font-weight:600;letter-spacing:0;text-transform:none}
 .arow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px 10px 14px;border-top:1px solid var(--border);min-height:54px}
