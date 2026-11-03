@@ -215,6 +215,12 @@ window.KCC_PHRASES = {
     { kr: "2~3%p 상승", en: "up two to three percentage points" },
     { kr: "9.5% → 13.5%", en: "from nine point five to thirteen point five percent" },
     { kr: "2028~29년", en: "twenty twenty-eight to twenty twenty-nine" },
-    { kr: "3분기 / 하반기 / 내후년", en: "the third quarter (Q3) / the second half (H2) / the year after next" }
+    { kr: "3분기 / 하반기 / 내후년", en: "the third quarter (Q3) / the second half (H2) / the year after next" },
+    { kr: "연매출 23억달러 (Momentive 규모감)", en: "annual revenue of about two point three billion dollars" },
+    { kr: "세전이익 흑자 전환", en: "turned profitable at the pre-tax level / swung to a pre-tax profit" },
+    { kr: "계획 대비 소폭 미달", en: "slightly behind our own plan" },
+    { kr: "수주 전년 대비 +12%", en: "order intake up about twelve percent year-on-year" },
+    { kr: "주력제품 잠식", en: "core product erosion" },
+    { kr: "재고생산 / 주문생산", en: "make-to-stock / make-to-order" }
   ]
 };

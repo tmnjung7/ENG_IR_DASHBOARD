@@ -315,3 +315,137 @@ window.KCC_SCRIPTS = [
     ]
   }
 ];
+
+// ============================================================
+// 추가분 — 2Q26 치트시트 v3.2(8/17)의 Momentive 5분 요약 + 실리콘 비전(대외 가능 정성 메시지만)
+// ============================================================
+window.KCC_SCRIPTS.push(
+  {
+    id: "momentive-5min",
+    quarter: "2Q 2026", kind: "Topic",
+    title: "Momentive — 5-minute Update",
+    titleKr: "모멘티브 5분 요약 (실리콘 코멘트 뒤에)",
+    duration: "5 min",
+    badge: "방향성만",
+    note: "Bridge 20초 → 포인트 5개 각 40~50초 → Closing 20초. 수치를 요구받으면 “Momentive’s stand-alone numbers are not separately disclosed.”",
+    sections: [
+      {
+        title: "Bridge", time: "0:00 – 0:20",
+        chips: ["US silicone subsidiary", "Directionally — not separately disclosed", "Five points"],
+        paras: [
+          { en: "Let me add some colour on <b>Momentive</b>, our US silicone subsidiary. I will speak directionally, since its stand-alone numbers are not separately disclosed. <b>Five points.</b>",
+            kr: "미국 실리콘 자회사 모멘티브에 대해 방향성 중심으로 다섯 가지." }
+        ]
+      },
+      {
+        title: "1 · Profitability — turned the corner", time: "0:20 – 1:10",
+        chips: ["1H pre-tax meaningfully better YoY", "Refinancing cut interest", "Operating side stable to improving", "Gap = execution, not demand"],
+        paras: [
+          { en: "<b>First, profitability.</b> Momentive’s first half was meaningfully better than a year ago at the pre-tax level. The refinancing cut interest costs sharply, and the operating side is stable to improving.",
+            kr: "상반기 세전 손익 전년 대비 의미 있게 개선. 리파이낸싱으로 이자 급감, 영업은 안정~개선." },
+          { en: "Where we are behind our own plan, it is our own execution — quality and delivery — <b>not demand</b>.",
+            kr: "자체 계획 미달분은 수요가 아니라 품질·납기 실행 문제." }
+        ]
+      },
+      {
+        title: "2 · Demand is there — the issue is execution", time: "1:10 – 2:00",
+        chips: ["Orders well above last year", "Backlog healthy", "Shortfall = orders not shipped on time", "Pricing absorbed raw-material inflation"],
+        paras: [
+          { en: "<b>Second, demand.</b> Order intake is running well above last year, and the backlog is healthy.",
+            kr: "수주 전년 대비 크게 상회, 수주잔고 건전." },
+          { en: "The shortfall is orders we could not ship on time, because of capacity bottlenecks or quality holds. Recovering those is the number-one priority for the second half. Pricing has so far absorbed raw-material inflation.",
+            kr: "미달분은 설비 병목·품질 보류로 못 나간 주문 → 하반기 최우선 회복 과제. 가격이 원재료 인플레 흡수 중.", pause: true }
+        ]
+      },
+      {
+        title: "3 · Balance sheet — strong liquidity, goal is self-funding", time: "2:00 – 2:50",
+        chips: ["Liquidity at multi-year high", "Interest far lower", "KCC support = investment, not losses", "Board: self-funding · monthly cash forecast"],
+        paras: [
+          { en: "<b>Third, the balance sheet.</b> Momentive’s liquidity is at its strongest level in several years, and interest costs are far lower after last year’s refinancing.",
+            kr: "유동성 수년래 최고, 이자 급감." },
+          { en: "KCC’s support this year is for the investment programme, not for covering losses. The clear direction from the board is for Momentive to become <b>self-funding</b>, with a monthly cash forecast and cash actions on inventory, purchasing and costs.",
+            kr: "올해 KCC 지원은 투자 재원. 이사회 방향은 자립 — 월별 현금 전망, 재고·구매·비용 조치." }
+        ]
+      },
+      {
+        title: "4 · Strategy — scale down basics, focus specialty", time: "2:50 – 3:40",
+        chips: ["Lost share in commodities to China", "Not fighting on price", "Cost ratio 80 → 75%", "Growth: personal care · electronics/thermal · healthcare · additives", "Specialty capacity in Asia"],
+        paras: [
+          { en: "<b>Fourth, strategy.</b> Momentive lost share in commoditised products to low-cost Chinese producers, and we are choosing not to fight on price there.",
+            kr: "범용품에서 중국 저원가 업체에 점유율 상실 → 가격 경쟁 안 함." },
+          { en: "Low-margin basics are being scaled down deliberately. That is what you see in our silicone cost ratio improving from about 80 to 75 percent. The growth focus is personal care, electronics and thermal management, healthcare, and specialty additives, with capital going into specialty capacity in Asia.",
+            kr: "저마진 베이직 의도적 축소(원가율 80→75%). 성장 초점: 퍼스널케어·전자/열관리·헬스케어·스페셜티 첨가제. 아시아 스페셜티 증설.", pause: true }
+        ]
+      },
+      {
+        title: "5 · Execution — quality, delivery, KCC know-how", time: "3:40 – 4:40",
+        chips: ["Quality & on-time delivery = main constraints", "New head of quality · SPC in every plant", "Lead time ~3 weeks → ~1 week", "KCC know-how · 18 months injury-free in Korea"],
+        paras: [
+          { en: "<b>Fifth, execution.</b> Management is candid that quality and on-time delivery are the main constraints today. There is a new head of quality, statistical process control is going into every plant, and the make-to-stock model is being rebuilt so key products ship within about a week instead of three.",
+            kr: "품질·정시 납기가 현재 제약임을 인정. 새 품질 총괄, 전 공장 SPC, 리드타임 3주→약 1주." },
+          { en: "And we are transferring KCC’s operational know-how: lead-time discipline, scrap reduction, safety. Our Korean sites have gone <b>eighteen months</b> without a recordable injury.",
+            kr: "KCC 노하우 이전(리드타임·폐기·안전). 국내 사업장 18개월 무재해." }
+        ]
+      },
+      {
+        title: "Closing", time: "4:40 – 5:00",
+        chips: ["Demand there", "Profitability turned", "Liquidity solid", "Next 18 months = execution"],
+        paras: [
+          { en: "So: demand is there, profitability has turned the corner, liquidity is solid, and the next eighteen months are about execution. You will see the progress in our silicone segment results each quarter.",
+            kr: "수요 있음, 수익성 고비 넘음, 유동성 탄탄, 향후 18개월은 실행. 매 분기 실리콘 실적으로 확인." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "silicone-vision",
+    quarter: "Evergreen", kind: "Topic",
+    title: "Silicone — Vision & Pipeline",
+    titleKr: "실리콘 장기 비전·파이프라인 (3~4분)",
+    duration: "3–4 min",
+    badge: "유지",
+    note: "장기 질문이 나올 때. 제품별 매출 전망·고객사명·배합 정보 금지.",
+    sections: [
+      {
+        title: "Direction", time: "0:00 – 1:00",
+        chips: ["Basic → specialty", "Leaner cost base: 80 → 75%", "EBITDA 11.8% → 13% → 13.5%", "Target 16–17% by 2028–29", "2030: 10tn won, global #2"],
+        paras: [
+          { en: "Our long-term direction is simple: move from basic silicone to <b>high-value specialty</b>, with a leaner cost base.",
+            kr: "장기 방향: 베이직 → 고부가 스페셜티, 더 가벼운 원가 구조." },
+          { en: "Silicone grows with big structural trends: electric vehicles, AI data centres, and healthcare. Our job is to put our silicone into those growth markets.",
+            kr: "EV·AI 데이터센터·헬스케어 등 구조적 트렌드와 함께 성장." },
+          { en: "We have been downscaling low-margin basics since the second half of last year. The cost-to-sales ratio improved from about 80 to about 75 percent, and the EBITDA margin from 11.8 percent in 2024 to 13.5 percent in Q2 this year.",
+            kr: "저마진 베이직 축소. 원가율 80→75%, EBITDA 11.8%(’24)→13.5%(2Q26)." },
+          { en: "Our targets: an EBITDA margin of <b>16 to 17 percent by 2028 to 2029</b>, high teens by the late 2020s. Under the value-up plan, silicone revenue of 10 trillion won by 2030 and a firm number-two position globally. The 10 trillion is a target, not a forecast.",
+            kr: "목표: ’28~29 EBITDA 16~17%, 후반 하이틴. 2030 매출 10조·글로벌 2위 — 타겟이지 예측 아님.", pause: true }
+        ]
+      },
+      {
+        title: "Four Platforms", time: "1:00 – 2:30",
+        chips: ["Mobility: tire silanes, release agents", "Electronics: gap fillers, EMI, adhesives", "Healthcare: USP Class VI tubing, skin adhesives, single-use", "Personal care & sustainability: naturals, PFAS-replacement"],
+        paras: [
+          { en: "<b>One, mobility.</b> We supply silane coupling agents for fuel-efficient tires, and tire release agents. As cars go electric, demand for our materials keeps growing.",
+            kr: "①모빌리티: 고연비 타이어 실란 커플링제, 이형제. EV 전환으로 수요 증가." },
+          { en: "<b>Two, electronics and thermal management.</b> Gap fillers, EMI shielding, and adhesives for electronics. AI data centres and EV chargers need to manage heat. That is a structural growth driver for silicone.",
+            kr: "②전자·열관리: 갭필러·EMI 차폐·접착. AI DC·EV 충전기 발열 관리." },
+          { en: "<b>Three, healthcare and bio-pharma.</b> Medical-grade tubing with USP Class VI certification, silicone skin adhesives, and single-use tubing for bio-pharma production. High barriers, high value.",
+            kr: "③헬스케어: USP Class VI 튜빙, 의료용 점착제, 바이오 일회용 튜빙. 고진입장벽." },
+          { en: "<b>Four, personal care and sustainability.</b> Natural-based personal-care ingredients, PFAS-replacement coatings, and eco-friendly polyurethane additives.",
+            kr: "④퍼스널케어·지속가능: 천연 유래 성분, PFAS 대체 코팅, 친환경 PU 첨가제.", pause: true }
+        ]
+      },
+      {
+        title: "Proof Points & Close", time: "2:30 – 3:30",
+        chips: ["NB-latex defoamer localised", "Railway LSR: HL3 under EN 45545-2", "Electronics 12–13% → 20% of sales", "Next-gen tire silane: pilot → 2028 decision"],
+        paras: [
+          { en: "Two quick proof points. We localised the silicone defoamer for NB-latex gloves, a market long dominated by foreign suppliers. And our liquid silicone rubber for railway bellows earned the highest fire-safety grade, HL3, under the European standard EN 45545-2.",
+            kr: "사례: NB라텍스 소포제 국산화, 철도 벨로우즈 LSR HL3." },
+          { en: "The engine is the specialty mix. Electronics is now 12 to 13 percent of silicone sales with an EBITDA margin above 30 percent, and we want to grow it to 20 percent. In tire silanes, we are commercialising a next-generation platform before competitors replace our own product.",
+            kr: "전자 12~13% → 20%(마진 30%+). 타이어 실란 차세대 플랫폼 상업화." },
+          { en: "In short, we are building the next decade of our silicone business on EV, electronics and healthcare, with a stronger cost base and a richer specialty mix.",
+            kr: "요컨대 EV·전자·헬스케어 위에 다음 10년. 더 탄탄한 원가, 더 풍부한 스페셜티 믹스." }
+        ]
+      }
+    ]
+  }
+);
