@@ -6,6 +6,7 @@
   const ANSWERS = window.KCC_ANSWERS || [];
   const PHRASES = window.KCC_PHRASES || { categories: [], easyWords: [], pronounce: [], mistakes: [], numberExamples: [] };
   const FACTS = window.KCC_FACTS || [];
+  const STUDY = window.KCC_STUDY || [];
 
   const $ = (sel, el) => (el || document).querySelector(sel);
   const h = (tag, attrs, ...kids) => {
@@ -54,7 +55,13 @@
     stars: store.get("stars", []),
     speakMode: store.get("speakMode", "flow"),
     sQuarter: store.get("sQuarter", null),
-    phraseTab: store.get("phraseTab", "phrases"),
+    phraseTab: store.get("phraseTab", "study"),
+    studyDeck: store.get("studyDeck", "all"),
+    studyTier: store.get("studyTier", 1),
+    studyMode: store.get("studyMode", "list"),
+    studyDir: store.get("studyDir", "kr2en"),
+    known: store.get("known", []),
+    studyIdx: 0, studyFlip: false, studyOrder: null,
     phraseCat: store.get("phraseCat", PHRASES.categories[0] && PHRASES.categories[0].id),
     outline: false,
     timer: { running: false, start: 0, acc: 0, iv: null }
@@ -116,6 +123,11 @@
         else if (e.key === "Escape") { state.outline = !state.outline; render(); }
         else if (e.key.toLowerCase() === "k") { state.kr.speak = !state.kr.speak; applyKr(); }
         else if (e.key.toLowerCase() === "t") toggleTimer();
+      } else if (state.view === "phrases" && state.phraseTab === "study" && state.studyMode === "cards") {
+        if (e.key === " ") { e.preventDefault(); state.studyFlip = !state.studyFlip; render(); }
+        else if (e.key === "ArrowRight") { state.studyFlip = false; state.studyIdx++; render(); }
+        else if (e.key === "ArrowLeft") { state.studyFlip = false; state.studyIdx = Math.max(0, state.studyIdx - 1); render(); }
+        else if (e.key.toLowerCase() === "k") { const pool = studyItems().filter(i => !state.known.includes(i.key)); if (pool.length) { const it = pool[(state.studyOrder || pool.map((_, i) => i))[state.studyIdx % pool.length]]; toggleKnown(it.key); state.studyFlip = false; state.studyOrder = null; render(); } }
       } else if (state.view === "answer") {
         if (e.key === "/") { e.preventDefault(); const q = $("#aSearch"); if (q) { q.focus(); q.select(); } return; }
         if (!state.answerId) return;
@@ -493,7 +505,7 @@
   // PHRASES — survival English + tools
   // =====================================================================
   const PTABS = [
-    { id: "phrases", label: "Phrases" }, { id: "easy", label: "Easy words" }, { id: "say", label: "Pronounce" },
+    { id: "study", label: "IR Core ★" }, { id: "phrases", label: "Phrases" }, { id: "easy", label: "Easy words" }, { id: "say", label: "Pronounce" },
     { id: "numbers", label: "Numbers" }, { id: "mistakes", label: "Mistakes" }
   ];
   function renderPhrases(main, r) {
@@ -501,6 +513,7 @@
     const tabs = h("div", { class: "subtabs" }, PTABS.map(t => h("button", { class: t.id === state.phraseTab ? "on" : "", onclick: () => go("phrases", t.id) }, t.label)));
     main.append(tabs);
     const t = state.phraseTab;
+    if (t === "study") { renderStudy(main); return; }
     if (t === "phrases") {
       if (r.b && PHRASES.categories.some(c => c.id === r.b)) { state.phraseCat = r.b; store.set("phraseCat", r.b); }
       const cat = PHRASES.categories.find(c => c.id === state.phraseCat) || PHRASES.categories[0];
@@ -529,6 +542,74 @@
         PHRASES.numberExamples.map(w => h("tr", null, h("td", { class: "h", style: "color:var(--text)" }, w.kr), h("td", { class: "e" }, w.en))))));
     }
   }
+
+  // ---------- IR Core English — study deck (list / flashcards) ----------
+  function studyItems() {
+    const decks = state.studyDeck === "all" ? STUDY : STUDY.filter(d => d.id === state.studyDeck);
+    const out = [];
+    decks.forEach(d => d.items.forEach((it, i) => { if (it.t <= state.studyTier) out.push({ ...it, deck: d, key: d.id + ":" + i }); }));
+    return out;
+  }
+  function renderStudy(main) {
+    const all = studyItems();
+    const knownSet = new Set(state.known);
+    const setS = (k, v) => { state[k] = v; store.set(k, v); state.studyIdx = 0; state.studyFlip = false; state.studyOrder = null; render(); };
+    // deck chips
+    main.append(h("div", { class: "chips catrow" },
+      h("button", { class: "chip" + (state.studyDeck === "all" ? " sel" : ""), onclick: () => setS("studyDeck", "all") }, "All decks"),
+      STUDY.map(d => h("button", { class: "chip" + (state.studyDeck === d.id ? " sel" : ""), onclick: () => setS("studyDeck", d.id) }, d.titleKr.split(" — ")[0]))));
+    // controls
+    const tierBtn = (n, l) => h("button", { class: "tool" + (state.studyTier === n ? " on" : ""), onclick: () => setS("studyTier", n) }, l);
+    const total = studyItems().length, knownN = studyItems().filter(i => knownSet.has(i.key)).length;
+    main.append(h("div", { class: "modebar" },
+      h("button", { class: "tool" + (state.studyMode === "list" ? " on" : ""), onclick: () => setS("studyMode", "list") }, "☰ List"),
+      h("button", { class: "tool" + (state.studyMode === "cards" ? " on" : ""), onclick: () => setS("studyMode", "cards") }, "🃏 Flashcards"),
+      h("span", { class: "sep" }),
+      tierBtn(1, "필수"), tierBtn(2, "+권장"), tierBtn(3, "+심화"),
+      h("span", { class: "kr modehint" }, `${knownN} / ${total} 외움`),
+      h("button", { class: "tool", onclick: () => { if (confirm("외운 표시를 모두 지울까요?")) { state.known = []; store.set("known", []); render(); } } }, "↺ reset")));
+    const deck = state.studyDeck === "all" ? null : STUDY.find(d => d.id === state.studyDeck);
+    if (deck && deck.tip) main.append(h("div", { class: "status", style: "margin-bottom:12px" }, "💡 " + deck.tip));
+
+    if (state.studyMode === "list") {
+      let lastDeck = null;
+      const card = h("div", { class: "card slist" });
+      for (const it of all) {
+        if (it.deck.id !== lastDeck) { lastDeck = it.deck.id; card.append(h("div", { class: "ahead" }, it.deck.titleKr, h("span", null, it.deck.title))); }
+        const known = knownSet.has(it.key);
+        card.append(h("div", { class: "sitem" + (known ? " known" : "") },
+          h("button", { class: "kbox", title: "외웠음", onclick: () => { toggleKnown(it.key); render(); } }, known ? "✓" : ""),
+          h("div", { class: "stxt" },
+            h("div", { class: "sen" }, it.en, h("span", { class: "tier t" + it.t }, it.t === 1 ? "필수" : it.t === 2 ? "권장" : "심화")),
+            h("div", { class: "skr kr" }, it.kr),
+            it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”") : null)));
+      }
+      if (!all.length) card.append(h("div", { class: "aempty" }, "No items."));
+      main.append(card);
+      return;
+    }
+
+    // flashcards — default: show Korean, recall English (active recall for speaking)
+    const pool = all.filter(i => !knownSet.has(i.key));
+    if (!state.studyOrder || state.studyOrder.length !== pool.length) { state.studyOrder = pool.map((_, i) => i); state.studyIdx = 0; }
+    if (!pool.length) { main.append(h("div", { class: "card", style: "padding:28px;text-align:center" }, h("div", { style: "font-size:1.3rem;font-weight:800" }, "All done 🎉"), h("div", { class: "kr", style: "margin-top:6px" }, "이 범위는 다 외웠습니다. 범위를 넓히거나 reset 하세요."))); return; }
+    const it = pool[state.studyOrder[state.studyIdx % pool.length]];
+    const front = state.studyDir === "kr2en" ? it.kr : it.en, back = state.studyDir === "kr2en" ? it.en : it.kr;
+    const fc = h("div", { class: "card fcard" + (state.studyFlip ? " flip" : ""), onclick: () => { state.studyFlip = !state.studyFlip; render(); } },
+      h("div", { class: "fdeck" }, it.deck.titleKr.split(" — ")[0], h("span", { class: "tier t" + it.t }, it.t === 1 ? "필수" : it.t === 2 ? "권장" : "심화"), h("span", { class: "fpos" }, `${(state.studyIdx % pool.length) + 1} / ${pool.length}`)),
+      h("div", { class: "fface" }, front),
+      state.studyFlip ? h("div", { class: "fback" }, h("div", { class: "fans" }, back), it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”") : null) : h("div", { class: "fhint kr" }, "탭하면 답이 보입니다 · Space"));
+    const nav = h("div", { class: "fnav" },
+      h("button", { class: "big ghost", onclick: () => { state.studyFlip = false; state.studyIdx = (state.studyIdx - 1 + pool.length) % pool.length; render(); } }, "← Prev"),
+      h("button", { class: "big know", onclick: () => { toggleKnown(it.key); state.studyFlip = false; state.studyOrder = null; render(); } }, "✓ 외웠음"),
+      h("button", { class: "big", onclick: () => { state.studyFlip = false; state.studyIdx = (state.studyIdx + 1) % pool.length; render(); } }, "Next →"));
+    const opts = h("div", { class: "modebar", style: "margin-top:10px" },
+      h("button", { class: "tool" + (state.studyDir === "kr2en" ? " on" : ""), onclick: () => setS("studyDir", "kr2en") }, "한 → 영 (말하기)"),
+      h("button", { class: "tool" + (state.studyDir === "en2kr" ? " on" : ""), onclick: () => setS("studyDir", "en2kr") }, "영 → 한 (듣기)"),
+      h("button", { class: "tool", onclick: () => { const o = pool.map((_, i) => i); for (let i = o.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; } state.studyOrder = o; state.studyIdx = 0; state.studyFlip = false; render(); } }, "🔀 Shuffle"));
+    main.append(fc, nav, opts);
+  }
+  function toggleKnown(key) { const i = state.known.indexOf(key); if (i < 0) state.known.push(key); else state.known.splice(i, 1); store.set("known", state.known); }
 
   // ---------- number converter (KR 억/조 ↔ EN billion/trillion) ----------
   function convert(raw) {
