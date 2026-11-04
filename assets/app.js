@@ -581,7 +581,7 @@
           h("button", { class: "kbox", title: "외웠음", onclick: () => { toggleKnown(it.key); render(); } }, known ? "✓" : ""),
           h("div", { class: "stxt" },
             h("div", { class: "sen" }, it.en, h("span", { class: "tier t" + it.t }, it.t === 1 ? "필수" : it.t === 2 ? "권장" : "심화")),
-            h("div", { class: "skr kr" }, it.kr),
+            h("div", { class: "skr" }, it.kr),
             it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”") : null)));
       }
       if (!all.length) card.append(h("div", { class: "aempty" }, "No items."));

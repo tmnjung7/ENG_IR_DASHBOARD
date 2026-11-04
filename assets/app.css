@@ -303,7 +303,7 @@ mark{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px}
 .sitem.known .kbox{background:#E6F4EA;border-color:#9CCC65}
 .stxt{flex:1;min-width:0}
 .sen{font-size:1.1rem;font-weight:800;line-height:1.4}
-.skr{font-size:.88rem;margin-top:2px}
+.skr{font-size:.88rem;margin-top:2px;color:var(--muted)}
 .sex{font-size:.9rem;color:var(--muted);margin-top:4px;font-style:italic}
 .tier{display:inline-block;font-size:.65rem;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:8px;vertical-align:middle;font-style:normal}
 .tier.t1{background:#FDE2E2;color:#9F1D1D}.tier.t2{background:#FFF1CC;color:#7A5200}.tier.t3{background:var(--chip);color:var(--chip-text)}
