@@ -582,7 +582,7 @@
           h("div", { class: "stxt" },
             h("div", { class: "sen" }, it.en, h("span", { class: "tier t" + it.t }, it.t === 1 ? "필수" : it.t === 2 ? "권장" : "심화")),
             h("div", { class: "skr" }, it.kr),
-            it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”") : null)));
+            it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”", it.exKr ? h("span", { class: "sexk" }, " — " + it.exKr) : null) : null)));
       }
       if (!all.length) card.append(h("div", { class: "aempty" }, "No items."));
       main.append(card);
@@ -594,11 +594,13 @@
     if (!state.studyOrder || state.studyOrder.length !== pool.length) { state.studyOrder = pool.map((_, i) => i); state.studyIdx = 0; }
     if (!pool.length) { main.append(h("div", { class: "card", style: "padding:28px;text-align:center" }, h("div", { style: "font-size:1.3rem;font-weight:800" }, "All done 🎉"), h("div", { class: "kr", style: "margin-top:6px" }, "이 범위는 다 외웠습니다. 범위를 넓히거나 reset 하세요."))); return; }
     const it = pool[state.studyOrder[state.studyIdx % pool.length]];
-    const front = state.studyDir === "kr2en" ? it.kr : it.en, back = state.studyDir === "kr2en" ? it.en : it.kr;
+    const k2e = state.studyDir === "kr2en";
+    const front = k2e ? it.kr : it.en, back = k2e ? it.en : it.kr;
+    const frontEx = k2e ? it.exKr : it.ex, backEx = k2e ? it.ex : it.exKr;
     const fc = h("div", { class: "card fcard" + (state.studyFlip ? " flip" : ""), onclick: () => { state.studyFlip = !state.studyFlip; render(); } },
       h("div", { class: "fdeck" }, it.deck.titleKr.split(" — ")[0], h("span", { class: "tier t" + it.t }, it.t === 1 ? "필수" : it.t === 2 ? "권장" : "심화"), h("span", { class: "fpos" }, `${(state.studyIdx % pool.length) + 1} / ${pool.length}`)),
-      h("div", { class: "fface" }, front),
-      state.studyFlip ? h("div", { class: "fback" }, h("div", { class: "fans" }, back), it.ex ? h("div", { class: "sex" }, "“" + it.ex + "”") : null) : h("div", { class: "fhint kr" }, "탭하면 답이 보입니다 · Space"));
+      h("div", { class: "fface" }, h("div", null, h("div", null, front), frontEx ? h("div", { class: "fex" }, "“" + frontEx + "”") : null)),
+      state.studyFlip ? h("div", { class: "fback" }, h("div", { class: "fans" }, back), backEx ? h("div", { class: "sex" }, "“" + backEx + "”") : null) : h("div", { class: "fhint kr" }, "탭하면 답이 보입니다 · Space"));
     const nav = h("div", { class: "fnav" },
       h("button", { class: "big ghost", onclick: () => { state.studyFlip = false; state.studyIdx = (state.studyIdx - 1 + pool.length) % pool.length; render(); } }, "← Prev"),
       h("button", { class: "big know", onclick: () => { toggleKnown(it.key); state.studyFlip = false; state.studyOrder = null; render(); } }, "✓ 외웠음"),
