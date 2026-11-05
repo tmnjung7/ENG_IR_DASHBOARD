@@ -35,6 +35,7 @@
   const VIEWS = [
     { id: "speak", label: "SPEAK", ic: "🎙️" },
     { id: "answer", label: "ANSWER", ic: "💬" },
+    { id: "silicone", label: "SILICONE", ic: "🧪" },
     { id: "phrases", label: "PHRASES", ic: "🗣️" },
     { id: "facts", label: "FACTS", ic: "📊" }
   ];
@@ -43,7 +44,7 @@
     scale: store.get("scale", 1),
     theme: store.get("theme", null),
     // Korean gist visibility per view (SPEAK hidden by default — brief §2)
-    kr: store.get("kr", { speak: false, answer: true, phrases: false, facts: true }),
+    kr: store.get("kr", { speak: false, answer: true, silicone: true, phrases: false, facts: true }),
     interp: store.get("interp", !!CFG.interpreterDefault),
     scriptId: store.get("scriptId", SCRIPTS[0] && SCRIPTS[0].id),
     pos: store.get("pos", {}),      // scriptId -> flat paragraph index
@@ -52,6 +53,7 @@
     aSub: store.get("aSub", "all"),
     aPeriod: store.get("aPeriod", "all"),
     aQuery: "",
+    sSub: store.get("sSub", "all"), sTab: store.get("sTab", "qa"), sQuery: "",
     stars: store.get("stars", []),
     speakMode: store.get("speakMode", "flow"),
     sQuarter: store.get("sQuarter", null),
@@ -128,12 +130,13 @@
         else if (e.key === "ArrowRight") { state.studyFlip = false; state.studyIdx++; render(); }
         else if (e.key === "ArrowLeft") { state.studyFlip = false; state.studyIdx = Math.max(0, state.studyIdx - 1); render(); }
         else if (e.key.toLowerCase() === "k") { const pool = studyItems().filter(i => !state.known.includes(i.key)); if (pool.length) { const it = pool[(state.studyOrder || pool.map((_, i) => i))[state.studyIdx % pool.length]]; toggleKnown(it.key); state.studyFlip = false; state.studyOrder = null; render(); } }
-      } else if (state.view === "answer") {
+      } else if (state.view === "answer" || (state.view === "silicone" && state.sTab === "qa")) {
+        const cfg = state.view === "silicone" ? SIL_CFG : { view: "answer" };
         if (e.key === "/") { e.preventDefault(); const q = $("#aSearch"); if (q) { q.focus(); q.select(); } return; }
         if (!state.answerId) return;
-        if (e.key === "ArrowRight") stepAnswer(1);
-        else if (e.key === "ArrowLeft") stepAnswer(-1);
-        else if (e.key === "Escape") go("answer");
+        if (e.key === "ArrowRight") stepAnswer(1, cfg);
+        else if (e.key === "ArrowLeft") stepAnswer(-1, cfg);
+        else if (e.key === "Escape") (cfg.lockCat ? go("silicone", "qa") : go("answer"));
       }
     });
   }
@@ -145,7 +148,8 @@
     renderHeader(); applyKr();
     const main = $("#main"); main.innerHTML = "";
     if (r.view === "speak") renderSpeak(main, r);
-    else if (r.view === "answer") renderAnswer(main, r);
+    else if (r.view === "answer") renderAnswer(main, r, { view: "answer" });
+    else if (r.view === "silicone") renderSilicone(main, r);
     else if (r.view === "phrases") renderPhrases(main, r);
     else renderFacts(main, r);
     main.append(h("div", { class: "foot" }, `${CFG.appName || "KCC IR Meet"} ${CFG.version || ""} · as of ${CFG.asOf || ""} · external-statement content only · ←→ keys / swipe to move`));
@@ -345,15 +349,20 @@
     }
     return total;
   }
-  function filteredAnswers() {
-    const groups = expandQuery(state.aQuery);
+  const SIL_CFG = { view: "silicone", lockCat: "silicone" };
+  function filteredAnswers(cfg) {
+    cfg = cfg || {};
+    const lock = cfg.lockCat;
+    const cat = lock || state.aCat, sub = lock ? state.sSub : state.aSub, query = lock ? state.sQuery : state.aQuery;
+    const groups = expandQuery(query);
     const searching = groups.length > 0;
     const order = id => { const i = CATS.findIndex(c => c.id === id); return i < 0 ? 99 : i; };
-    const base = ANSWERS.filter(a => searching ? true :
-        (state.aCat === "stars" ? state.stars.includes(a.id) :
-          (state.aCat === "all" || a.cat === state.aCat) && (state.aSub === "all" || state.aCat === "all" || a.sub === state.aSub)) &&
-        (state.aPeriod === "all" || a.period === state.aPeriod));
-    if (!searching) return base.sort((a, b) => order(a.cat) - order(b.cat) || (b.period || "").localeCompare(a.period || "") || a.n - b.n);
+    const base = ANSWERS.filter(a => (lock ? a.cat === lock : true) && (searching ? true :
+        (cat === "stars" ? state.stars.includes(a.id) :
+          (cat === "all" || a.cat === cat) && (sub === "all" || cat === "all" || a.sub === sub)) &&
+        (state.aPeriod === "all" || a.period === state.aPeriod)));
+    const subOrder = (c, id) => { const cc = CATS.find(x => x.id === c); const i = cc && cc.subs ? cc.subs.findIndex(x => x.id === id) : -1; return i < 0 ? 99 : i; };
+    if (!searching) return base.sort((a, b) => order(a.cat) - order(b.cat) || (lock ? subOrder(a.cat, a.sub) - subOrder(b.cat, b.sub) : 0) || (b.period || "").localeCompare(a.period || "") || a.n - b.n);
     return base.map(a => ({ a, s: scoreAnswer(a, groups) })).filter(x => x.s > 0)
       .sort((x, y) => y.s - x.s || order(x.a.cat) - order(y.a.cat) || x.a.n - y.a.n).map(x => x.a);
   }
@@ -370,42 +379,53 @@
     String(text).split(re).forEach((part, i) => { if (!part) return; frag.append(i % 2 ? h("mark", null, part) : part); });
     return frag;
   }
-  function stepAnswer(d) {
-    const list = filteredAnswers().length ? filteredAnswers() : ANSWERS;
+  function openCard(id, cfg) { if (cfg && cfg.lockCat) go("silicone", "qa", id); else go("answer", id); }
+  function stepAnswer(d, cfg) {
+    const f = filteredAnswers(cfg);
+    const list = f.length ? f : (cfg && cfg.lockCat ? ANSWERS.filter(a => a.cat === cfg.lockCat) : ANSWERS);
     let i = list.findIndex(a => a.id === state.answerId); if (i < 0) i = 0;
     const n = (i + d + list.length) % list.length;
-    go("answer", list[n].id);
+    openCard(list[n].id, cfg);
   }
-  function renderAnswer(main, r) {
-    state.answerId = r.a && ANSWERS.some(a => a.id === r.a) ? r.a : null;
+  function renderAnswer(main, r, cfg) {
+    cfg = cfg || { view: "answer" };
+    const lock = cfg.lockCat || null;
+    const idArg = lock ? r.b : r.a;
+    state.answerId = idArg && ANSWERS.some(a => a.id === idArg && (!lock || a.cat === lock)) ? idArg : null;
     const wrap = h("div", { class: "ans-wrap" + (state.answerId ? " has-detail" : "") });
     const side = h("div", { class: "alist-wrap" });
+    const getQ = () => lock ? state.sQuery : state.aQuery;
+    const setQ = v => { if (lock) state.sQuery = v; else state.aQuery = v; };
 
     // search
-    const input = h("input", { id: "aSearch", type: "search", placeholder: "검색: 질문·키워드·숫자 (예: 특별배당, Wacker, 2028, EB)   /", value: state.aQuery, autocomplete: "off" });
+    const input = h("input", { id: "aSearch", type: "search", placeholder: lock ? "실리콘 카드 안에서 검색 (예: Wacker, 4Q, 현금, 품질)   /" : "검색: 질문·키워드·숫자 (예: 특별배당, Wacker, 2028, EB)   /", value: getQ(), autocomplete: "off" });
     let deb = null;
-    input.addEventListener("input", () => { state.aQuery = input.value; clearTimeout(deb); deb = setTimeout(paintList, 80); });
+    input.addEventListener("input", () => { setQ(input.value); clearTimeout(deb); deb = setTimeout(paintList, 80); });
     input.addEventListener("keydown", e => {
-      if (e.key === "Escape") { input.value = ""; state.aQuery = ""; paintList(); input.blur(); }
-      if (e.key === "Enter") { const f = filteredAnswers(); if (f.length) go("answer", f[0].id); }
+      if (e.key === "Escape") { input.value = ""; setQ(""); paintList(); input.blur(); }
+      if (e.key === "Enter") { const f = filteredAnswers(cfg); if (f.length) openCard(f[0].id, cfg); }
     });
     side.append(h("div", { class: "asearch" }, h("span", { class: "mag" }, "🔍"), input,
-      h("button", { class: "clr", title: "clear", onclick: () => { input.value = ""; state.aQuery = ""; paintList(); input.focus(); } }, "✕")));
+      h("button", { class: "clr", title: "clear", onclick: () => { input.value = ""; setQ(""); paintList(); input.focus(); } }, "✕")));
 
     // category chips (+ ★ Today, + sub-chips when the category has them)
     const periods = []; for (const p of ANSWERS.map(a => a.period).filter(Boolean)) if (!periods.includes(p)) periods.push(p);
     periods.sort().reverse();
-    const chipRow = h("div", { class: "chips catrow" });
-    const setCat = id => { state.aCat = id; state.aSub = "all"; store.set("aCat", id); store.set("aSub", "all"); render(); };
-    const mkCat = (id, label, sub) => h("button", { class: "chip" + (state.aCat === id ? " sel" : ""), onclick: () => setCat(id) }, label, sub ? h("span", { class: "sub" }, sub) : null);
-    chipRow.append(mkCat("all", "All", "전체"));
-    chipRow.append(h("button", { class: "chip star" + (state.aCat === "stars" ? " sel" : ""), onclick: () => setCat("stars") }, "★ Today", h("span", { class: "sub" }, String(state.stars.length))));
-    for (const c of CATS) chipRow.append(mkCat(c.id, c.labelKr, c.label));
-    side.append(chipRow);
-    const curCat = CATS.find(c => c.id === state.aCat);
+    if (!lock) {
+      const chipRow = h("div", { class: "chips catrow" });
+      const setCat = id => { state.aCat = id; state.aSub = "all"; store.set("aCat", id); store.set("aSub", "all"); render(); };
+      const mkCat = (id, label, sub) => h("button", { class: "chip" + (state.aCat === id ? " sel" : ""), onclick: () => setCat(id) }, label, sub ? h("span", { class: "sub" }, sub) : null);
+      chipRow.append(mkCat("all", "All", "전체"));
+      chipRow.append(h("button", { class: "chip star" + (state.aCat === "stars" ? " sel" : ""), onclick: () => setCat("stars") }, "★ Today", h("span", { class: "sub" }, String(state.stars.length))));
+      for (const c of CATS) chipRow.append(mkCat(c.id, c.labelKr, c.label));
+      side.append(chipRow);
+    }
+    const curCat = CATS.find(c => c.id === (lock || state.aCat));
+    const curSub = lock ? state.sSub : state.aSub;
     if (curCat && curCat.subs && curCat.subs.length) {
-      const srow = h("div", { class: "chips catrow subs" });
-      const mkSub = (id, label, sub) => h("button", { class: "chip" + (state.aSub === id ? " sel" : ""), onclick: () => { state.aSub = id; store.set("aSub", id); render(); } }, label, sub ? h("span", { class: "sub" }, sub) : null);
+      const srow = h("div", { class: "chips catrow subs" + (lock ? " nolead" : "") });
+      const setSub = id => { if (lock) { state.sSub = id; store.set("sSub", id); } else { state.aSub = id; store.set("aSub", id); } render(); };
+      const mkSub = (id, label, sub) => h("button", { class: "chip" + (curSub === id ? " sel" : ""), onclick: () => setSub(id) }, label, sub ? h("span", { class: "sub" }, sub) : null);
       srow.append(mkSub("all", "All " + curCat.labelKr));
       for (const sc of curCat.subs) srow.append(mkSub(sc.id, sc.labelKr, sc.label));
       side.append(srow);
@@ -423,25 +443,31 @@
     const listEl = h("div", { class: "alist card" });
     const cntEl = h("span", { id: "aCount" });
     side.append(listEl);
+    const poolN = lock ? ANSWERS.filter(a => a.cat === lock).length : ANSWERS.length;
     function paintList() {
       listEl.innerHTML = "";
-      const groups = expandQuery(state.aQuery);
+      const groups = expandQuery(getQ());
       const searching = groups.length > 0;
       note.classList.toggle("hidden", !searching);
-      note.textContent = "🔎 검색 중에는 카테고리·시기 필터를 무시하고 전체 " + ANSWERS.length + "개에서 찾습니다.";
+      note.textContent = lock ? "🔎 실리콘 카드 " + poolN + "개 안에서 찾습니다 (하위 카테고리·시기 무시)." : "🔎 검색 중에는 카테고리·시기 필터를 무시하고 전체 " + ANSWERS.length + "개에서 찾습니다.";
       side.classList.toggle("searching", searching);
-      const list = filteredAnswers();
-      if (!list.length) { cntEl.textContent = `0 / ${ANSWERS.length}`; listEl.append(h("div", { class: "aempty" }, "No match. ", h("span", { class: "kr" }, state.aCat === "stars" ? "행의 ★을 눌러 오늘 쓸 카드를 담아두세요." : "다른 단어로 검색해 보세요 (한글·영문 모두 가능)."))); return; }
-      let lastCat = null;
-      const grouped = !searching && state.aCat === "all";
+      const list = filteredAnswers(cfg);
+      if (!list.length) { cntEl.textContent = `0 / ${poolN}`; listEl.append(h("div", { class: "aempty" }, "No match. ", h("span", { class: "kr" }, state.aCat === "stars" && !lock ? "행의 ★을 눌러 오늘 쓸 카드를 담아두세요." : "다른 단어로 검색해 보세요 (한글·영문 모두 가능)."))); return; }
+      let lastCat = null, lastSub = null;
+      const grouped = !searching && !lock && state.aCat === "all";
+      const groupedSub = !searching && !!lock && state.sSub === "all" && curCat && curCat.subs;
       for (const a of list) {
         if (grouped && a.cat !== lastCat) {
           lastCat = a.cat; const c = catOf(a.cat);
           listEl.append(h("div", { class: "ahead" }, c.labelKr, h("span", null, c.label)));
         }
+        if (groupedSub && a.sub !== lastSub) {
+          lastSub = a.sub; const sc = curCat.subs.find(x => x.id === a.sub) || { labelKr: "기타", label: "" };
+          listEl.append(h("div", { class: "ahead" }, sc.labelKr, h("span", null, sc.label)));
+        }
         const starred = state.stars.includes(a.id);
-        const subLabel = (curCat && curCat.subs && state.aSub === "all" && a.sub) ? (curCat.subs.find(x => x.id === a.sub) || {}).labelKr : null;
-        listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : ""), onclick: () => go("answer", a.id) },
+        const subLabel = (!groupedSub && curCat && curCat.subs && curSub === "all" && a.sub) ? (curCat.subs.find(x => x.id === a.sub) || {}).labelKr : null;
+        listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : ""), onclick: () => openCard(a.id, cfg) },
           h("span", { class: "txt" }, h("span", { class: "l" }, highlight(a.label, groups)), h("span", { class: "lk kr" }, highlight(a.labelKr, groups))),
           h("span", { class: "meta" },
             (!grouped && (searching || state.aCat === "stars")) ? h("span", { class: "per cat" }, catOf(a.cat).labelKr) : null,
@@ -449,13 +475,13 @@
             a.period ? h("span", { class: "per" }, a.period) : null,
             h("span", { class: "starbtn" + (starred ? " on" : ""), title: "Today 목록에 담기", onclick: e => { e.stopPropagation(); toggleStar(a.id); paintList(); const sc = $(".chip.star .sub"); if (sc) sc.textContent = String(state.stars.length); } }, starred ? "★" : "☆"))));
       }
-      cntEl.textContent = `${list.length} / ${ANSWERS.length}`;
+      cntEl.textContent = `${list.length} / ${poolN}`;
     }
     side.append(h("div", { class: "acount kr" }, cntEl, " · 카테고리 → 최신 분기 → 번호 순 · ☆ = 오늘 쓸 카드 담기"));
     paintList();
     wrap.append(side);
 
-    if (state.answerId) wrap.append(renderAnswerDetail(ANSWERS.find(a => a.id === state.answerId)));
+    if (state.answerId) wrap.append(renderAnswerDetail(ANSWERS.find(a => a.id === state.answerId), cfg));
     else if (window.innerWidth >= 900) {
       wrap.append(h("div", { class: "card", style: "padding:28px;color:var(--muted);font-size:1rem" },
         h("div", { style: "font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:8px" }, "Pick a question on the left, or type to search."),
@@ -464,10 +490,11 @@
     }
     main.append(wrap);
   }
-  function renderAnswerDetail(a) {
+  function renderAnswerDetail(a, cfg) {
+    cfg = cfg || { view: "answer" };
     const d = h("div", { class: "card adetail" + (state.interp ? " interp" : "") });
     d.append(h("div", { class: "ad-head" },
-      h("button", { class: "tool", onclick: () => go("answer"), title: "Esc" }, "← All"),
+      h("button", { class: "tool", onclick: () => (cfg.lockCat ? go("silicone", "qa") : go("answer")), title: "Esc" }, "← All"),
       h("span", { class: "ic" }, a.icon || ""),
       h("div", null, h("div", { class: "t" }, a.label, h("span", { class: "cardno" }, "#" + a.n)),
         h("div", { class: "tk" }, h("span", { class: "per" }, catOf(a.cat).labelKr), (() => { const c = catOf(a.cat); const sc = c.subs && c.subs.find(x => x.id === a.sub); return sc ? h("span", { class: "per" }, sc.labelKr) : null; })(), a.period ? h("span", { class: "per" }, a.period) : null, a.updated ? h("span", { class: "upd" }, "updated " + a.updated) : null, " ", h("span", { class: "kr" }, a.labelKr))),
@@ -496,9 +523,59 @@
     if (a.hold && a.hold !== "—") body.append(h("div", { class: "ad-hold kr" }, h("span", null, "🚧"), h("span", null, "여기까지만: " + a.hold)));
     d.append(body);
     d.append(h("div", { class: "ad-nav" },
-      h("button", { onclick: () => stepAnswer(-1) }, "← Prev card"),
-      h("button", { onclick: () => stepAnswer(1) }, "Next card →")));
+      h("button", { onclick: () => stepAnswer(-1, cfg) }, "← Prev card"),
+      h("button", { onclick: () => stepAnswer(1, cfg) }, "Next card →")));
     return d;
+  }
+
+  // =====================================================================
+  // SILICONE — top-level hub: Q&A (locked to silicone) · Scripts · Facts · Stance
+  // =====================================================================
+  const STABS = [{ id: "qa", label: "Q&A" }, { id: "scripts", label: "Scripts" }, { id: "facts", label: "Facts" }, { id: "stance", label: "Stance" }];
+  const SIL_SCRIPT_IDS = ["seg-silicone-3q26", "silicone-3q4q-update", "momentive-5min", "silicone-vision"];
+  const SIL_FACT_IDS = ["sil-3q4q", "silicone", "momentive"];
+  function renderSilicone(main, r) {
+    if (r.a && STABS.some(t => t.id === r.a)) { state.sTab = r.a; store.set("sTab", r.a); }
+    else if (!r.a) { state.sTab = "qa"; }
+    const sil = ANSWERS.filter(a => a.cat === "silicone");
+    const latest = sil.map(a => a.period || "").sort().reverse()[0];
+    main.append(h("div", { class: "silhead" },
+      h("div", null, h("div", { class: "t" }, "🧪 Silicone & Momentive"), h("div", { class: "s kr" }, `외국인 질문의 대부분. 카드 ${sil.length}장 · 스크립트 ${SIL_SCRIPT_IDS.length}개 · 최신 스탠스 ${latest}`)),
+      h("div", { class: "subtabs", style: "margin:0" }, STABS.map(t => h("button", { class: t.id === state.sTab ? "on" : "", onclick: () => go("silicone", t.id) }, t.label)))));
+    if (state.sTab === "qa") { renderAnswer(main, r, SIL_CFG); return; }
+    if (state.sTab === "scripts") {
+      const list = SIL_SCRIPT_IDS.map(id => SCRIPTS.find(s => s.id === id)).filter(Boolean);
+      main.append(h("p", { class: "kr", style: "font-size:.85rem;margin-bottom:10px" }, "투자자가 실리콘을 콕 집어 물을 때. 1분 코멘트 → 3Q/4Q 업데이트 → 모멘티브 5분 → 장기 비전 순으로 깊어집니다."));
+      main.append(h("div", { class: "plist" }, list.map(sc => h("button", { class: "card pitem sbtn", onclick: () => go("speak", sc.id, String(state.pos[sc.id] || 0)) },
+        h("div", { class: "en" }, h("span", { class: "b k-" + (sc.kind || "").toLowerCase() }, sc.kind), " ", sc.title),
+        h("div", { class: "kr" }, `${sc.quarter} · ${sc.duration} · ${sc.titleKr}`),
+        sc.note ? h("div", { class: "kr", style: "font-size:.78rem;margin-top:4px" }, "📝 " + sc.note) : null))));
+      return;
+    }
+    if (state.sTab === "facts") {
+      for (const id of SIL_FACT_IDS) {
+        const g = FACTS.find(x => x.id === id); if (!g) continue;
+        const card = h("div", { class: "card fgroup" });
+        card.append(h("h3", null, g.icon ? h("span", null, g.icon) : null, g.title));
+        if (g.note) card.append(h("div", { class: "note kr" }, g.note));
+        for (const row of g.rows) card.append(h("div", { class: "frow" }, h("div", { class: "l" }, row[0]), h("div", { class: "v" }, row[1]), row[2] ? h("div", { class: "s" }, row[2]) : null));
+        main.append(card);
+      }
+      return;
+    }
+    // stance: fixed lines by period, latest first — the "say it the same way" sheet
+    const periods = [...new Set(sil.map(a => a.period || ""))].sort().reverse();
+    main.append(h("p", { class: "kr", style: "font-size:.85rem;margin-bottom:10px" }, "실리콘 카드의 고정 문장만 모은 것. 최신 분기가 위. 같은 주제가 여러 분기에 있으면 위의 것을 씁니다."));
+    for (const per of periods) {
+      const card = h("div", { class: "card fgroup" });
+      card.append(h("h3", null, h("span", { class: "per" }, per), per === latest ? "Current stance" : "Earlier stance"));
+      for (const a of sil.filter(x => (x.period || "") === per).sort((x, y) => x.n - y.n)) {
+        card.append(h("button", { class: "stance", onclick: () => go("silicone", "qa", a.id) },
+          h("div", { class: "l" }, a.label, h("span", { class: "lk kr" }, " · " + a.labelKr)),
+          h("div", { class: "fx" }, (a.fixed || [a.core]).map(f => h("p", null, f)))));
+      }
+      main.append(card);
+    }
   }
 
   // =====================================================================

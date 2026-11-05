@@ -1527,3 +1527,262 @@ window.KCC_ANSWERS.push(
     hold: "개인별 지분·승계 계획 세부는 말하지 않음."
   }
 );
+
+// ============================================================
+// 추가분 — 2026.11 MPM MBR 회의록의 「IR 시사점 · 맺음(발언가능/주의/금지)」 기준으로만 작성
+// 🔒 EBITDA·현금·유동성·RICO·월매출 수치, 고객사명, 사업장명, 2027 목표치, 유럽 거점 검토는 넣지 않음
+// period "4Q26" = 3Q 실적 설명 + 4Q 전망 시기
+// ============================================================
+window.KCC_ANSWERS.push(
+  {
+    id: "sil-3q-why-below",
+    cat: "silicone", sub: "margin", period: "4Q26", updated: "2026-11-05",
+    n: 46, icon: "📉",
+    label: "Silicone 3Q — why below plan? Was it FX?",
+    labelKr: "실리콘 3Q — 왜 계획 미달? 환율 탓인가?",
+    tags: ["3Q", "execution", "FX", "below plan"],
+    fixed: ["Demand held. The shortfall was execution and higher costs, not FX."],
+    core: "Demand indicators held. The shortfall came from quality and production execution, and higher costs, not from FX.",
+    support: [
+      "Order intake and the backlog stayed healthy through the quarter.",
+      "What held us back was our own execution: quality holds and production issues that delayed shipments, plus cost inflation.",
+      "FX moved both ways across the year and largely offsets. We do not use it to explain Q3.",
+      "Management is focused on what we control: volume, price and execution."
+    ],
+    numbers: [
+      { v: "Demand held", l: "orders · backlog" },
+      { v: "Execution", l: "quality · production · cost" },
+      { v: "Not FX", l: "offsets over the year" }
+    ],
+    kr: [
+      "수요 지표는 유지됐습니다. 미달은 품질·생산 실행과 원가 상승 때문이지 환율 때문이 아닙니다.",
+      "환율은 연간으로 상당 부분 상쇄되며, 저희는 통제 가능한 물량·가격·실행에 집중하고 있습니다."
+    ],
+    terms: [
+      { kr: "계획 미달", en: "below plan / behind plan" },
+      { kr: "실행 문제", en: "execution issues" },
+      { kr: "품질 보류", en: "quality holds" },
+      { kr: "통제 가능한 것", en: "what we control" }
+    ],
+    hold: "🔒 EBITDA 수치, 충당금 환입, FX 평가손 금액, 사업·지역별 Red 현황은 말하지 않음."
+  },
+  {
+    id: "sil-4q-outlook",
+    cat: "silicone", sub: "margin", period: "4Q26", updated: "2026-11-05",
+    n: 47, icon: "🧭",
+    label: "Silicone / Momentive 4Q — better than 3Q?",
+    labelKr: "실리콘·모멘티브 4Q — 3Q보다 나아지나?",
+    tags: ["4Q", "price increase", "shipments", "outlook"],
+    fixed: ["We target an improvement over Q3: price increases from mid-November and better shipment execution."],
+    core: "We target an improvement over Q3, on price increases taking effect from mid-November and better shipment execution.",
+    support: [
+      "Three levers. First, the recent sales outlook. Second, price increases that take effect from mid-November. Third, converting the backlog into shipments.",
+      "Electronic materials and healthcare are the relatively stronger businesses.",
+      "November and December shipments matter for the full year, so the focus is on execution week by week.",
+      "That is a target, not guidance. We will see the result in the segment numbers."
+    ],
+    numbers: [
+      { v: "Mid-Nov", l: "price increases take effect" },
+      { v: "EM · Healthcare", l: "relatively strong" },
+      { v: "Target", l: "improvement vs Q3, not guidance" }
+    ],
+    kr: [
+      "4분기는 11월 중순부터 반영되는 가격 인상과 출하 실행 개선으로 3분기 대비 개선을 목표로 합니다.",
+      "전자재료와 헬스케어가 상대적으로 좋은 사업이며, 목표이지 가이던스는 아닙니다."
+    ],
+    terms: [
+      { kr: "개선 목표", en: "target an improvement" },
+      { kr: "수주잔고 실행", en: "converting the backlog into shipments" },
+      { kr: "가격 인상 반영", en: "price increases taking effect" }
+    ],
+    hold: "🔒 4Q·연간 EBITDA 전망치, 경영진 Stretch 목표, 월매출 목표 금지. “개선 목표”까지만."
+  },
+  {
+    id: "sil-freight-surcharge",
+    cat: "silicone", sub: "market", period: "4Q26", updated: "2026-11-05",
+    n: 48, icon: "🚚",
+    label: "Freight & cost inflation — are you recovering it?",
+    labelKr: "운송비·원가 인플레 — 회수하고 있나?",
+    tags: ["freight", "surcharge", "inflation", "pricing"],
+    fixed: ["Higher freight is being recovered through surcharges. Pricing decisions are moving closer to the market."],
+    core: "We are recovering higher freight costs through surcharges, and pricing decisions now sit closer to the regions.",
+    support: [
+      "Moving more siloxane between regions after the European supply changes raised freight costs. A surcharge recovers that actual cost. It is cost recovery, not upside.",
+      "Inflation pressure has returned, so we expect further targeted price actions where costs rise.",
+      "In 2027, regional and market teams will act on margin trends faster, instead of waiting for a global decision."
+    ],
+    numbers: [
+      { v: "Surcharge", l: "recovers actual freight cost" },
+      { v: "Targeted", l: "price actions where costs rise" },
+      { v: "Regional", l: "faster pricing decisions" }
+    ],
+    kr: [
+      "운송비 상승분은 할증으로 회수하고 있습니다. 실제 발생한 비용을 회수하는 것이지 업사이드가 아닙니다.",
+      "인플레 압력이 다시 커져 원가가 오르는 곳에는 선별적 가격 조치를 이어가고, 가격 결정은 지역·시장 담당이 더 빨리 하도록 바꾸고 있습니다."
+    ],
+    terms: [
+      { kr: "운송비 할증", en: "freight surcharge" },
+      { kr: "비용 회수", en: "cost recovery" },
+      { kr: "선별적 가격 조치", en: "targeted price actions" }
+    ],
+    hold: "🔒 할증 연환산 금액, 일반·소규모 고객 가격 기회 금액, 인플레 이월 금액 금지."
+  },
+  {
+    id: "sil-ai-thermal-qual",
+    cat: "silicone", sub: "strategy", period: "4Q26", updated: "2026-11-05",
+    n: 49, icon: "🤖",
+    label: "AI data-centre thermal — customer qualification progress?",
+    labelKr: "AI 데이터센터 열관리 — 고객 인증 진전?",
+    tags: ["AI", "thermal", "data centre", "qualification", "2027"],
+    fixed: ["Customer qualification has progressed. We expect it to contribute to growth next year, scaling step by step."],
+    core: "Customer qualification in AI data-centre thermal materials has progressed, and we expect it to contribute to growth next year.",
+    support: [
+      "Recent qualification, audit and test results were positive, and we have been recognised as a supplier.",
+      "Supply ramps step by step. Some raw-material constraints remain, so we manage expectations on timing.",
+      "It is one of the more important growth opportunities in next year’s plan.",
+      "We do not name customers or give product-level revenue."
+    ],
+    numbers: [
+      { v: "Progressed", l: "qualification · audit · tests" },
+      { v: "2027", l: "expected growth contribution" },
+      { v: "Step by step", l: "supply ramp; raw-material constraints" }
+    ],
+    kr: [
+      "AI 데이터센터 열관리 소재에서 고객 인증이 진전되어 내년 성장에 기여할 것으로 기대합니다.",
+      "공급은 단계적으로 늘리며 일부 원재료 제약이 남아 있어 시점은 보수적으로 봅니다. 고객사명과 제품별 매출은 말씀드리지 않습니다."
+    ],
+    terms: [
+      { kr: "고객 인증", en: "customer qualification" },
+      { kr: "공급사로 인정", en: "recognised / approved as a supplier" },
+      { kr: "단계적 확대", en: "scaling step by step" },
+      { kr: "원재료 제약", en: "raw-material constraints" }
+    ],
+    hold: "🔒 고객사명(NVIDIA 등), 금액, 수요 대응 비율 금지. ‘사업부 확인 후 사용’ — 기대 과열 관리."
+  },
+  {
+    id: "mom-cash-priority",
+    cat: "silicone", sub: "mom-fin", period: "4Q26", updated: "2026-11-05",
+    n: 50, icon: "💧",
+    label: "Momentive cash — will KCC support again?",
+    labelKr: "모멘티브 현금 — KCC가 또 지원하나?",
+    tags: ["cash", "working capital", "KCC support", "self-funding"],
+    fixed: ["Momentive’s top priority is working-capital efficiency and self-generated cash."],
+    core: "Momentive’s top priority is working-capital efficiency and generating its own cash.",
+    support: [
+      "The direction from the board is unchanged: the business should fund its own reinvestment without relying on KCC capital or debt.",
+      "Liquidity, including undrawn facilities, remains solid. Cash generation is the work in progress.",
+      "The levers are shipments, receivables collection, inventory, purchasing and cost discipline. Q4 shipments feed cash in early 2027.",
+      "The 2026 injection was planned as the last."
+    ],
+    numbers: [
+      { v: "Self-generated cash", l: "top priority" },
+      { v: "Solid", l: "liquidity incl. facilities" },
+      { v: "Planned as the last", l: "2026 injection" }
+    ],
+    kr: [
+      "모멘티브의 최우선 과제는 운전자본 효율화와 자체 현금 창출입니다. KCC 지원이나 차입에 기대지 않고 재투자 현금을 스스로 벌어야 한다는 이사회 방향은 그대로입니다.",
+      "유동성은 탄탄하고, 현금 창출은 진행 중인 과제입니다. 2026년 출자가 마지막으로 계획된 것입니다."
+    ],
+    terms: [
+      { kr: "운전자본 효율화", en: "working-capital efficiency" },
+      { kr: "자체 현금 창출", en: "self-generated cash / cash generation" },
+      { kr: "매출채권 회수", en: "receivables collection" },
+      { kr: "미사용 한도", en: "undrawn facilities" }
+    ],
+    hold: "🔒 현금·소진액·유동성·FCF 수치, 1Q27 현금 저점 금지. 추가 지원 ‘없음’ 단정 금지 — “planned as the last”."
+  },
+  {
+    id: "sil-2027-outlook",
+    cat: "silicone", sub: "strategy", period: "4Q26", updated: "2026-11-05",
+    n: 51, icon: "📅",
+    label: "Silicone 2027 — growth and margin outlook?",
+    labelKr: "실리콘 2027 — 성장·마진 전망?",
+    tags: ["2027", "AOP", "growth", "above market"],
+    fixed: ["We are planning for growth above market growth and improved profitability. The plan is not final, so no numbers."],
+    core: "We are planning for growth above the market’s growth and for improved profitability. The plan is not final yet.",
+    support: [
+      "The silicone market grows around mid-single digits, so growing above it is the minimum, not an ambition.",
+      "The plan is built bottom-up by business and region. Where it falls short, teams must show the actions that close the gap.",
+      "Growth drivers: new products, new wins, and pricing already executed. We separately track churn from our own new products versus real share loss.",
+      "Risks we plan for: inflation carried in inventory, project delays and quality costs. We keep some levers in reserve rather than putting every opportunity in the base plan."
+    ],
+    numbers: [
+      { v: "> market", l: "growth planning basis" },
+      { v: "Bottom-up", l: "by business & region" },
+      { v: "Not final", l: "no numbers until disclosed" }
+    ],
+    kr: [
+      "내년은 시장 성장률 이상의 성장과 수익성 개선을 목표로 계획을 수립 중입니다. 계획이 확정되지 않아 수치는 말씀드리지 않습니다.",
+      "성장 동력은 신제품, 신규 수주, 이미 실행한 가격이고, 재고에 담긴 인플레와 프로젝트 지연, 품질비용을 리스크로 반영합니다."
+    ],
+    terms: [
+      { kr: "연간 운영계획", en: "annual operating plan (AOP)" },
+      { kr: "상향식 계획", en: "bottom-up plan" },
+      { kr: "부족분 메우기", en: "gap closure" },
+      { kr: "자기잠식 / 점유율 손실", en: "cannibalisation / share loss" }
+    ],
+    hold: "🔒 5%·10% 목표치, 여유분(cushion), 점유율 손실·잠식 금액, 특정 프로젝트 금액, 유럽 생산거점 재검토 — 절대 금지."
+  },
+  {
+    id: "sil-quality-status",
+    cat: "silicone", sub: "ops", period: "4Q26", updated: "2026-11-05",
+    n: 52, icon: "🔧",
+    label: "Quality & delivery — fixed yet?",
+    labelKr: "품질·납기 — 해결됐나?",
+    tags: ["quality", "delivery", "owner", "service"],
+    fixed: ["Improving, but in repeated verification. Every open item now has an owner and an action."],
+    core: "Improving, but we are in a repeated-verification phase rather than declaring it solved.",
+    support: [
+      "The management rhythm changed: unshipped orders, out-of-spec material, customer complaints and inventory each have an owner and an action, tracked daily and weekly, not just reported monthly.",
+      "Some legacy product grades still have open technical issues. We do not call a problem solved until it is fully closed.",
+      "Plant leaders now own the whole customer experience, including logistics and delivery, not only product quality.",
+      "Quality and service management systems are being upgraded, including analytical capability for specialty products."
+    ],
+    numbers: [
+      { v: "Owner + action", l: "per open item" },
+      { v: "Daily / weekly", l: "short-interval control" },
+      { v: "Not ‘solved’", l: "until fully closed" }
+    ],
+    kr: [
+      "개선 중이지만 반복 검증 단계이며, 해결됐다고 선언하지 않습니다. 미출하 주문·규격 미달품·고객 불만·재고마다 담당자와 조치를 붙여 일·주 단위로 관리합니다.",
+      "공장 리더가 물류·배송까지 고객 경험 전체를 책임지고, 품질·서비스 관리체계와 분석 역량을 고도화하고 있습니다."
+    ],
+    terms: [
+      { kr: "규격 미달품", en: "out-of-spec material (OOS)" },
+      { kr: "단기 관리", en: "short-interval control" },
+      { kr: "담당자와 조치", en: "an owner and an action" },
+      { kr: "분석 역량", en: "analytical (QC) capability" }
+    ],
+    hold: "🔒 RICO·OOS 수치, 특정 제품(RTV·X4) 이슈, 재고일수 목표, 사업장명 금지."
+  },
+  {
+    id: "sil-safety-esg",
+    cat: "silicone", sub: "ops", period: "4Q26", updated: "2026-11-05",
+    n: 53, icon: "🦺",
+    label: "Safety / ESG at Momentive sites",
+    labelKr: "모멘티브 안전·ESG 성과",
+    tags: ["safety", "ESG", "shutdown", "injury"],
+    fixed: ["Safety performance at our major sites is strong, with no incidents through shutdown and restart."],
+    core: "Safety performance at our major production sites is strong, including no incidents through shutdown and restart.",
+    support: [
+      "Recordable injuries at the major sites are at historically low levels.",
+      "Where incidents occurred this year, they were at smaller sites and of the routine kind, and reporting has become more transparent, which we see as a positive culture signal.",
+      "Our Korean silicone sites have gone eighteen months without a recordable injury."
+    ],
+    numbers: [
+      { v: "Historically low", l: "recordable injuries, major sites" },
+      { v: "Zero", l: "incidents in shutdown & restart" },
+      { v: "18 months", l: "Korea injury-free" }
+    ],
+    kr: [
+      "주요 생산거점의 안전 성과는 매우 양호하며, 셧다운·재가동 과정에서도 무사고였습니다.",
+      "올해 재해는 소규모 사업장의 전형적 유형이었고, 보고가 투명해진 것은 긍정적 문화 신호로 봅니다."
+    ],
+    terms: [
+      { kr: "기록 대상 재해", en: "recordable injury" },
+      { kr: "셧다운·재가동", en: "shutdown and restart" },
+      { kr: "아차사고", en: "near miss" }
+    ],
+    hold: "🔒 사업장명, 재해 건수, OOS 감축 목표 금지."
+  }
+);

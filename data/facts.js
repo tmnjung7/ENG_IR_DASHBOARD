@@ -94,6 +94,21 @@ window.KCC_FACTS = [
     ]
   },
   {
+    id: "sil-3q4q", title: "Silicone 3Q/4Q — Talking Points (Nov 2026)", icon: "🗣️",
+    note: "11월 MBR 「발언가능」만. 수치 없음. 아래 문장 그대로.",
+    rows: [
+      ["3Q shortfall", "“Demand held. The shortfall was execution and higher costs, not FX.”", "환율을 원인으로 내세우지 않음"],
+      ["4Q", "“We target an improvement over Q3: price increases from mid-November and better shipment execution.”", "‘개선 목표’까지 — 전망치 없음"],
+      ["Freight", "“We are recovering higher freight through surcharges. That is cost recovery, not upside.”", ""],
+      ["AI thermal", "“Customer qualification has progressed; we expect a contribution to growth next year, scaling step by step.”", "사업부 확인 후 사용 · 고객사명 없음 · 원재료 제약"],
+      ["Cash / KCC support", "“Momentive’s top priority is working-capital efficiency and self-generated cash.”", "현금·유동성 수치 없음"],
+      ["Quality", "“Improving, but in repeated verification. Every open item has an owner and an action.”", ""],
+      ["Safety", "“Safety at the major sites is strong; no incidents through shutdown and restart.”", "ESG 질문용"],
+      ["2027", "“Planning for growth above market growth and improved profitability. The plan is not final.”", "5% / 10% 등 목표치 금지"],
+      ["Do not go near", "EBITDA · cash · liquidity · RICO · monthly sales figures · customer names · site names · 2027 targets · European footprint review", "물으면: not separately disclosed / not final / cannot comment on sites"]
+    ]
+  },
+  {
     id: "momentive", title: "Momentive — Sayable Anchors (directional)", icon: "🌐",
     note: "8월 이사회 자료 기반. 🟢 정성 메시지만. 단독 P&L·현금·계획 대비 수치·고객사명·사업장은 말하지 않음.",
     rows: [

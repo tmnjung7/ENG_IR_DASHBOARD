@@ -580,3 +580,62 @@ window.KCC_SCRIPTS.push(
     ]
   }
 );
+
+// ============================================================
+// 2026.11 MBR 「발언가능」 기준 — 실리콘 3Q 리뷰 + 4Q 전망 토픽 스크립트 (수치 없음)
+// ============================================================
+window.KCC_SCRIPTS.push(
+  {
+    id: "silicone-3q4q-update",
+    quarter: "4Q 2026", kind: "Topic",
+    title: "Silicone — 3Q Review & 4Q Outlook",
+    titleKr: "실리콘·모멘티브 3Q 리뷰 + 4Q 전망 (2~3분, 수치 없음)",
+    duration: "2–3 min",
+    badge: "방향성만",
+    note: "11월 MBR 반영. 수치 요구 시 “Momentive’s stand-alone numbers are not separately disclosed.” 고객사명·사업장명·2027 목표치 금지.",
+    sections: [
+      {
+        title: "3Q — what happened", time: "0:00 – 0:50",
+        chips: ["Demand held", "Execution + cost, not FX", "Quality holds · production", "Focus on what we control"],
+        paras: [
+          { en: "Let me give you the silicone picture directionally, since Momentive’s stand-alone numbers are not separately disclosed.",
+            kr: "브리지: 방향성 중심, 단독 수치 미공시." },
+          { en: "In the third quarter, <b>demand held</b>. Order intake and the backlog stayed healthy. The shortfall against our own plan came from <b>execution and higher costs</b>: quality holds and production issues delayed shipments, and cost inflation returned.",
+            kr: "3Q: 수요 유지. 미달은 실행(품질 보류·생산)과 원가 상승." },
+          { en: "FX moved both ways across the year and largely offsets, so we do not use it to explain the quarter. Management is focused on what we control: volume, price and execution.",
+            kr: "환율은 연간 상쇄 — 설명 요인으로 쓰지 않음. 통제 가능한 것에 집중.", pause: true }
+        ]
+      },
+      {
+        title: "4Q — the target", time: "0:50 – 1:30",
+        chips: ["Improvement vs Q3 — a target", "Price increases from mid-Nov", "Backlog → shipments", "EM · Healthcare stronger", "Freight surcharge = cost recovery"],
+        paras: [
+          { en: "For the fourth quarter we <b>target an improvement over Q3</b>. Three levers: the recent sales outlook, price increases that take effect from mid-November, and converting the backlog into shipments. Electronic materials and healthcare are the relatively stronger businesses.",
+            kr: "4Q: 3Q 대비 개선 목표. 판매 전망·11월 중순 가격 인상·백로그 실행. EM·헬스케어 상대 강세." },
+          { en: "On costs, we are recovering higher freight through surcharges. That is cost recovery, not upside. And pricing decisions now sit closer to the regions, so we react faster when inflation moves.",
+            kr: "운송비 할증으로 회수(업사이드 아님). 가격 결정 지역화 → 더 빠른 대응.", pause: true }
+        ]
+      },
+      {
+        title: "Cash & execution", time: "1:30 – 2:10",
+        chips: ["Priority: working capital, own cash", "Liquidity solid", "Owner + action per item", "Quality: improving, repeated verification", "Safety strong"],
+        paras: [
+          { en: "On cash, Momentive’s top priority is <b>working-capital efficiency and generating its own cash</b>. Liquidity, including undrawn facilities, remains solid. Fourth-quarter shipments feed receivables and cash in early 2027.",
+            kr: "현금: 운전자본 효율화·자체 현금 창출 최우선. 유동성 탄탄. 4Q 출하 → 2027 초 현금." },
+          { en: "On execution, the management rhythm changed. Unshipped orders, out-of-spec material, complaints and inventory each have an owner and an action, tracked daily and weekly. Quality is improving, but we are in a repeated-verification phase and do not call it solved. Safety at the major sites is strong, with no incidents through shutdown and restart.",
+            kr: "실행: 항목별 담당자·조치, 일·주 단위. 품질 개선 중이나 반복 검증. 안전 양호." }
+        ]
+      },
+      {
+        title: "Next year & close", time: "2:10 – 2:40",
+        chips: ["AI thermal: qualification progressed", "2027: above-market growth, better profitability", "Plan not final — no numbers"],
+        paras: [
+          { en: "Looking to next year: customer qualification in AI data-centre thermal materials has progressed, and we expect it to contribute to growth, scaling step by step as raw-material constraints ease.",
+            kr: "AI 열관리 고객 인증 진전 → 내년 성장 기여, 단계적." },
+          { en: "We are planning for <b>growth above market growth and improved profitability</b>. The plan is not final, so I will not give you numbers today. <b>That is the silicone update. Happy to take questions.</b>",
+            kr: "2027: 시장 이상 성장·수익성 개선 목표로 수립 중. 수치 없음. Q&A." }
+        ]
+      }
+    ]
+  }
+);
