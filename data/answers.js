@@ -770,13 +770,13 @@ window.KCC_ANSWERS.push(
     core: "The supply side is finally working in our favour: Chinese cuts and peer restructuring are stabilising the market.",
     support: [
       "Chinese producers are running joint production cuts, with utilisation around 61 percent.",
-      "DMC bottomed in mid-2025 and has recovered. Silicon metal is flat at a low level. That spread shows in our margin.",
+      "DMC bottomed in 2025 and has recovered on a trend basis, while silicon metal stays flat at a low level. That spread shows in our margin.",
       "Dow is shutting about a third of European siloxane capacity, and Dow and Shin-Etsu raised prices again in Q2.",
       "The market is splitting: commodity weak, specialty firm. Our low-end issue was fixed costs, not DMC."
     ],
     numbers: [
       { v: "~61%", l: "China utilisation under joint cuts" },
-      { v: "13–14.8k RMB", l: "DMC, from ~10k low" },
+      { v: "DMC: trend up", l: "from the 2025 low — say trend, not spot" },
       { v: "~1/3", l: "European siloxane capacity Dow is closing" }
     ],
     kr: [
@@ -1784,5 +1784,138 @@ window.KCC_ANSWERS.push(
       { kr: "아차사고", en: "near miss" }
     ],
     hold: "🔒 사업장명, 재해 건수, OOS 감축 목표 금지."
+  }
+);
+
+// ============================================================
+// 추가분 — 중국 실리콘·DMC 시황 IR 정리본(2026.10) 「발언가능」 기준 · 피어 실적 수치·스팟 가격 직접 인용 없음
+// ============================================================
+window.KCC_ANSWERS.push(
+  {
+    id: "sil-china-cycle",
+    cat: "silicone", sub: "market", period: "4Q26", updated: "2026-11-05",
+    n: 54, icon: "📈",
+    label: "China DMC market — where are we in the cycle?",
+    labelKr: "중국 DMC 시황 — 사이클 어디쯤인가?",
+    tags: ["China", "DMC", "cycle", "rebound", "oversupply"],
+    fixed: ["The market passed the bottom in late 2025 and is in a firm recovery cycle. The oversupply concern has been resolved."],
+    core: "The market passed the bottom in late 2025 and is in a firm price-recovery cycle. The oversupply concern has been resolved.",
+    support: [
+      "There has been no meaningful new DMC capacity in China this year. Leading producers self-regulate utilisation, so spot inventories are tight.",
+      "Prices have risen on a trend basis through the year, with a further step up into the autumn peak season on real demand, not speculative stocking.",
+      "Producers have regained pricing power. That supports our own spread.",
+      "The watch item is the fourth-quarter off-season: how fast downstream inventories are digested after the peak."
+    ],
+    numbers: [
+      { v: "Bottom: late 2025", l: "cycle position" },
+      { v: "No new capacity", l: "China DMC, 1H26" },
+      { v: "Trend: up", l: "say trend, not spot price" }
+    ],
+    kr: [
+      "중국 DMC 시장은 2025년 말 바닥을 지나 확고한 가격 반등 사이클에 있습니다. 공급 과잉 우려는 해소됐습니다.",
+      "올해 신규 증설이 사실상 없고 선도 기업이 가동률을 자율 조절해 재고가 타이트합니다. 4분기 비수기 재고 소진 속도는 지켜볼 변수입니다."
+    ],
+    terms: [
+      { kr: "가격 반등 사이클", en: "price-recovery cycle" },
+      { kr: "가동률 자율 규제", en: "self-regulated utilisation" },
+      { kr: "판가 주도권", en: "pricing power" },
+      { kr: "성수기 / 비수기", en: "peak season / off-season" }
+    ],
+    hold: "스팟 가격(14,500 RMB 등) 직접 제시 금지 — ‘추세적 반등’. 중국 JV 가동률·‘판매’ 표현 금지."
+  },
+  {
+    id: "sil-downstream-shift",
+    cat: "silicone", sub: "market", period: "4Q26", updated: "2026-11-05",
+    n: 55, icon: "🔋",
+    label: "Downstream shift — AI data centres, EV/ESS, solar",
+    labelKr: "전방 수요 재편 — AI DC·전기차/ESS·태양광",
+    tags: ["downstream", "AI", "ESS", "EV", "solar", "mix"],
+    fixed: ["Demand is being rebuilt from construction toward specialty end-markets: AI data-centre thermal, large ESS, EVs and solar."],
+    core: "Silicone demand is being rebuilt from construction toward specialty end-markets: AI data-centre thermal materials, large energy storage, electric vehicles and solar.",
+    support: [
+      "AI data centres need silicone thermal fluids and thermal-interface materials to manage heat from large-model computing.",
+      "Electric vehicles use far more silicone per vehicle than combustion cars, and large outdoor energy-storage systems need weather- and flame-resistant specialty grades.",
+      "In solar, dual-glass and N-type modules raise silicone use per unit area again.",
+      "This is the qualitative upgrade behind our specialty strategy: the mix moves to high-end applications across the industry."
+    ],
+    numbers: [
+      { v: "AI DC · ESS · EV · PV", l: "new demand pillars" },
+      { v: "Construction ↓", l: "legacy share shrinking" },
+      { v: "Mix upgrade", l: "industry-wide" }
+    ],
+    kr: [
+      "과거 건축·부동산에 편중됐던 수요가 AI 데이터센터 열관리 소재, 대형 ESS, 전기차, 태양광 등 스페셜티 중심으로 재편되고 있습니다.",
+      "산업 전반에서 하이엔드 어플리케이션 비중이 커지는 질적 성장이며, 이것이 저희 스페셜티 전략의 배경입니다."
+    ],
+    terms: [
+      { kr: "액침냉각액", en: "immersion-cooling fluid / thermal fluid" },
+      { kr: "열계면소재", en: "thermal-interface material (TIM)" },
+      { kr: "에너지저장장치", en: "energy-storage system (ESS)" },
+      { kr: "양면유리 모듈", en: "dual-glass module" }
+    ],
+    hold: "경쟁사 액침냉각 제품·인증 진척도 인용 금지. 당사의 미확정 AI 냉각재를 연상시키지 않기 — 기존 열관리 문구까지만."
+  },
+  {
+    id: "sil-peers-benefit",
+    cat: "silicone", sub: "market", period: "4Q26", updated: "2026-11-05",
+    n: 56, icon: "🏭",
+    label: "Chinese peers rebounded sharply — are you benefiting the same way?",
+    labelKr: "중국 피어 실적 급반등 — 당사도 같은 수혜?",
+    tags: ["peers", "Dongyue", "Wynca", "benchmark", "specialty"],
+    fixed: ["Industry fundamentals have turned. Our exposure is more specialty than commodity DMC, so our benefit comes through mix and pricing, not spot prices."],
+    core: "Industry fundamentals have turned, and we benefit, but through specialty mix and pricing rather than spot DMC prices.",
+    support: [
+      "Major Chinese producers returned to strong profit growth in the first half. That confirms the rebound is industry-wide, not company-specific.",
+      "Their earnings are geared to commodity DMC. Ours sit further downstream in specialties, where raw materials can be under 10 percent of cost.",
+      "So a DMC price recovery helps us at the margin and removes the low-price pressure on our basic lines, while the bigger driver for us is mix and our own pricing.",
+      "We benchmark ourselves against global specialty peers such as Wacker, and we have not closed that gap yet."
+    ],
+    numbers: [
+      { v: "Industry-wide", l: "rebound confirmed by peers" },
+      { v: "<10%", l: "raw materials in specialty cost" },
+      { v: "Mix + pricing", l: "our main lever" }
+    ],
+    kr: [
+      "중국 주요 피어들이 상반기에 강한 이익 반등을 보여 산업 전체 펀더멘털이 돌아섰음을 확인했습니다.",
+      "다만 피어는 범용 DMC에 연동되고, 저희는 스페셜티 비중이 커서 수혜는 스팟 가격보다 믹스와 자체 가격 정책을 통해 옵니다."
+    ],
+    terms: [
+      { kr: "범용 DMC 연동", en: "geared to commodity DMC" },
+      { kr: "후방(다운스트림)", en: "further downstream" },
+      { kr: "산업 전반의 반등", en: "industry-wide rebound" }
+    ],
+    hold: "🔒 피어 1H26 수치(+916%, +268%, 흑자전환 등) 직접 제시 금지. 특정 피어와 당사 직접 비교 지양."
+  },
+  {
+    id: "sil-cost-floor",
+    cat: "silicone", sub: "market", period: "4Q26", updated: "2026-11-05",
+    n: 57, icon: "⛏️",
+    label: "Raw materials — silicon metal, methanol, the spread",
+    labelKr: "원재료 — 메탈실리콘·메탄올·스프레드",
+    tags: ["raw materials", "silicon metal", "methanol", "spread", "cost floor"],
+    fixed: ["Silicon metal is flat at a low level while DMC has risen, so the spread has widened. We watch the cost floor and the Q4 off-season."],
+    core: "Silicon metal has stayed flat at a low level while DMC prices rose, so the spread widened this year.",
+    support: [
+      "Silicon metal has been in a long downtrend since early 2024 and is now flat. Methanol costs have risen recently, which supported the latest DMC step-up.",
+      "The question from here is whether DMC holds above the cost floor as metal and methanol costs move. So far the spread has held.",
+      "For our specialty business the spread matters less than for commodity producers, but it sets the tone for basic grades.",
+      "The second watch item is Q4 off-season destocking after the autumn peak."
+    ],
+    numbers: [
+      { v: "Metal: flat, low", l: "since early 2024 downtrend" },
+      { v: "Spread: wider", l: "DMC up, metal flat" },
+      { v: "Watch: Q4", l: "off-season destocking" }
+    ],
+    kr: [
+      "메탈실리콘은 2024년 초 이후 장기 하락 뒤 저점에서 횡보하고, DMC는 올랐기 때문에 스프레드가 넓어졌습니다. 최근 메탄올 원가 상승이 DMC 추가 상승을 뒷받침했습니다.",
+      "앞으로는 원가 지지선 위에서 DMC가 유지되는지, 4분기 비수기 재고 소진이 얼마나 빠른지가 관찰 포인트입니다."
+    ],
+    terms: [
+      { kr: "메탈실리콘", en: "silicon metal (metallurgical-grade)" },
+      { kr: "원가 지지선", en: "cost floor" },
+      { kr: "스프레드", en: "spread (DMC price minus feedstock cost)" },
+      { kr: "재고 소진", en: "destocking / inventory digestion" }
+    ],
+    hold: "RMB 단가 직접 제시는 ‘추세’로 갈음. 당사 원재료 구매 단가·계약 조건 금지."
   }
 );

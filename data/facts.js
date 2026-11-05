@@ -109,6 +109,20 @@ window.KCC_FACTS = [
     ]
   },
   {
+    id: "sil-market", title: "Silicone Market — China DMC (Oct 2026)", icon: "📈",
+    note: "IR 정리본(SunSirs·증권일보 기반). 미팅에서는 수치 대신 추세로. 피어 실적 수치 금지.",
+    rows: [
+      ["Cycle", "“Passed the bottom in late 2025; firm recovery cycle; oversupply concern resolved.”", "no new DMC capacity in China 1H26 (~3.44 Mt total)"],
+      ["DMC price (ref)", "~10,000 (Oct 25) → ~13,600 (early Sep 26) → 14,500–14,800 RMB/t (mid-Oct 26)", "say: ‘risen on a trend basis’ — not the spot number"],
+      ["Silicon metal (ref)", "~9,600–9,700 RMB/t, flat after long downtrend", "spread with DMC widened; methanol cost up"],
+      ["Supply", "Leading producers self-regulate utilisation (~61% under joint cuts)", "spot inventories tight"],
+      ["Demand", "Autumn peak-season restocking = real demand, not speculative", "Q4 off-season destocking = watch item"],
+      ["Downstream shift", "AI DC thermal fluids/TIM · NEV & large ESS · PV dual-glass/N-type", "construction share shrinking"],
+      ["Peers", "“Major Chinese peers returned to strong profit growth in 1H26.”", "🔒 no figures (+916%, +268%); no direct benchmark"],
+      ["Our angle", "“Specialty exposure: benefit through mix and pricing, not spot DMC.”", "raw materials <10% of specialty cost"]
+    ]
+  },
+  {
     id: "momentive", title: "Momentive — Sayable Anchors (directional)", icon: "🌐",
     note: "8월 이사회 자료 기반. 🟢 정성 메시지만. 단독 P&L·현금·계획 대비 수치·고객사명·사업장은 말하지 않음.",
     rows: [

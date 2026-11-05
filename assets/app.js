@@ -7,6 +7,7 @@
   const PHRASES = window.KCC_PHRASES || { categories: [], easyWords: [], pronounce: [], mistakes: [], numberExamples: [] };
   const FACTS = window.KCC_FACTS || [];
   const STUDY = window.KCC_STUDY || [];
+  const MARKET = window.KCC_MARKET || null;
 
   const $ = (sel, el) => (el || document).querySelector(sel);
   const h = (tag, attrs, ...kids) => {
@@ -531,9 +532,9 @@
   // =====================================================================
   // SILICONE — top-level hub: Q&A (locked to silicone) · Scripts · Facts · Stance
   // =====================================================================
-  const STABS = [{ id: "qa", label: "Q&A" }, { id: "scripts", label: "Scripts" }, { id: "facts", label: "Facts" }, { id: "stance", label: "Stance" }];
+  const STABS = [{ id: "qa", label: "Q&A" }, { id: "market", label: "Market" }, { id: "scripts", label: "Scripts" }, { id: "facts", label: "Facts" }, { id: "stance", label: "Stance" }];
   const SIL_SCRIPT_IDS = ["seg-silicone-3q26", "silicone-3q4q-update", "momentive-5min", "silicone-vision"];
-  const SIL_FACT_IDS = ["sil-3q4q", "silicone", "momentive"];
+  const SIL_FACT_IDS = ["sil-3q4q", "sil-market", "silicone", "momentive"];
   function renderSilicone(main, r) {
     if (r.a && STABS.some(t => t.id === r.a)) { state.sTab = r.a; store.set("sTab", r.a); }
     else if (!r.a) { state.sTab = "qa"; }
@@ -543,6 +544,7 @@
       h("div", null, h("div", { class: "t" }, "🧪 Silicone & Momentive"), h("div", { class: "s kr" }, `외국인 질문의 대부분. 카드 ${sil.length}장 · 스크립트 ${SIL_SCRIPT_IDS.length}개 · 최신 스탠스 ${latest}`)),
       h("div", { class: "subtabs", style: "margin:0" }, STABS.map(t => h("button", { class: t.id === state.sTab ? "on" : "", onclick: () => go("silicone", t.id) }, t.label)))));
     if (state.sTab === "qa") { renderAnswer(main, r, SIL_CFG); return; }
+    if (state.sTab === "market") { renderMarket(main); return; }
     if (state.sTab === "scripts") {
       const list = SIL_SCRIPT_IDS.map(id => SCRIPTS.find(s => s.id === id)).filter(Boolean);
       main.append(h("p", { class: "kr", style: "font-size:.85rem;margin-bottom:10px" }, "투자자가 실리콘을 콕 집어 물을 때. 1분 코멘트 → 3Q/4Q 업데이트 → 모멘티브 5분 → 장기 비전 순으로 깊어집니다."));
@@ -576,6 +578,46 @@
       }
       main.append(card);
     }
+  }
+
+  // ---------- SILICONE › Market — raw-material & China DMC trends (English first) ----------
+  function renderMarket(main) {
+    if (!MARKET) { main.append(h("div", { class: "card", style: "padding:20px" }, "No market data (data/market.js)")); return; }
+    const M = MARKET;
+    main.append(h("div", { class: "card mhead" },
+      h("div", { class: "mk-lbl" }, "MARKET VIEW · " + M.asOf),
+      h("div", { class: "mk-t" }, M.title), h("div", { class: "mk-tk kr" }, M.titleKr),
+      h("p", { class: "mk-h" }, M.headline.en), h("p", { class: "kr mk-hk" }, M.headline.kr)));
+    // say
+    const say = h("div", { class: "card mcard" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Say it like this — no numbers"));
+    M.say.forEach((x, i) => say.append(h("div", { class: "msay" }, h("i", null, String(i + 1)), h("div", null, h("div", { class: "en" }, x.en), h("div", { class: "kr" }, x.kr)))));
+    main.append(say);
+    // grid: price path + metrics
+    const grid = h("div", { class: "mgrid" });
+    const price = h("div", { class: "card mcard" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "DMC price path — " + M.ref.priceUnit), h("div", { class: "mnote kr" }, M.ref.noteKr || M.ref.note));
+    const path = h("div", { class: "mpath" });
+    M.ref.price.forEach((pt, i) => { if (i) path.append(h("span", { class: "arr" }, "→")); path.append(h("div", { class: "mpt" }, h("b", null, pt.v), h("span", null, pt.when), pt.s ? h("em", null, pt.s) : null)); });
+    price.append(path, h("div", { class: "mnote" }, M.ref.note));
+    grid.append(price);
+    const met = h("div", { class: "card mcard" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Supply & cost — reference"));
+    M.ref.metrics.forEach(m => met.append(h("div", { class: "frow" }, h("div", { class: "l" }, m.l), h("div", { class: "v" }, m.v), h("div", { class: "s" }, m.s))));
+    grid.append(met);
+    main.append(grid);
+    // demand shift
+    const dem = h("div", { class: "card mcard" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Downstream shift — where demand is moving"));
+    M.ref.demand.forEach(d => dem.append(h("div", { class: "frow" }, h("div", { class: "l" }, d.l), h("div", { class: "s", style: "grid-column:2 / -1" }, d.s))));
+    main.append(dem);
+    // caution / avoid / watch
+    const g2 = h("div", { class: "mgrid three" });
+    const cau = h("div", { class: "card mcard warn" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Careful"));
+    M.caution.forEach(c => cau.append(h("div", { class: "mli" }, h("div", { class: "en" }, c.en), h("div", { class: "kr" }, c.kr))));
+    const avd = h("div", { class: "card mcard stop" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Do not say"));
+    M.avoid.forEach(a => avd.append(h("div", { class: "mli" }, h("div", { class: "en" }, "✕ " + a.en), h("div", { class: "kr" }, a.kr))));
+    const wat = h("div", { class: "card mcard" }, h("div", { class: "ad-lbl", style: "padding:12px 16px 0" }, "Watch list"));
+    M.ref.watch.forEach(w => wat.append(h("div", { class: "mli" }, h("div", { class: "en" }, "• " + w))));
+    g2.append(cau, avd, wat);
+    main.append(g2);
+    main.append(h("div", { class: "kr", style: "font-size:.78rem;margin-top:8px" }, "관련 카드: SILICONE › Q&A › 시황·수요·경쟁. 갱신: data/market.js (월 1회 권장)."));
   }
 
   // =====================================================================

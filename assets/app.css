@@ -342,3 +342,34 @@ mark{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px}
 :root[data-theme="dark"] .stance .fx p{color:#7EB1FF}
 .stance .fx p+p{margin-top:2px}
 .fgroup h3 .per{margin-right:6px}
+
+/* ---------- SILICONE › Market ---------- */
+.mhead{padding:16px 18px;margin-bottom:12px}
+.mk-lbl{font-size:.7rem;font-weight:800;letter-spacing:1px;color:var(--muted)}
+.mk-t{font-size:1.2rem;font-weight:900;margin-top:4px}
+.mk-tk{font-size:.85rem}
+.mk-h{font-size:1.15rem;font-weight:700;line-height:1.5;margin-top:10px;color:var(--navy)}
+:root[data-theme="dark"] .mk-h{color:#CFE0FF}
+.mk-hk{font-size:.9rem;margin-top:4px}
+.mcard{margin-bottom:12px;overflow:hidden;padding-bottom:6px}
+.msay{display:flex;gap:10px;padding:10px 16px;border-top:1px solid var(--border)}
+.msay i{flex:0 0 24px;height:24px;border-radius:999px;background:var(--chip);color:var(--chip-text);font-style:normal;font-weight:800;font-size:.75rem;display:inline-flex;align-items:center;justify-content:center;margin-top:3px}
+.msay .en{font-size:1.05rem;font-weight:700;line-height:1.5}
+.msay .kr{font-size:.82rem;margin-top:2px}
+.mgrid{display:grid;gap:12px}
+@media(min-width:900px){.mgrid{grid-template-columns:1fr 1fr}.mgrid.three{grid-template-columns:1fr 1fr 1fr}}
+.mgrid .mcard{margin-bottom:0}
+.mgrid{margin-bottom:12px}
+.mpath{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 16px}
+.mpt{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:6px 10px;display:flex;flex-direction:column;min-width:96px}
+.mpt b{font-size:1rem;color:var(--navy);font-variant-numeric:tabular-nums}
+:root[data-theme="dark"] .mpt b{color:#7EB1FF}
+.mpt span{font-size:.72rem;color:var(--muted)}
+.mpt em{font-size:.7rem;color:var(--muted);font-style:normal;margin-top:2px}
+.mpath .arr{color:var(--muted);font-weight:800}
+.mnote{font-size:.75rem;color:var(--muted);padding:4px 16px 8px}
+.mli{padding:8px 16px;border-top:1px solid var(--border)}
+.mli .en{font-size:.92rem;font-weight:600;line-height:1.45}
+.mli .kr{font-size:.8rem;margin-top:2px}
+.mcard.warn .ad-lbl{color:#8A5A00}.mcard.stop .ad-lbl{color:var(--red)}
+.mcard.stop .mli .en{color:var(--red)}
