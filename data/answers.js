@@ -35,6 +35,7 @@ window.KCC_ANSWER_CATS = [
 window.KCC_ANSWERS = [
   {
     id: "cnt-when-how",
+    asked: "최근 외국인 미팅",
     cat: "asset", period: "3Q26", updated: "2026-10-26",
     n: 1, icon: "🏢",
     label: "Samsung C&T — when / how",
@@ -70,6 +71,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "special-dividend",
+    asked: "최근 외국인 미팅",
     cat: "returns", period: "3Q26", updated: "2026-10-26",
     n: 2, icon: "💰",
     label: "Special dividend — ≥50%? lag? quarterly?",
@@ -140,6 +142,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "silicone-margin",
+    asked: "최근 외국인 미팅",
     cat: "silicone", sub: "margin", period: "3Q26", updated: "2026-10-26",
     n: 4, icon: "🧪",
     label: "Silicone margin — normalisation",
@@ -210,6 +213,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "raw-materials",
+    asked: "최근 외국인 미팅",
     cat: "group", sub: "cost", period: "3Q26", updated: "2026-10-26",
     n: 6, icon: "🛢️",
     label: "Raw materials — lag, how long",
@@ -348,6 +352,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "building-materials",
+    asked: "최근 외국인 미팅",
     cat: "bm", period: "3Q26", updated: "2026-10-26",
     n: 10, icon: "🏗️",
     label: "Building materials — recovery timing",
@@ -383,6 +388,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "paint-margins",
+    asked: "최근 외국인 미팅",
     cat: "paint", period: "3Q26", updated: "2026-10-26",
     n: 11, icon: "🎨",
     label: "Paint — marine / auto margins",
@@ -518,6 +524,7 @@ window.KCC_ANSWERS = [
   },
   {
     id: "value-up-targets",
+    asked: "최근 외국인 미팅",
     cat: "returns", period: "3Q26", updated: "2026-08-21",
     n: 15, icon: "🎯",
     label: "Value-up targets — PBR / ROE",
@@ -698,6 +705,7 @@ window.KCC_ANSWERS.push(
   // ---------------- 실리콘 · Momentive ----------------
   {
     id: "sil-sustainable",
+    asked: "최근 외국인 미팅",
     cat: "silicone", sub: "margin", period: "2Q26", updated: "2026-08-17",
     n: 20, icon: "🧪",
     label: "Silicone recovery — sustainable, or just the April price?",
@@ -761,6 +769,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-market-backdrop",
+    asked: "최근 외국인 미팅",
     cat: "silicone", sub: "market", period: "2Q26", updated: "2026-08-17",
     n: 22, icon: "🌏",
     label: "Silicone market — China cuts, DMC, Dow Europe",
@@ -826,6 +835,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "sil-long-term",
+    asked: "최근 외국인 미팅",
     cat: "silicone", sub: "strategy", period: "2Q26", updated: "2026-08-21",
     n: 24, icon: "🚀",
     label: "Silicone — long-term targets & strategy",
@@ -1272,6 +1282,7 @@ window.KCC_ANSWERS.push(
   },
   {
     id: "rating-low",
+    asked: "최근 외국인 미팅",
     cat: "capex", period: "2Q26", updated: "2026-08-17",
     n: 38, icon: "🏷️",
     label: "Why is the credit rating low despite big assets?",
@@ -1306,6 +1317,7 @@ window.KCC_ANSWERS.push(
   // ---------------- 자산활용 · 주주환원 ----------------
   {
     id: "close-the-gap",
+    asked: "최근 외국인 미팅",
     cat: "asset", period: "2Q26", updated: "2026-08-17",
     n: 39, icon: "📐",
     label: "Stock trades far below your holdings — how do you close the gap?",
@@ -1917,5 +1929,405 @@ window.KCC_ANSWERS.push(
       { kr: "재고 소진", en: "destocking / inventory digestion" }
     ],
     hold: "RMB 단가 직접 제시는 ‘추세’로 갈음. 당사 원재료 구매 단가·계약 조건 금지."
+  }
+);
+
+// ============================================================
+// 추가분 — 최근 외국인 투자자 미팅 전사(통역 동반, 3Q 공시 전)에서 추출
+// imp  = 중요 포인트(목록 음영 + ★ 배지) · warn = 미팅 발언이 공식 스탠스와 다르거나 민감해 확인 필요
+// src  = 출처 표시. 미팅에서 실제로 말한 수치는 numbers에 넣되 warn으로 민감도 표시
+// ============================================================
+window.KCC_ANSWERS.push(
+  // ---------------- 건자재 ----------------
+  {
+    id: "bm-hightech-share",
+    cat: "bm", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 58, icon: "🏭",
+    imp: "외국인이 반드시 묻는 숫자. 비중 3개(20% / 80% / 30~40%)와 ‘정점은 내년’을 한 호흡으로.",
+    label: "How big is semiconductor / data-centre demand in Building Materials?",
+    labelKr: "건자재에서 반도체·데이터센터 비중은 얼마나 되나?",
+    tags: ["insulation", "high-tech", "data centre", "fab", "share"],
+    fixed: ["Insulation is a little under 20% of Building Materials revenue. About 80% of that is commercial, and 30–40% of the commercial volume is high-tech: data centres and fabs."],
+    core: "Insulation is a little under 20 percent of Building Materials revenue; about 80 percent of that is commercial, and 30 to 40 percent of the commercial volume goes to data centres and semiconductor fabs.",
+    support: [
+      "The rest of the commercial volume is logistics warehouses and similar projects.",
+      "Q2 and Q3 are the initial volumes. As the large fabs under construction approach completion, volumes rise, so we see the peak next year.",
+      "Insulation is fixed-cost heavy, so this volume matters for utilisation as much as for revenue.",
+      "Excluding insulation, the broader building-materials recovery depends on housing supply, which we see from late 2027 or early 2028."
+    ],
+    numbers: [
+      { v: "<20%", l: "insulation share of BM revenue" },
+      { v: "80% · 30–40%", l: "commercial share · high-tech share of it" },
+      { v: "Peak next year", l: "fab completion timing" }
+    ],
+    kr: [
+      "단열재는 건자재 매출의 20% 조금 못 미치고, 그중 약 80%가 상업용이며, 상업용의 30~40%가 데이터센터·반도체 팹 물량입니다.",
+      "2~3분기는 초도 물량이고, 대형 팹 준공이 가까워질수록 물량이 늘어 정점은 내년으로 봅니다."
+    ],
+    terms: [
+      { kr: "초도 물량", en: "initial volumes" },
+      { kr: "준공 시점", en: "completion timing" },
+      { kr: "반도체 팹", en: "semiconductor fab" },
+      { kr: "물류창고", en: "logistics warehouses" }
+    ],
+    hold: "고객사명(삼성전자·하이닉스)과 공장당 금액(~200억원)은 미팅에서 언급됐지만 이후에는 ‘the large fabs under construction’으로 뭉개는 것을 권장."
+  },
+  {
+    id: "bm-margin-why-10",
+    cat: "bm", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 59, icon: "🛡️",
+    imp: "‘왜 건설 불황에도 마진 10%인가’ — 점유율 → 가격 방어 → 하이테크 물량 3단 논리.",
+    label: "Why is the BM margin holding at ~10% in a bad construction market?",
+    labelKr: "건설 불황인데 건자재 마진이 왜 10%를 지키나?",
+    tags: ["margin", "market share", "pricing", "housing"],
+    fixed: ["Market share lets us hold price. High-tech volume fills the gap. The upside needs housing, around late 2027 to early 2028."],
+    core: "Two things hold the margin: our market share lets us keep prices firm, and high-tech commercial volume fills the volume gap.",
+    support: [
+      "First, share. In gypsum board and insulation we lead the market, so even in a weak market we do not have to cut price.",
+      "Second, commercial volume from data centres and fabs has been coming in, which keeps revenue and the margin at today’s level.",
+      "To go back above this, residential volume has to return. Builders’ order books point to visibility the year after next.",
+      "Orders turn into revenue only when construction starts, so there is a lag. Until then the goal is to hold the current margin."
+    ],
+    numbers: [
+      { v: "~10%", l: "BM operating margin, holding" },
+      { v: "Share → price", l: "gypsum 60–70% · insulation 55%+" },
+      { v: "Late 2027 – early 2028", l: "housing recovery view" }
+    ],
+    kr: [
+      "시장 점유율 덕분에 불황에도 가격을 견조하게 유지하고, 하이테크 상업용 물량이 매출과 마진을 받쳐 줍니다.",
+      "그 이상으로 올라가려면 주거용 물량이 돌아와야 하는데, 건설사 수주로 보면 내후년에 가시성이 보입니다. 수주가 착공으로 이어지는 시차가 있어 당분간은 현 마진 유지가 목표입니다."
+    ],
+    terms: [
+      { kr: "가격 방어", en: "defend / hold price" },
+      { kr: "수주 → 착공", en: "orders turning into construction starts" },
+      { kr: "주거용 물량", en: "residential volume" }
+    ],
+    hold: "—"
+  },
+  // ---------------- 공통 · 원재료 ----------------
+  {
+    id: "rm-war-impact",
+    cat: "group", sub: "cost", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 60, icon: "🛢️",
+    imp: "원재료 질문의 표준 답: 3~4월 급등 → 다변화 → 공급 제약 없음 → 건자재는 PVC만, 도료는 4월 무헤지 → 4Q 해소.",
+    label: "Middle-East war and raw materials — can you pass it on? BM vs Paint",
+    labelKr: "중동 전쟁과 원재료 — 전가 가능한가? 건자재 vs 도료",
+    tags: ["raw materials", "war", "PVC", "hedging", "pass-through"],
+    fixed: ["The spike was March–April. We diversified sourcing, there is no supply constraint, and we buy only slightly above past levels. BM: only PVC was affected. Paint: no hedge in April, so July–August took the hit; Q4 is clear."],
+    core: "The spike was March and April. Since then we diversified sourcing, there is no supply constraint, and prices have normalised, slightly above past levels.",
+    support: [
+      "Building materials: PVC fell back quickly, so the effect fades after Q3. Other inputs are mostly domestic or mineral-based, so the war had little impact.",
+      "Paint: we had no hedge in place in April, so the expensive purchases hit July and August profitability. Inventory has been adjusted and part of the cost increase has been passed to prices, so the Q4 impact should be small.",
+      "So paint is bottoming in Q3. Building materials is a little weaker in Q3 than Q2 on margin, and we expect some recovery in Q4."
+    ],
+    numbers: [
+      { v: "Mar–Apr", l: "peak purchase cost" },
+      { v: "Diversified", l: "sourcing; no supply limits" },
+      { v: "Q3 bottom", l: "paint; BM eases after Q3" }
+    ],
+    kr: [
+      "원재료는 3~4월이 가장 심했고, 이후 수급을 다변화해 공급 제약은 없으며 과거보다 약간 비싼 수준에서 정상화됐습니다.",
+      "건자재는 PVC 외엔 국내 조달·광물이라 영향이 제한적이고 3분기 지나면 해소됩니다. 도료는 4월에 헤지가 없어 7~8월 수익성에 영향이 있었지만 재고 조정과 일부 전가로 4분기 영향은 크지 않습니다."
+    ],
+    terms: [
+      { kr: "헤지 부재", en: "no hedge in place" },
+      { kr: "수급 다변화", en: "diversified sourcing" },
+      { kr: "광물 형태", en: "mineral-based inputs" },
+      { kr: "저점 통과", en: "bottoming out" }
+    ],
+    hold: "구매 단가·공급처명 금지. ‘Iran war’ 등 정치적 명칭 대신 ‘the Middle East disruption’."
+  },
+  // ---------------- 도료 ----------------
+  {
+    id: "paint-shipbuilding-cycle",
+    cat: "paint", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 61, icon: "🚢",
+    imp: "조선 사이클 질문: ‘3~4년은 지속, 그 뒤 감소 → MRO 15~20% 성장으로 준비’ + 중기 ‘매출 보합·마진 개선’ 프레임.",
+    warn: "미팅에서 도료 영업이익률을 ‘low-teens’라고 답했으나, 공식 자료는 2Q ~9% · 연간 목표 9~10%입니다. 선박 부문(미드틴)과 혼동 가능성 — 다음 미팅 전 수치 통일 필요.",
+    label: "Shipbuilding cycle — when does newbuild demand fall? What about MRO?",
+    labelKr: "조선 사이클 — 신조 수요는 언제 꺾이나? MRO는?",
+    tags: ["marine", "newbuild", "MRO", "repair", "cycle"],
+    fixed: ["Shipyard demand continues for another three to four years. After that it declines, so we are building repair and maintenance, which is growing 15–20% a year."],
+    core: "Shipyard demand continues for another three to four years. After that we expect it to decline, which is why we are building the repair business now.",
+    support: [
+      "Yards are booked out, so newbuild coatings demand is steady for the next three to four years, not declining from next year.",
+      "Repair and maintenance orders are growing 15 to 20 percent a year on our installed base, plus silicone antifouling.",
+      "Medium term, paint revenue is roughly flat for a year or two, and the margin improves as this year’s raw-material shock drops out.",
+      "Demand held up through the year except for the Q3 raw-material effect."
+    ],
+    numbers: [
+      { v: "3–4 yrs", l: "newbuild demand continues" },
+      { v: "+15–20% / yr", l: "MRO order growth" },
+      { v: "Flat revenue · better margin", l: "1–2 year view" }
+    ],
+    kr: [
+      "조선소 수요는 앞으로 3~4년은 이어지고 그 이후 줄 것으로 보기 때문에, 지금 보수선(MRO)을 키우고 있습니다. MRO 수주는 매년 15~20% 성장하고 있습니다.",
+      "중기적으로 도료 매출은 1~2년 보합, 마진은 올해 원재료 충격이 빠지면서 개선되는 그림입니다."
+    ],
+    terms: [
+      { kr: "신조선", en: "newbuild" },
+      { kr: "보수·유지", en: "repair and maintenance (MRO)" },
+      { kr: "수주 잔고가 꽉 찬", en: "booked out / fully booked" },
+      { kr: "매출 보합", en: "flattish revenue" }
+    ],
+    hold: "도료 전체 마진은 ‘around 9–10% for the year’. ‘low-teens’는 선박 부문(mid-teens)에만."
+  },
+  // ---------------- 실리콘 ----------------
+  {
+    id: "sil-portfolio-targets",
+    cat: "silicone", sub: "strategy", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 62, icon: "🎯",
+    imp: "포트폴리오 목표 두 개를 한 번에: 전자 12~13% → 20%, 퍼스널케어 10~12% → 15~16%, 둘 다 EBITDA 30%+.",
+    label: "Silicone portfolio targets — electronics and personal care",
+    labelKr: "실리콘 포트폴리오 목표 — 전자·퍼스널케어 비중",
+    tags: ["electronics", "personal care", "mix", "targets", "EBITDA"],
+    fixed: ["Electronics: 12–13% of silicone sales today, target ~20%. Personal care: 10–12% today, target 15–16%. Both run above 30% EBITDA margin."],
+    core: "Electronics is 12 to 13 percent of silicone sales today and we want it at about 20 percent; personal care is 10 to 12 percent and the target is 15 to 16 percent. Both run above 30 percent EBITDA margin.",
+    support: [
+      "That mix shift is how the group EBITDA margin moves from about 13 percent today toward the high teens by 2028 to 2030.",
+      "Volume improves gradually; the focus is margin, not volume.",
+      "Profitability was held back after the acquisition by higher-than-expected capex and maintenance spending. Much of that is now behind us, so the fundamental base is set.",
+      "China: we opened a branch to serve Chinese electronics manufacturers, and electronics revenue in China keeps improving."
+    ],
+    numbers: [
+      { v: "12–13% → ~20%", l: "electronics share of sales" },
+      { v: "10–12% → 15–16%", l: "personal care share" },
+      { v: ">30%", l: "EBITDA margin, both lines" }
+    ],
+    kr: [
+      "전자재료는 실리콘 매출의 12~13%에서 약 20%로, 퍼스널케어는 10~12%에서 15~16%로 키우는 것이 목표이며 둘 다 EBITDA 마진 30% 이상입니다.",
+      "이 믹스 전환으로 EBITDA 마진을 현재 약 13%에서 2028~30년 10% 후반까지 올리는 것이 중기 목표입니다. 인수 후 예상보다 컸던 설비·보수 지출은 상당 부분 정리됐습니다."
+    ],
+    terms: [
+      { kr: "믹스 전환", en: "mix shift" },
+      { kr: "10% 후반", en: "high teens" },
+      { kr: "기본 체력(펀더멘털) 세팅", en: "the fundamental base is set" }
+    ],
+    hold: "경쟁사 M&A(Bluestar 등) 추측 금지. 중국 고객사명 금지."
+  },
+  {
+    id: "sil-dmc-lowend-link",
+    cat: "silicone", sub: "market", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    imp: "‘DMC가 왜 우리에게 중요한가’ 설명 틀: 중저가 제품 가격의 기준 → 중국 공급 제한 2년 지속 → 장기 우상향 → 지표는 중국 건설 경기.",
+    n: 63, icon: "🔗",
+    label: "Why does DMC matter to you if you are specialty?",
+    labelKr: "스페셜티인데 DMC가 왜 중요한가?",
+    tags: ["DMC", "low-end", "China", "construction", "pricing"],
+    fixed: ["DMC sets the price floor for our mid- and low-end products. Chinese supply restrictions should hold for about two more years, so we expect DMC to trend up long term."],
+    core: "DMC sets the price reference for our mid- and low-end products, so it matters even though our growth is in specialty.",
+    support: [
+      "China had its own oversupply problem, and policy-driven supply restrictions are now in place. We expect them to continue through next year and the year after.",
+      "So long term we see DMC trending up, and with it some margin recovery in our mid- and low-end lines. There should be no further collapse.",
+      "The indicator to watch is China’s construction market, which is still weak. If it improves, our profitability recovery accelerates.",
+      "Our low-end issue was fixed costs, not DMC. A DMC level around the recent range does not worry us."
+    ],
+    numbers: [
+      { v: "~2 years", l: "Chinese supply restrictions expected to hold" },
+      { v: "Trend up", l: "long-term DMC view" },
+      { v: "China construction", l: "the indicator to watch" }
+    ],
+    kr: [
+      "DMC는 저희 중저가 제품 가격의 기준이 되기 때문에, 성장은 스페셜티에서 나와도 DMC는 중요합니다.",
+      "중국의 정책적 공급 제한이 올해·내년·내후년까지 이어질 것으로 보고, 장기적으로 DMC는 우상향하며 중저가 제품 마진도 회복될 것으로 봅니다. 지표는 중국 건설 경기입니다."
+    ],
+    terms: [
+      { kr: "가격 기준점", en: "price reference / price floor" },
+      { kr: "정책적 공급 제한", en: "policy-driven supply restrictions" },
+      { kr: "붕괴", en: "collapse (no further collapse)" }
+    ],
+    hold: "스팟 수치는 ‘the recent range’로. 중국 JV 가동률 금지."
+  },
+  // ---------------- 배당 · 주주환원 ----------------
+  {
+    id: "div-this-year-level",
+    cat: "returns", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 64, icon: "💰",
+    imp: "이번 미팅에서 사실상 ‘작년 수준 유지’로 들리게 답함. 다음부터는 아래 문장으로 — 이사회 결정임을 먼저.",
+    warn: "미팅 답변(“줄인 적이 거의 없고, 기준선에 미달해도 최대한 맞추는 방향”)은 15,000원 유지로 해석될 수 있습니다. 공식적으로는 ‘공식에 따르며 이사회가 결정’이 안전합니다.",
+    label: "Can we expect last year’s dividend level (15,000 won) this year?",
+    labelKr: "올해 배당은 작년 수준(15,000원) 기대해도 되나?",
+    tags: ["DPS", "15,000", "board", "formula"],
+    fixed: ["The dividend follows the formula and is decided by the board next April. Our track record is to maintain or raise, not to cut."],
+    core: "The dividend follows our formula and is decided by the board next spring. Our track record is to maintain or raise, not to cut.",
+    support: [
+      "Layer one is the 6,000-won floor; layer two is 10 percent of standalone operating profit above 100 billion won.",
+      "Historically we have rarely reduced the dividend, and the stance has been to maintain or increase it.",
+      "I cannot pre-announce the figure. The board sets it when the policy is finalised in April."
+    ],
+    numbers: [
+      { v: "15,000 won", l: "FY2025 DPS (26th consecutive)" },
+      { v: "Formula", l: "floor + earnings layer" },
+      { v: "Board, April", l: "decision timing" }
+    ],
+    kr: [
+      "배당은 공식에 따르며 내년 4월 이사회가 결정합니다. 그동안 배당을 줄인 경우는 거의 없고 유지 또는 확대 방향이었습니다.",
+      "수치를 미리 말씀드릴 수는 없습니다."
+    ],
+    terms: [
+      { kr: "유지 또는 확대", en: "maintain or raise" },
+      { kr: "사전 공표", en: "pre-announce" },
+      { kr: "이사회 결의", en: "board resolution" }
+    ],
+    hold: "‘작년 수준은 맞출 것’ 같은 확약성 표현 금지."
+  },
+  {
+    id: "special-div-earlier",
+    cat: "returns", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 65, icon: "⏩",
+    imp: "시차 질문의 완성형: 기본은 내후년, 물산이 올해 안에 특별배당하면 내년 4월 정책에 반영 → 1년 당겨짐.",
+    label: "Could the special-dividend pass-through come earlier than the year after next?",
+    labelKr: "특별배당 환원이 내후년보다 빨라질 수 있나?",
+    tags: ["special dividend", "timing", "cash basis", "April"],
+    fixed: ["Our policy is set on cash actually received. Base case: the step-up shows the year after next. If Samsung C&T pays a special dividend within this year, it is reflected in next April’s policy — one year earlier."],
+    core: "Our policy is set on the cash we actually receive, so the base case is the year after next; if Samsung C&T pays a special dividend within this year, it moves one year earlier.",
+    support: [
+      "We set the dividend policy each April on a cash basis.",
+      "Samsung Electronics announced a special dividend unexpectedly in the second and third quarters. If Samsung C&T passes that through within this year, the cash is in before April and our policy can reflect it.",
+      "If not, the conservative view is the year after next.",
+      "For scale, we currently receive about 47 billion won a year from Samsung C&T at 2,800 won per share. Analyst estimates of how much that grows vary, and they are not our guidance."
+    ],
+    numbers: [
+      { v: "Cash basis", l: "policy set each April" },
+      { v: "Year after next", l: "base case" },
+      { v: "Next year", l: "if C&T pays within this year" }
+    ],
+    kr: [
+      "배당 정책은 실제 수취한 현금 기준으로 매년 4월에 세웁니다. 기본은 내후년이지만, 삼성물산이 올해 안에 특별배당을 하면 내년 4월 정책에 반영되어 1년 당겨집니다.",
+      "현재 삼성물산에서 주당 2,800원 기준 연 약 470억원을 받고 있고, 증가 폭에 대한 증권가 추정은 다양하며 저희 가이던스가 아닙니다."
+    ],
+    terms: [
+      { kr: "현금 수취 기준", en: "on a cash-received basis" },
+      { kr: "1년 당겨지다", en: "pulled forward by a year" },
+      { kr: "재배당", en: "pass-through dividend / redistribution" }
+    ],
+    hold: "배수(7~8배)와 금액(~3,000억) 추정치는 미팅에서 언급됐지만 ‘analyst estimates’로만. 당사 전망으로 말하지 않기."
+  },
+  {
+    id: "buyback-vs-special",
+    cat: "returns", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 66, icon: "🔁",
+    imp: "미팅에서 “명확히 모른다”로 끝난 질문. 준비된 답으로 교체 — EV가 마이너스인데 왜 자사주 매입이 아니냐.",
+    warn: "실제 미팅 답변이 약했던 항목(“저희도 명확하게 모르지만”). 아래 문장을 외워 두세요.",
+    label: "Negative enterprise value — why not buybacks instead of a special dividend?",
+    labelKr: "EV가 마이너스인데 왜 자사주 매입이 아니라 특별배당인가?",
+    tags: ["buyback", "special dividend", "EV", "cancellation"],
+    fixed: ["We are doing both. The buyback is already in motion — 13.2% of shares being cancelled by 3Q 2027. The special dividend passes through cash we actually receive."],
+    core: "We are doing both. The buyback is already in motion, and the special dividend passes through cash we actually receive from Samsung C&T.",
+    support: [
+      "We are cancelling 13.2 percent of shares outstanding in four tranches by the third quarter of 2027. The first was done in April.",
+      "The special-dividend layer is a formula on cash income. It is additive, it does not use the balance sheet, and it sends the remainder to debt reduction.",
+      "We recognise the gap between asset value and market cap. Closing it needs the core business, monetisation at the right time, and returns. The mix between dividends and buybacks can be revisited after the cancellation programme completes.",
+      "Anything beyond that is a board decision."
+    ],
+    numbers: [
+      { v: "13.2%", l: "cancellation by 3Q27" },
+      { v: "≥50% pre-tax", l: "special pass-through" },
+      { v: "Revisit after 3Q27", l: "dividend vs buyback mix" }
+    ],
+    kr: [
+      "둘 다 하고 있습니다. 자사주는 이미 13.2% 소각이 진행 중(2027년 3분기까지)이고, 특별배당은 실제 수취한 현금을 공식에 따라 전달하는 것입니다.",
+      "자산가치와 시총의 괴리는 인지하고 있으며, 소각 프로그램이 끝난 뒤 배당과 자사주의 조합은 다시 볼 수 있습니다. 그 이상은 이사회 판단입니다."
+    ],
+    terms: [
+      { kr: "기업가치(EV) 마이너스", en: "negative enterprise value" },
+      { kr: "추가적인", en: "additive" },
+      { kr: "조합 재검토", en: "revisit the mix" }
+    ],
+    hold: "“모르겠다” 금지. 자사주 추가 매입 계획을 암시하지 않기."
+  },
+  // ---------------- 자산활용 · 재무 ----------------
+  {
+    id: "rating-1tn",
+    cat: "capex", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 67, icon: "🏷️",
+    imp: "등급 상향 질문에 ‘약 1조원’이라고 답함. 이 숫자를 계속 쓸지 결정 필요.",
+    warn: "‘1조원 차입 감축’은 미팅에서 처음 나온 수치입니다. 공식 커뮤니케이션 수치인지 확인하고, 아니면 ‘a meaningful reduction’으로 되돌리세요.",
+    label: "How much deleveraging for a rating upgrade?",
+    labelKr: "신용등급 상향에 차입을 얼마나 줄여야 하나?",
+    tags: ["rating", "deleveraging", "1 trillion", "proceeds"],
+    fixed: ["A rating upgrade is a management goal for this year and next. It needs a meaningful reduction in debt — the order of a trillion won — funded by dividend income, asset monetisation and EBITDA growth."],
+    core: "A rating upgrade is a management goal, and it needs a meaningful debt reduction — in the order of a trillion won.",
+    support: [
+      "Debt is still sizeable, so an upgrade is not easy as things stand.",
+      "The sources are the dividend income from Samsung C&T after the shareholder pass-through, monetisation of financial assets at the right time, and EBITDA growth.",
+      "That is one reason monetisation is under review: our largest asset is the financial portfolio.",
+      "Last year we monetised most of our HD KSOE stake through the exchangeable bond; that process continues."
+    ],
+    numbers: [
+      { v: "~1tn won", l: "debt reduction for upgrade (said in meeting)" },
+      { v: "3 sources", l: "dividend income · monetisation · EBITDA" },
+      { v: "KPI", l: "rating upgrade, this year & next" }
+    ],
+    kr: [
+      "등급 상향은 올해·내년 경영 목표이며 의미 있는 차입 감축, 대략 1조원 규모가 필요합니다.",
+      "재원은 주주환원 후 남는 삼성물산 배당수익, 적절한 시점의 금융자산 유동화, EBITDA 증가입니다."
+    ],
+    terms: [
+      { kr: "등급 상향", en: "rating upgrade" },
+      { kr: "~규모의", en: "in the order of" },
+      { kr: "재원", en: "sources (of funds)" }
+    ],
+    hold: "1조원 수치는 확인 전까지 ‘in the order of’ 이상 구체화하지 않기."
+  },
+  {
+    id: "ksoe-remaining",
+    cat: "asset", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 68, icon: "⚓",
+    warn: "미팅에서 ‘잔여 1%도 추가 논의 중 / 곧 매각’이라고 답함. 미공시 거래 계획이면 선행 언급 리스크 — 공시 범위 확인 필요.",
+    label: "HD KSOE stake — how much is left after the EB?",
+    labelKr: "HD한국조선해양 지분 — EB 이후 얼마나 남았나?",
+    tags: ["KSOE", "EB", "stake", "remaining"],
+    fixed: ["Of the 3.9% stake, 2.9% backs the 650-million-dollar exchangeable bond issued last year. We still receive the dividends on the stake."],
+    core: "Of our 3.9 percent stake, 2.9 percent backs the exchangeable bond we issued last year; the rest remains with us.",
+    support: [
+      "The EB raised 650 million dollars at a 1.75 percent coupon without selling a share, and we keep receiving the dividends.",
+      "Any further step would be disclosed at the appropriate time; I cannot comment beyond what is disclosed."
+    ],
+    numbers: [
+      { v: "3.9% → 2.9% in EB", l: "stake · portion backing the EB" },
+      { v: "$650M · 1.75%", l: "EB terms" },
+      { v: "~1%", l: "remaining — no comment on plans" }
+    ],
+    kr: [
+      "3.9% 지분 중 2.9%는 작년 발행한 6.5억달러 교환사채의 기초자산이고, 나머지는 보유 중이며 배당은 계속 받고 있습니다.",
+      "추가 조치는 적절한 시점에 공시로 말씀드리겠습니다."
+    ],
+    terms: [
+      { kr: "기초자산", en: "underlying (shares backing the EB)" },
+      { kr: "잔여 지분", en: "remaining stake" }
+    ],
+    hold: "잔여 1% 매각 계획·시점은 공시 전 언급 금지."
+  },
+  {
+    id: "ten-trillion-how",
+    cat: "asset", period: "3Q26", updated: "2026-11-05", src: "투자자 미팅 전사", asked: "최근 외국인 미팅",
+    n: 69, icon: "🧭",
+    imp: "‘10조는 어떻게?’ — 자산 활용 → 실리콘 투자·신성장 → 배당수익·유동화로 재무 안정과 성장 재원 동시 확보.",
+    label: "Revenue 10 trillion won by 2030 — how, from 6–7 trillion today?",
+    labelKr: "2030 매출 10조 — 지금 6~7조에서 어떻게?",
+    tags: ["10 trillion", "2030", "target", "growth engine"],
+    fixed: ["It is a target set by top management, not an organic forecast. The path is to put our assets to work: silicone investment and new growth engines, funded by dividend income and monetisation."],
+    core: "It is a target, not an organic forecast. The path is to put our assets to work in silicone and new growth engines.",
+    support: [
+      "Organic growth alone does not get from 6 to 7 trillion to 10. The plan assumes pipeline expansion and structural options.",
+      "Funding comes from dividend income after the shareholder pass-through, monetisation of financial assets at the right time, and operating cash.",
+      "The same sources stabilise the balance sheet and support the rating upgrade, so the two goals are linked, not competing.",
+      "Progress is reported in the annual value-up review."
+    ],
+    numbers: [
+      { v: "6–7tn → 10tn", l: "revenue today → 2030 target" },
+      { v: "Target", l: "not a forecast" },
+      { v: "Assets to work", l: "silicone · new engines" }
+    ],
+    kr: [
+      "10조는 경영진이 세운 목표이지 유기적 성장 예측이 아닙니다. 보유 자산을 활용해 실리콘 투자와 신성장 동력을 키우는 경로입니다.",
+      "재원은 주주환원 후 배당수익, 적절한 시점의 유동화, 영업 현금이며, 같은 재원이 재무 안정과 등급 상향에도 쓰입니다."
+    ],
+    terms: [
+      { kr: "자산을 활용하다", en: "put assets to work" },
+      { kr: "구조적 옵션", en: "structural options (M&A etc.)" },
+      { kr: "신성장 동력", en: "new growth engine" }
+    ],
+    hold: "구체 M&A 대상·규모 금지."
   }
 );

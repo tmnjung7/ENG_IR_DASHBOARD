@@ -55,6 +55,7 @@
     aPeriod: store.get("aPeriod", "all"),
     aQuery: "",
     sSub: store.get("sSub", "all"), sTab: store.get("sTab", "qa"), sQuery: "",
+    aQuick: store.get("aQuick", ""),
     stars: store.get("stars", []),
     speakMode: store.get("speakMode", "flow"),
     sQuarter: store.get("sQuarter", null),
@@ -358,7 +359,8 @@
     const groups = expandQuery(query);
     const searching = groups.length > 0;
     const order = id => { const i = CATS.findIndex(c => c.id === id); return i < 0 ? 99 : i; };
-    const base = ANSWERS.filter(a => (lock ? a.cat === lock : true) && (searching ? true :
+    const quickOk = a => state.aQuick === "imp" ? !!a.imp : state.aQuick === "asked" ? !!a.asked : true;
+    const base = ANSWERS.filter(a => quickOk(a) && (lock ? a.cat === lock : true) && (searching ? true :
         (cat === "stars" ? state.stars.includes(a.id) :
           (cat === "all" || a.cat === cat) && (sub === "all" || cat === "all" || a.sub === sub)) &&
         (state.aPeriod === "all" || a.period === state.aPeriod)));
@@ -439,6 +441,13 @@
       side.append(prow);
     }
 
+    {
+      const qrow = h("div", { class: "chips catrow quick" });
+      const mkQ = (id, label, sub) => h("button", { class: "chip" + (id === "imp" ? " impchip" : " askchip") + (state.aQuick === id ? " sel" : ""), onclick: () => { state.aQuick = state.aQuick === id ? "" : id; store.set("aQuick", state.aQuick); render(); } }, label, sub ? h("span", { class: "sub" }, sub) : null);
+      const pool = lock ? ANSWERS.filter(a => a.cat === lock) : ANSWERS;
+      qrow.append(mkQ("imp", "★ 중요", String(pool.filter(a => a.imp).length)), mkQ("asked", "기출", String(pool.filter(a => a.asked).length)));
+      side.append(qrow);
+    }
     const note = h("div", { class: "anote kr hidden" });
     side.append(note);
     const listEl = h("div", { class: "alist card" });
@@ -468,8 +477,8 @@
         }
         const starred = state.stars.includes(a.id);
         const subLabel = (!groupedSub && curCat && curCat.subs && curSub === "all" && a.sub) ? (curCat.subs.find(x => x.id === a.sub) || {}).labelKr : null;
-        listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : ""), onclick: () => openCard(a.id, cfg) },
-          h("span", { class: "txt" }, h("span", { class: "l" }, highlight(a.label, groups)), h("span", { class: "lk kr" }, highlight(a.labelKr, groups))),
+        listEl.append(h("button", { class: "arow" + (a.id === state.answerId ? " on" : "") + (a.imp ? " imp" : ""), onclick: () => openCard(a.id, cfg) },
+          h("span", { class: "txt" }, h("span", { class: "l" }, a.imp ? h("span", { class: "bimp" }, "★") : null, highlight(a.label, groups), a.warn ? h("span", { class: "bwarn", title: "확인 필요" }, "⚠") : null), h("span", { class: "lk kr" }, a.asked ? h("span", { class: "bask" }, "기출") : null, highlight(a.labelKr, groups))),
           h("span", { class: "meta" },
             (!grouped && (searching || state.aCat === "stars")) ? h("span", { class: "per cat" }, catOf(a.cat).labelKr) : null,
             subLabel ? h("span", { class: "per cat" }, subLabel) : null,
@@ -503,6 +512,8 @@
         h("button", { class: "tool" + (state.stars.includes(a.id) ? " on" : ""), onclick: () => { toggleStar(a.id); render(); } }, state.stars.includes(a.id) ? "★ Today" : "☆ Today"),
         h("button", { class: "tool" + (state.interp ? " on" : ""), onclick: () => { state.interp = !state.interp; store.set("interp", state.interp); render(); } },
           state.interp ? "🎧 With interpreter" : "🗣 Direct English"))));
+    if (a.imp) d.append(h("div", { class: "ad-imp kr" }, h("b", null, "★ 중요 포인트 "), a.imp, a.src ? h("span", { class: "src" }, " · 출처: " + a.src + (a.asked ? " (기출)" : "")) : null));
+    if (a.warn) d.append(h("div", { class: "ad-warn kr" }, h("b", null, "⚠ 확인 필요 "), a.warn));
     if (a.fixed && a.fixed.length) {
       d.append(h("div", { class: "ad-fixed" }, h("div", { class: "lbl" }, "FIXED LINE — SAY IT THE SAME WAY EVERY TIME"), a.fixed.map(f => h("p", null, f))));
     }

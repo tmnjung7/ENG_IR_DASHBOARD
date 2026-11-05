@@ -373,3 +373,27 @@ mark{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px}
 .mli .kr{font-size:.8rem;margin-top:2px}
 .mcard.warn .ad-lbl{color:#8A5A00}.mcard.stop .ad-lbl{color:var(--red)}
 .mcard.stop .mli .en{color:var(--red)}
+
+/* ---------- importance / asked / warn marks ---------- */
+.arow.imp{background:#FFF8DC}
+.arow.imp:hover{background:#FFF1BF}
+:root[data-theme="dark"] .arow.imp{background:#2E2710}
+:root[data-theme="dark"] .arow.imp:hover{background:#3A3114}
+.arow.imp.on{background:var(--navy)}
+.bimp{color:#D99A00;margin-right:4px}
+.bwarn{color:var(--red);margin-left:6px;font-size:.85em}
+.bask{display:inline-block;font-size:.65rem;font-weight:800;padding:0 5px;border-radius:999px;background:#E6F4EA;color:#1B5E20;margin-right:5px;vertical-align:middle}
+:root[data-theme="dark"] .bask{background:#1F3A24;color:#A5D6A7}
+.arow.on .bask{background:rgba(255,255,255,.2);color:#fff}
+.chip.impchip{background:#FFF4D6;color:#8A5A00;border-color:#F3D98B}
+.chip.impchip.sel{background:#D99A00;color:#fff}
+.chip.askchip{background:#E6F4EA;color:#1B5E20}
+.chip.askchip.sel{background:#1B5E20;color:#fff}
+:root[data-theme="dark"] .chip.impchip{background:#3A2E10;color:#F3D98B}
+:root[data-theme="dark"] .chip.askchip{background:#1F3A24;color:#A5D6A7}
+.ad-imp{background:#FFF8DC;border-left:4px solid #D99A00;padding:10px 16px;font-size:.9rem;line-height:1.5;color:#5A4300}
+:root[data-theme="dark"] .ad-imp{background:#2E2710;color:#F3D98B}
+.ad-imp .src{color:var(--muted);font-size:.8rem}
+.ad-warn{background:#FDECEC;border-left:4px solid var(--red);padding:10px 16px;font-size:.9rem;line-height:1.5;color:#7A1C1C}
+:root[data-theme="dark"] .ad-warn{background:#3A1818;color:#FFB4B4}
+.catrow.quick .chip{font-size:.8rem;padding:4px 10px}
