@@ -70,7 +70,7 @@ data/facts.js       ★ FACTS 숫자표 (확정 분기로 교체)
 - 네트워크 없는 곳: 폰트만 시스템 폰트로 대체되고 기능은 동일하게 동작합니다.
 
 ## IR Core PDF (태블릿용 가로형)
-`docs/IR_Core_English.pdf` — PHRASES › IR Core 덱 + KCC 덱 2개(핵심 답변 문장·통역 용어)를 A4 가로로 뽑은 암기용 PDF. 왼쪽 한글(문제) / 오른쪽 영문(답) 배치라 오른쪽을 가리고 외웁니다. 배포 후에는 `https://<배포주소>/docs/IR_Core_English.pdf`로 열립니다.
+PHRASES › IR Core 덱 + KCC 덱 2개(핵심 답변 문장·통역 용어)를 A4 가로로 뽑는 암기용 PDF. 왼쪽 한글(문제) / 오른쪽 영문(답) 배치라 오른쪽을 가리고 외웁니다. PDF 파일은 저장소에 넣지 않고(공개 저장소) 아래 명령으로 로컬에서 생성합니다. 
 `data/study.js`를 고친 뒤 다시 만들려면:
 
 ```bash
