@@ -2331,3 +2331,129 @@ window.KCC_ANSWERS.push(
     hold: "구체 M&A 대상·규모 금지."
   }
 );
+
+// ============================================================
+// 3Q 잠정실적(11월) 이후 — 부문별 3Q 결과·4Q 전망 카드
+// bg[] = 🔒 내부 배경(IR 담당자 메모) — 카드에 접힌 상태로 표시, 미팅에서 말하지 않음
+// ============================================================
+window.KCC_ANSWERS.push(
+  {
+    id: "sil-3q-results-detail",
+    cat: "silicone", sub: "margin", period: "4Q26", updated: "2026-11-06", src: "3Q 잠정실적 + 내부 메모",
+    n: 70, icon: "🧪",
+    imp: "3Q 공시 후 실리콘 표준 답변: 비수기·일부 정기보수 → 물량↓ → 고정비 / 운송비·일부 원재료 / 환산 → 4Q 가격 인상·출하 개선.",
+    label: "Silicone 3Q — what drove the decline, and what changes in 4Q?",
+    labelKr: "실리콘 3Q — 하락 요인과 4Q 변화",
+    tags: ["3Q", "maintenance", "fixed cost", "freight", "price increase", "4Q"],
+    fixed: ["Q3 fell on the summer season and some scheduled maintenance, which cut volume and raised fixed-cost burden, plus higher freight and some raw-material costs, and KRW translation. Q4: price increases on key products and better shipments."],
+    core: "Q3 fell on lower volume from the summer season and some scheduled maintenance, higher freight, some raw-material cost, and KRW translation; Q4 improves on price increases and better shipments.",
+    support: [
+      "Raw-material volatility itself was limited. The pressure was volume: the summer slow season plus some scheduled maintenance lowered output, so fixed costs weighed on margins, mainly in low-end lines.",
+      "Freight rose as more product moves directly from our plants to customers, and some inputs such as methanol went up. We are recovering freight through surcharges.",
+      "The stronger won reduced the translated value of revenue and profit.",
+      "For Q4 we are pushing price increases on key products, with pass-through expected on some lines, and shipment execution is improving. Full-year profit is up year on year, but the initial annual operating-profit target will take more time.",
+      "Polarisation continues: electronics and personal care grow with solid margins; low-end lines recover slowly."
+    ],
+    numbers: [
+      { v: "Volume → fixed cost", l: "season + maintenance" },
+      { v: "Freight · methanol", l: "cost items; surcharge recovery" },
+      { v: "Q4 price increases", l: "key products" }
+    ],
+    kr: [
+      "3분기는 원재료 변동보다 물량이 문제였습니다. 하계 비수기와 일부 정기보수로 판매량이 줄어 고정비 부담이 커졌고, 운송비와 메탄올 등 일부 원재료가 올랐으며, 원화 강세로 환산 금액이 줄었습니다.",
+      "4분기에는 주요 제품 가격 인상을 추진하고 있고 일부는 수익성 전가가 예상되며, 출하도 개선되고 있습니다. 연간 이익은 전년 대비 늘지만 당초 연간 영업이익 목표는 시간이 더 필요합니다."
+    ],
+    terms: [
+      { kr: "정기보수", en: "scheduled maintenance" },
+      { kr: "고정비 부담", en: "fixed-cost burden" },
+      { kr: "직접 배송", en: "direct delivery to customers" },
+      { kr: "수익성 전가", en: "pass-through to pricing" }
+    ],
+    bg: [
+      "운송비: 과거 고객 직접 수령 ~10% → 최근 ~96% MPM 직접 배송 (수치 금지, ‘more direct delivery’로만)",
+      "원재료 수급 부족: 생산 지연, 특수 원재료 관련 호르무즈 봉쇄 영향 (구체 언급 금지 — ‘some supply tightness’ 이하)",
+      "주요 제품 가격 인상 4분기 추진, 일부 제품 수익성 전가 전망 (품목·폭 금지)",
+      "AI 데이터센터 열관리 고객 인증 긍정 진행 (고객명 금지)",
+      "🔒 2027 목표: 매출 +5~10%, EBITDA +10% — AOP 미확정, 수치 제시 금지. 유기실리콘 시장 성장률 ~5.3%는 ‘around five percent’로 가능"
+    ],
+    hold: "2027 목표 수치, 호르무즈·특정 원재료, 직배송 비율, 고객사명 금지."
+  },
+  {
+    id: "paint-3q-results-detail",
+    cat: "paint", period: "4Q26", updated: "2026-11-06", src: "3Q 잠정실적 + 내부 메모",
+    n: 71, icon: "🎨",
+    imp: "도료 3Q 표준 답변: 자동차(휴가·생산 감소) / 선박(8월 휴가, 전가, 중국 신조 확대) / 건축(단가 정상화·경쟁) + 시황연동은 ‘일부’ 회수.",
+    label: "Coatings 3Q — auto, marine, architectural: what happened and 4Q?",
+    labelKr: "도료 3Q — 자동차·선박·건축 현황과 4Q",
+    tags: ["auto", "marine", "architectural", "market-linked", "China", "4Q"],
+    fixed: ["Demand continued in auto and marine, with summer-holiday effects. The raw-material lag put profit below 1H; Q3 is the cost peak. Market-linked pricing recovers part of the increase, not all. Q4 normalises."],
+    core: "Auto and marine demand continued through the summer-holiday quarter, the raw-material lag put profit below the first half, and Q4 should normalise.",
+    support: [
+      "Automotive: domestic production was lower than last year on the summer holidays and a customer production stoppage, so volume was down while raw-material costs were up. Market-linked pricing covers part of the raw-material increase, not all; more than half of our revenue is under such mechanisms.",
+      "Marine: the usual two-week August holiday at the yards. We keep passing costs through, and annual price discussions with major customers take place toward year-end. Our share in Chinese newbuild is expanding as Korean shipowners place orders at Chinese yards.",
+      "Architectural: demand is weak and competition intense; we are working to normalise prices.",
+      "In Q4 purchasing costs and selling prices return to a normal basis, so we expect some margin recovery. Full-year goal: hold the margin in the 9 to 10 percent range."
+    ],
+    numbers: [
+      { v: ">50% of revenue", l: "under market-linked / spec pricing" },
+      { v: "Q3 = cost peak", l: "Q4 normalises" },
+      { v: "9–10%", l: "FY margin goal" }
+    ],
+    kr: [
+      "자동차는 하계 휴가와 고객사 생산 중단으로 생산이 전년보다 줄어 물량 감소와 원재료 인상이 함께 작용했습니다. 시황연동제는 인상분 일부를 회수하며 매출의 절반 이상이 적용됩니다.",
+      "선박은 8월 2주 휴가 요인이 있었고 원가 전가를 지속하며, 국내 선주의 중국 발주로 중국 신조 시장 점유율을 늘리고 있습니다. 건축은 경쟁이 심해 단가 정상화를 추진 중이고, 4분기에는 매입가·판가가 정상화됩니다."
+    ],
+    terms: [
+      { kr: "생산 중단(파업)", en: "a customer production stoppage (strike)" },
+      { kr: "시황연동제", en: "market-linked pricing (raw-material index)" },
+      { kr: "연간 단가 협의", en: "annual price negotiations" },
+      { kr: "단가 정상화", en: "price normalisation" }
+    ],
+    bg: [
+      "자동차: 현대차 파업 + 여름 연휴로 생산대수 전년 대비 −5% 내외 전망 (고객명·수치 금지 — ‘a customer stoppage’)",
+      "시황연동으로 모든 원재료 인상분은 감당 어려움; 전체 매출의 절반 이상은 반영 중",
+      "선박: 11월 중 일부 대형 고객사 연간 단가 협의 중 (고객명·시점 구체화 금지)",
+      "중국 시장 점유율: ’24년 1~2% → ’26년 5~7% (국내 선주의 중국 내 발주) — 수치는 참고, ‘expanding’으로만",
+      "건축: 단가 정상화 노력 중이나 경쟁 심함"
+    ],
+    hold: "고객사명(현대차), 생산대수 수치, 협의 중인 고객·단가, 중국 점유율 수치 금지. 도료 전체 마진은 ‘9–10% for the year’."
+  },
+  {
+    id: "bm-3q-results-detail",
+    cat: "bm", period: "4Q26", updated: "2026-11-06", src: "3Q 잠정실적 + 내부 메모",
+    n: 72, icon: "🏗️",
+    imp: "건자재 3Q 표준 답변: 비수기·인테리어↓·착공 부진 / 단열재는 중소형 현장 급감이 하이테크 증가보다 큼 / 창호·석고 물량 감소 확대 / 금리·대출 규제.",
+    label: "Building Materials 3Q — insulation, windows, gypsum: what happened?",
+    labelKr: "건자재 3Q — 단열재·창호·석고보드 현황",
+    tags: ["insulation", "windows", "gypsum", "starts", "rates"],
+    fixed: ["Demand softened on the summer season, weaker interior demand and fewer construction starts. In insulation, high-tech volume grew but could not offset the fall in mid-size sites. We defend profitability conservatively."],
+    core: "Demand softened on the summer season, weaker interior demand and fewer construction starts; high-tech volume grew but could not offset the fall in ordinary sites.",
+    support: [
+      "Insulation: shipments to data centres and semiconductor sites kept growing, but volume from small and mid-size sites fell sharply, and organic-insulation competitors cut prices. So insulation profitability stayed under pressure.",
+      "PVC windows and gypsum board: volume declines widened. Higher rates and loan regulation keep the construction market from recovering.",
+      "Windows also carried the high-cost PVC bought in spring; that margin should partly recover as inventory clears, but volume stays constrained by subdued existing-home transactions.",
+      "Gypsum board remains relatively stable on commercial and functional products. We hold prices on share and defend profitability from a conservative stance; a full housing recovery takes time."
+    ],
+    numbers: [
+      { v: "High-tech ↑ < ordinary sites ↓", l: "insulation volume mix" },
+      { v: "Rates · loan rules", l: "why construction stays weak" },
+      { v: "Conservative", l: "defend profitability" }
+    ],
+    kr: [
+      "3분기는 하계 비수기, 인테리어 수요 감소, 착공 현장 부진의 영향이 컸습니다. 단열재는 데이터센터·반도체 물량이 늘었지만 중소형 현장이 급감하고 유기 단열재 업체가 가격을 내려 수익성 압박이 이어졌습니다.",
+      "PVC 창호와 석고보드는 물량 감소가 확대됐고, 금리 상승과 대출 규제로 건축 시장 회복이 지연되고 있습니다. 창호 마진은 고가 재고 소진으로 일부 회복, 석고보드는 상업용·기능성 중심으로 안정적이며 보수적으로 수익성을 지킵니다."
+    ],
+    terms: [
+      { kr: "착공 현장", en: "construction starts / active sites" },
+      { kr: "중소형 현장", en: "small and mid-size sites" },
+      { kr: "유기 단열재", en: "organic insulation (EPS, PIR)" },
+      { kr: "대출 규제", en: "loan regulation / lending rules" }
+    ],
+    bg: [
+      "단열재: 중소형 현장 급감, 유기 단열재 가격 하락; 하이테크 물량 확대되나 기존 현장 감소가 너무 커 수익성 하락 지속",
+      "PVC·석고보드: 물량 감소 확대, 금리 인상·대출 규제로 건축 시장 회복세 침체 지속",
+      "표현 주의: ‘profitability continuing to decline’ 대신 ‘under pressure / defend conservatively’"
+    ],
+    hold: "단열재 수익성 ‘하락 지속’ 단정 대신 ‘under pressure’. 현장·고객명 금지."
+  }
+);

@@ -639,3 +639,109 @@ window.KCC_SCRIPTS.push(
     ]
   }
 );
+
+// ============================================================
+// 3Q 2026 잠정실적 (11월 공시) — Earnings Release 스크립트를 IR 미팅 낭독용으로 재구성
+// 원문 릴리스의 Coatings 섹션은 건자재 본문이 복사된 상태였음 → 10/26 스크립트·내부 메모(발언 가능분)로 작성
+// ============================================================
+window.KCC_SCRIPTS.unshift(
+  {
+    id: "q3-2026-results",
+    quarter: "3Q 2026", kind: "Review",
+    title: "3Q 2026 — Preliminary Results",
+    titleKr: "3Q 잠정실적 브리핑 (6~7분) — 11월 공시 기준",
+    duration: "6–7 min",
+    badge: "잠정 수치",
+    note: "잠정실적 기준. 부문별 세부 수치는 분기보고서 후. 부문 코멘트는 방향성.",
+    sections: [
+      {
+        title: "Opening & Headline", time: "0:00 – 1:00",
+        chips: ["Revenue 1,673.3bn · −7.3% QoQ", "OP 85.2bn · −33.9% QoQ", "Preliminary — segment detail limited", "3 reasons · easing from Nov"],
+        paras: [
+          { en: "Thank you for your time today. I am [name] from the KCC IR team. Today I will walk you through our <b>preliminary third-quarter results</b>, and then take your questions.",
+            kr: "인사. 3Q 잠정실적 설명 후 Q&A." },
+          { en: "One note first. These are preliminary figures, ahead of our quarterly report. So detailed numbers by division are limited today. I will give you the direction for each business.",
+            kr: "잠정치 — 부문별 세부 수치 제한, 방향성 중심." },
+          { en: "The headline. Consolidated revenue was <b>1.67 trillion won</b>, down 7.3 percent from the second quarter. Operating profit was <b>85.2 billion won</b>, down 33.9 percent.",
+            kr: "매출 1조 6,733억(−7.3% QoQ), OP 852억(−33.9% QoQ)." },
+          { en: "So profitability came down from Q2. <b>Three reasons</b>, and they are the ones we flagged in October.",
+            kr: "2Q 대비 수익성 하락. 10월에 예고한 세 가지 이유.", pause: true }
+        ]
+      },
+      {
+        title: "The Three Drivers", time: "1:00 – 2:30",
+        chips: ["Summer slow season — all divisions", "Mar–Apr raw materials → Q3 COGS; paint & PVC windows", "COGS ratio +2–3 pts QoQ", "KRW strength → silicone translation", "Delay, not trend · easing from Nov"],
+        paras: [
+          { en: "<b>First, the season.</b> The summer holiday slowdown affected all three divisions: Building Materials, Coatings and Silicones.",
+            kr: "①계절성: 하계 비수기, 전 부문." },
+          { en: "<b>Second, raw materials.</b> The high-cost material we bought during the March–April spike was recognised in third-quarter cost of goods sold. The effect was largest in Coatings and in PVC window profiles. The consolidated cost ratio rose <b>two to three points</b> from Q2.",
+            kr: "②원재료: 3~4월 고가 매입분 3Q 원가 반영. 도료·PVC 창호. 원가율 +2~3%p." },
+          { en: "<b>Third, FX.</b> The stronger won reduced the translated value of Silicone revenue and profit.",
+            kr: "③환율: 원화 강세 → 실리콘 환산 감소." },
+          { en: "The important point: the raw-material pressure is a <b>timing lag, not a structural trend</b>. Prices have been stable since April, and the stronger won has improved our dollar-based purchasing. So we expect the cost pressure to ease from November, with a modest recovery in profitability toward year-end.",
+            kr: "핵심: 시차이지 추세 아님. 4월 이후 안정, 원화 강세로 달러 매입 개선 → 11월부터 완화, 연말 완만한 회복.", pause: true }
+        ]
+      },
+      {
+        title: "Building Materials", time: "2:30 – 3:30",
+        chips: ["Downcycle continues", "Q2 rebound drivers faded: interior, semiconductor initial volumes", "PVC windows: demand + cost", "Gypsum stable — commercial, functional", "Housing recovery takes time"],
+        paras: [
+          { en: "<b>Building Materials.</b> The construction downcycle continues. Q2 had a small rebound on interior remodelling and the first shipments to the semiconductor cluster. In Q3 both of those moderated, and demand softened.",
+            kr: "건자재: 다운사이클 지속. 2Q 반등 요인(인테리어·반도체 초도) 둔화." },
+          { en: "PVC window profiles had margin pressure from lower demand and high raw-material costs together. Gypsum board stayed relatively stable, anchored by commercial and functional products.",
+            kr: "창호: 수요↓+원가 이중 압박. 석고보드: 상업용·기능성 중심 안정." },
+          { en: "Outlook. Shipments to high-tech commercial projects remain steady. A full recovery in domestic housing will take time. Window margins should partly recover as the high-cost inventory is used up, but volume stays constrained because secondary-home transactions are subdued. We defend profitability from a conservative stance.",
+            kr: "전망: 하이테크 꾸준. 주택 본격 회복엔 시간. 창호 마진 일부 회복, 물량은 제한(기존주택 거래 부진). 보수적 수익성 방어.", pause: true }
+        ]
+      },
+      {
+        title: "Coatings", time: "3:30 – 4:30",
+        chips: ["Auto & marine demand continued; summer holidays", "Raw-material lag → profit below 1H", "Market-linked pricing covers part, not all", "Architectural: weak demand, price normalisation", "Overseas growing · Q4 normalises"],
+        paras: [
+          { en: "<b>Coatings.</b> Demand in automotive and marine continued through the quarter, with the usual summer-holiday effect on production. Because of the raw-material lag, profitability was below the first half. Q3 is the cost peak.",
+            kr: "도료: 자동차·선박 수요 지속, 하계 휴가 영향. 원재료 시차로 상반기 대비↓. 3Q 원가 정점." },
+          { en: "Automotive and marine use market-linked pricing, which recovers part of the raw-material increase, not all of it. We continue to pass costs through where we can. Architectural coatings remain the weak spot: demand is poor and competition is intense, and we are working to normalise prices.",
+            kr: "시황연동 가격은 원재료 인상분 일부 회수. 전가 지속. 건축용은 수요 부진·경쟁 심화, 단가 정상화 노력." },
+          { en: "On the positive side, overseas volumes keep growing, and in marine we are expanding in the Chinese newbuild market as Korean shipowners place orders there. In Q4, purchasing costs and selling prices should be back on a normal basis, so we expect margins to recover somewhat.",
+            kr: "해외 물량 성장, 중국 신조 시장 확대(국내 선주 발주). 4Q 매입가·판가 정상화 → 마진 회복.", pause: true }
+        ]
+      },
+      {
+        title: "Silicones", time: "4:30 – 5:30",
+        chips: ["Limited raw-material volatility", "Summer season → low-end margins; some maintenance", "KRW translation", "Q3 down QoQ → Q4 rebound", "Polarisation: electronics & personal care up", "FY up YoY; initial OP target needs more time"],
+        paras: [
+          { en: "<b>Silicones.</b> Raw-material volatility was limited. The pressure came from the summer season, which hurt margins in low-end commodity lines, and from the stronger won in translation. So Q3 declined from Q2. We project a <b>rebound in Q4</b>.",
+            kr: "실리콘: 원재료 변동 제한. 비수기(저가 라인 마진↓)+원화 환산 → 3Q↓, 4Q 반등 전망." },
+          { en: "Product polarisation is intensifying. Low-end commodity lines are slow to recover, while electronics and personal care kept expanding with solid margins. The commodity overhang is easing with production discipline in China and capacity rationalisation by global competitors.",
+            kr: "양극화 심화. 저가 더딤, 전자·퍼스널케어 성장·마진 양호. 범용 과잉은 중국 감산·경쟁사 합리화로 완화." },
+          { en: "For the full year, silicone profit grows year on year, but reaching our initial annual operating-profit target will take more time. We keep the upward trajectory through mix and disciplined pricing, including price increases on key products from Q4. Segment figures come with the final disclosure.",
+            kr: "연간 YoY 성장, 당초 연간 OP 목표는 시간 더 필요. 믹스·가격 규율, 4Q 주요 제품 가격 인상. 세부 수치는 확정 공시 후.", pause: true }
+        ]
+      },
+      {
+        title: "Net Income & Shareholder Returns", time: "5:30 – 6:30",
+        chips: ["Net profit ↓: ~2tn valuation loss (Samsung C&T)", "Non-operating · both ways · no other items", "Special dividend: full effect the year after next", "Monetisation: still under review", "Treasury: ~300k shares year-end · rest by 3Q27"],
+        paras: [
+          { en: "<b>Net income.</b> Consolidated net profit fell substantially, mainly on about <b>2 trillion won</b> of valuation losses on listed holdings, including Samsung C&T. It is a non-operating, mark-to-market item and can move either way each quarter. There were no other unusual items.",
+            kr: "순이익 대폭↓: 삼성물산 등 평가손 약 2조. 비영업·시가평가·양방향. 기타 특이사항 없음." },
+          { en: "<b>Shareholder returns.</b> Since the value-up disclosure in August we have kept up communication with the market. Special dividends follow the receipt of Samsung C&T’s payout, so the full effect comes the year after next. On monetisation, we keep reviewing in light of share-price volatility, dividend considerations and market conditions.",
+            kr: "8월 밸류업 이후 소통 지속. 특별배당은 물산 수취 후 순차 → 본격 효과 내후년. 유동화는 변동성·배당·시장 고려하며 검토." },
+          { en: "Treasury shares: on track to cancel about 300 thousand shares by year-end, and the remainder by Q3 next year. Programmes using treasury shares for employee compensation are not finalised; if adopted, distributions would be phased over a long horizon.",
+            kr: "자사주: 연말 ~30만주 소각, 잔여 내년 3Q. 임직원 보상 프로그램 미확정, 도입 시 장기 분할." }
+        ]
+      },
+      {
+        title: "Close → Q&A", time: "6:30 – 7:00",
+        chips: ["Q3 moderated: season · lagged raw materials · KRW", "Headwinds ease from Q4", "Electronics & personal care resilient", "Returns per the August framework"],
+        paras: [
+          { en: "To sum up. Q3 profitability moderated on seasonal headwinds, the lagged impact of first-half raw-material spikes, and the stronger won. We expect these to ease from Q4. High-value silicone segments keep growing, and we execute shareholder returns under the framework disclosed in August.",
+            kr: "요약: 3Q 완만(계절성·원재료 시차·환율), 4Q부터 완화. 고부가 실리콘 성장, 8월 프레임대로 환원." },
+          { en: "<b>That is our third-quarter briefing. I am happy to take your questions.</b>",
+            kr: "Q&A 진입." }
+        ]
+      }
+    ]
+  }
+);
+// 공시 전 프리뷰 스크립트는 보관용으로 표시
+(function () { const s = window.KCC_SCRIPTS.find(x => x.id === "q3-2026-recent"); if (s) { s.badge = "공시 전 버전 · 보관"; s.kind = "Preview"; } })();

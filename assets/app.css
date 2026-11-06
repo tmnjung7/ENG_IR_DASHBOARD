@@ -397,3 +397,12 @@ mark{background:#FFE58A;color:inherit;border-radius:3px;padding:0 1px}
 .ad-warn{background:#FDECEC;border-left:4px solid var(--red);padding:10px 16px;font-size:.9rem;line-height:1.5;color:#7A1C1C}
 :root[data-theme="dark"] .ad-warn{background:#3A1818;color:#FFB4B4}
 .catrow.quick .chip{font-size:.8rem;padding:4px 10px}
+
+/* ---------- internal background (collapsed) ---------- */
+.ad-bg{margin-top:16px;border:1px dashed var(--border);border-radius:10px;background:var(--card2);font-size:.85rem}
+.ad-bg summary{cursor:pointer;padding:9px 12px;font-weight:800;color:var(--muted);list-style:none}
+.ad-bg summary::-webkit-details-marker{display:none}
+.ad-bg summary::before{content:"▸ ";}
+.ad-bg[open] summary::before{content:"▾ ";}
+.ad-bg ul{padding:0 14px 10px 28px;color:var(--muted);line-height:1.5}
+.ad-bg li{margin:3px 0}

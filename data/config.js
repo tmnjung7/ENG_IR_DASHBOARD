@@ -6,10 +6,10 @@
 window.KCC_CONFIG = {
   appName: "KCC IR Meet",
   version: "v5.0",
-  quarter: "3Q 2026",
-  asOf: "2026-11-02",
+  quarter: "3Q26 결과 · 4Q 전망",
+  asOf: "2026-11-06",
   // 3Q 잠정공시 전/후 안내 문구 (공시 후 빈 문자열로)
-  status: "3Q 잠정공시 전 — 수치는 ‘방향성’으로만. [ ]는 공시 후 채움.",
+  status: "3Q 잠정실적 공시됨(11월). 부문별 세부 수치는 분기보고서 후 — 부문 코멘트는 방향성으로.",
   passcode: "",
   // 통역 동반 미팅이 기본이면 true (ANSWER 카드에서 국문 핵심을 먼저 보여줌)
   interpreterDefault: false,

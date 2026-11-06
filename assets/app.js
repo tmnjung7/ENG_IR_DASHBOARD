@@ -532,6 +532,11 @@
       body.append(h("div", { class: "ad-terms" }, h("span", { class: "ad-lbl" }, "Terms — 통역 병기 용어"),
         h("table", null, a.terms.map(t => h("tr", null, h("td", null, t.kr), h("td", null, t.en, t.note ? h("span", { class: "nt" }, "⚠ " + t.note) : null))))));
     }
+    if (a.bg && a.bg.length) {
+      const det = h("details", { class: "ad-bg kr" });
+      det.append(h("summary", null, "🔒 내부 배경 — 말하지 않음 (" + a.bg.length + ")"), h("ul", null, a.bg.map(b => h("li", null, b))));
+      body.append(det);
+    }
     if (a.hold && a.hold !== "—") body.append(h("div", { class: "ad-hold kr" }, h("span", null, "🚧"), h("span", null, "여기까지만: " + a.hold)));
     d.append(body);
     d.append(h("div", { class: "ad-nav" },

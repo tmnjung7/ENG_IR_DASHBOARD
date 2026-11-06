@@ -21,17 +21,19 @@ window.KCC_FACTS = [
     ]
   },
   {
-    id: "direction", title: "3Q 2026 — Direction (pre-disclosure)", icon: "🧭",
-    note: "공시 전 IR view(10/26). 공시 후 확정 수치로 교체.",
+    id: "q3prelim", title: "3Q 2026 — Preliminary (KRW bn)", icon: "🆕",
+    note: "11월 잠정공시. 부문별 세부 수치는 분기보고서 후. 아래 부문 행은 방향성.",
     rows: [
-      ["Profitability vs Q2", "Somewhat lower", "summer slow season · raw-material delay · stronger won"],
-      ["Cost-of-sales ratio", "+2–3 pts vs Q2", "paint & PVC windows most exposed; eases from ~Nov"],
-      ["Net profit", "Valuation loss ~2tn won on Samsung C&T", "no other special items"],
-      ["Q4", "Recovery", "purchasing costs and prices back to normal basis"],
-      ["Silicone", "Down from Q2 → Q4 recovery", "low-end hurt by season; FX translation; FY EBITDA 12–13%"],
-      ["Building materials", "Demand softer", "interior ↓, semiconductor initial volumes ↓, PVC windows cost+volume; gypsum stable"],
-      ["Paint", "Below 1H profitability", "auto & marine demand continue; architectural weak; overseas growing"],
-      ["Treasury shares", "~300k cancelled at year-end", "remainder by 3Q 2027"]
+      ["Revenue", "1,673.3", "−7.3% QoQ"],
+      ["Operating profit", "85.2", "−33.9% QoQ"],
+      ["Cost-of-sales ratio", "+2–3 pts QoQ", "Mar–Apr purchases → Q3 COGS; paint & PVC windows most exposed"],
+      ["Net profit", "Down substantially", "~2tn won valuation loss on listed holdings incl. Samsung C&T; no other unusual items"],
+      ["Three drivers", "Season · lagged raw materials · KRW strength", "timing lag, not a trend — easing from November"],
+      ["Building Materials", "Demand softened; PVC windows margin pressure; gypsum stable", "high-tech shipments steady; housing recovery takes time"],
+      ["Coatings", "Auto & marine demand continued; profit below 1H (cost peak)", "market-linked pricing covers part; architectural weak; Q4 normalises"],
+      ["Silicones", "Down QoQ (summer, low-end, KRW translation); Q4 rebound projected", "FY up YoY; initial OP target needs more time; polarisation"],
+      ["Treasury shares", "~300k cancelled by year-end; remainder by 3Q27", "employee programme not finalised"],
+      ["Q4 view", "Cost pressure eases from Nov; modest recovery toward year-end", "silicone: price increases on key products from Q4"]
     ]
   },
   {
