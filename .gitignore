@@ -4,3 +4,4 @@ node_modules/
 *.log
 docs/*.pdf
 docs/.study-print.html
+data/internal.js

@@ -2369,13 +2369,6 @@ window.KCC_ANSWERS.push(
       { kr: "직접 배송", en: "direct delivery to customers" },
       { kr: "수익성 전가", en: "pass-through to pricing" }
     ],
-    bg: [
-      "운송비: 과거 고객 직접 수령 ~10% → 최근 ~96% MPM 직접 배송 (수치 금지, ‘more direct delivery’로만)",
-      "원재료 수급 부족: 생산 지연, 특수 원재료 관련 호르무즈 봉쇄 영향 (구체 언급 금지 — ‘some supply tightness’ 이하)",
-      "주요 제품 가격 인상 4분기 추진, 일부 제품 수익성 전가 전망 (품목·폭 금지)",
-      "AI 데이터센터 열관리 고객 인증 긍정 진행 (고객명 금지)",
-      "🔒 2027 목표: 매출 +5~10%, EBITDA +10% — AOP 미확정, 수치 제시 금지. 유기실리콘 시장 성장률 ~5.3%는 ‘around five percent’로 가능"
-    ],
     hold: "2027 목표 수치, 호르무즈·특정 원재료, 직배송 비율, 고객사명 금지."
   },
   {
@@ -2409,13 +2402,6 @@ window.KCC_ANSWERS.push(
       { kr: "연간 단가 협의", en: "annual price negotiations" },
       { kr: "단가 정상화", en: "price normalisation" }
     ],
-    bg: [
-      "자동차: 현대차 파업 + 여름 연휴로 생산대수 전년 대비 −5% 내외 전망 (고객명·수치 금지 — ‘a customer stoppage’)",
-      "시황연동으로 모든 원재료 인상분은 감당 어려움; 전체 매출의 절반 이상은 반영 중",
-      "선박: 11월 중 일부 대형 고객사 연간 단가 협의 중 (고객명·시점 구체화 금지)",
-      "중국 시장 점유율: ’24년 1~2% → ’26년 5~7% (국내 선주의 중국 내 발주) — 수치는 참고, ‘expanding’으로만",
-      "건축: 단가 정상화 노력 중이나 경쟁 심함"
-    ],
     hold: "고객사명(현대차), 생산대수 수치, 협의 중인 고객·단가, 중국 점유율 수치 금지. 도료 전체 마진은 ‘9–10% for the year’."
   },
   {
@@ -2448,11 +2434,6 @@ window.KCC_ANSWERS.push(
       { kr: "중소형 현장", en: "small and mid-size sites" },
       { kr: "유기 단열재", en: "organic insulation (EPS, PIR)" },
       { kr: "대출 규제", en: "loan regulation / lending rules" }
-    ],
-    bg: [
-      "단열재: 중소형 현장 급감, 유기 단열재 가격 하락; 하이테크 물량 확대되나 기존 현장 감소가 너무 커 수익성 하락 지속",
-      "PVC·석고보드: 물량 감소 확대, 금리 인상·대출 규제로 건축 시장 회복세 침체 지속",
-      "표현 주의: ‘profitability continuing to decline’ 대신 ‘under pressure / defend conservatively’"
     ],
     hold: "단열재 수익성 ‘하락 지속’ 단정 대신 ‘under pressure’. 현장·고객명 금지."
   }

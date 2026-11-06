@@ -8,6 +8,8 @@
   const FACTS = window.KCC_FACTS || [];
   const STUDY = window.KCC_STUDY || [];
   const MARKET = window.KCC_MARKET || null;
+  // 🔒 optional internal notes file (not in the public repo): merged as card.bg
+  if (window.KCC_INTERNAL) for (const a of ANSWERS) if (window.KCC_INTERNAL[a.id]) a.bg = window.KCC_INTERNAL[a.id];
 
   const $ = (sel, el) => (el || document).querySelector(sel);
   const h = (tag, attrs, ...kids) => {
